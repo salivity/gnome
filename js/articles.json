@@ -1,0 +1,62 @@
+[
+  [
+    10,
+    "How Does GNOME Web Integrate With WebKitGTK?",
+    "GNOME Web, codenamed Epiphany, delivers a tailored browsing experience by combining the GNOME application framework with WebKitGTK, the official GTK port of the open-source WebKit rendering engine. Rather than treating the browser engine as an isolated b",
+    false
+  ],
+  [
+    9,
+    "What Is the GNOME HIG Design Philosophy?",
+    "The GNOME Human Interface Guidelines (HIG) are grounded in a philosophy of purposeful minimalism, clarity, and distraction-free utility. Rather than overwhelming users with exhaustive configuration panels and dense menus, the GNOME HIG prioritises core w",
+    false
+  ],
+  [
+    8,
+    "How Does GNOME Shell Handle JavaScript Extensions?",
+    "GNOME Shell executes user extensions by running them directly within the compositor's main process via GJS (GNOME JavaScript), integrating them into the desktop environment through standard lifecycle methods and GObject Introspection bindings. Because ex",
+    false
+  ],
+  [
+    7,
+    "How Do GSettings and dconf Manage Preferences in GNOME?",
+    "In the GNOME desktop environment, managing configuration preferences relies on a two-tier architecture composed of GSettings and dconf. GSettings serves as the high-level, schema-driven application programming interface (API) that applications interact w",
+    false
+  ],
+  [
+    6,
+    "How Does the GNOME Foundation Support Ecosystem Growth?",
+    "The GNOME Foundation sustains the ongoing development of the GNOME ecosystem by providing essential technical infrastructure, direct financial support, legal protection, and community-building programs. Rather than directly dictating day-to-day code deci",
+    false
+  ],
+  [
+    5,
+    "Why Did GNOME 3 Change the Linux Desktop Paradigm?",
+    "The transition from GNOME 2 to GNOME 3 in April 2011 marked one of the most radical redesigns in the history of open-source software. Rather than refining the traditional desktop model inherited from Windows 95, the GNOME Project discarded decades of est",
+    false
+  ],
+  [
+    4,
+    "What Role Does Mutter Play in GNOME Shell?",
+    "Mutter serves as the core compositor and window manager at the heart of the modern GNOME desktop environment, handling window placement, graphical rendering, input routing, and display server duties. Rather than running as a standalone background utility",
+    false
+  ],
+  [
+    3,
+    "How Does GNOME Use GTK as Its GUI Toolkit?",
+    "This article examines how the GNOME desktop environment uses GTK (GIMP Toolkit) as its foundational framework for creating graphical user interfaces. It details the structural relationship between GNOME's core design philosophy and GTK's component hierar",
+    false
+  ],
+  [
+    2,
+    "Who Co-Founded the Original GNOME Project?",
+    "The original GNOME desktop environment was founded in August 1997 by Mexican programmers Miguel de Icaza and Federico Mena Quintero. Created as a free software alternative to the proprietary dependencies of early desktop environments, GNOME was designed",
+    false
+  ],
+  [
+    1,
+    "Why Was the GNOME Project Founded in 1997?",
+    "The GNOME project was founded in August 1997 by Miguel de Icaza and Federico Mena Quintero primarily in response to software licensing concerns surrounding the KDE desktop environment and its underlying Qt toolkit. While KDE provided an intuitive graphic",
+    false
+  ]
+]
