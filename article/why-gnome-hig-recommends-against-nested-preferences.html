@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why GNOME HIG Recommends Against Nested Preferences - gnome</title>
+    <meta name="description" content="The GNOME Human Interface Guidelines (HIG) strongly advise against opening secondary, nested dialogs from within an application's preferences window. This article explains the rationale behind this recommendation, detailing how nested preferences degrade">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/why-gnome-hig-recommends-against-nested-preferences">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why GNOME HIG Recommends Against Nested Preferences - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/why-gnome-hig-recommends-against-nested-preferences" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Human Interface Guidelines (HIG) strongly advise against opening secondary, nested dialogs from within an application's preferences window. This article explains the rationale behind this recommendation, detailing how nested preferences degrade" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-gnome-hig-recommends-against-nested-preferences">Why GNOME
+HIG Recommends Against Nested Preferences</h1>
+<p>The GNOME Human Interface Guidelines (HIG) strongly advise against
+opening secondary, nested dialogs from within an application's
+preferences window. This article explains the rationale behind this
+recommendation, detailing how nested preferences degrade usability,
+complicate window management, and undermine responsive design, while
+highlighting the modern GNOME-recommended design patterns used to
+structure complex settings effectively.</p>
+<h3 id="minimizing-cognitive-load-and-navigation-confusion">Minimizing
+Cognitive Load and Navigation Confusion</h3>
+<p>Nested dialogs force users to manage multiple layers of context
+simultaneously. When a preferences window spawns an additional child
+dialog—often behind a generic "Advanced..." or "Configure..."
+button—users lose spatial orientation and mental tracking of where
+specific options live. Flattening the interface into a single, cohesive
+hierarchy ensures users do not have to guess which layer contains the
+setting they need, significantly reducing the cognitive effort required
+to configure an application.</p>
+<h3 id="preventing-window-management-issues">Preventing Window
+Management Issues</h3>
+<p>From an interface management perspective, stacked modal dialogs
+create technical and visual friction:</p>
+<ul>
+<li><strong>Modal Trapping:</strong> Child dialogs typically block
+interaction with the parent dialog until dismissed, creating rigid
+workflows where the user cannot cross-reference settings.</li>
+<li><strong>Visual Clutter:</strong> Overlapping windows crowd the
+desktop, causing visual noise and obscuring underlying application
+content.</li>
+<li><strong>Responsive Failures:</strong> On smaller screens, such as
+tablets, handhelds, or mobile devices running GNOME-based shells,
+cascading windows often overflow the viewport boundaries or become
+impossible to manage cleanly.</li>
+</ul>
+<h3 id="promoting-good-design-over-clutter">Promoting Good Design Over
+Clutter</h3>
+<p>A common pitfall in software design is using nested dialogs as a
+dumping ground for niche options, edge cases, and technical parameters
+that developers hesitate to curate. The GNOME philosophy emphasizes
+sensible defaults that work out of the box. By discouraging nested
+dialogs, the HIG compels designers to make definitive choices: either
+integrate an option meaningfully into the primary interface, redesign
+the feature to make manual configuration unnecessary, or remove
+redundant settings entirely.</p>
+<h3 id="gnomes-alternative-patterns">GNOME’s Alternative Patterns</h3>
+<p>Instead of launching detached secondary dialogs, modern GNOME
+applications built with <code>libadwaita</code> utilize inline,
+single-window navigation models:</p>
+<ul>
+<li><strong>Subpages and Navigation Views:</strong> Rather than spawning
+a new window, complex sub-configurations slide smoothly into view within
+the same window boundaries, maintaining a clear "Back" navigation
+path.</li>
+<li><strong>Expander Rows:</strong> Advanced controls can be collapsed
+directly within list rows, expanding in place only when required.</li>
+<li><strong>Categorized Pages and Groups:</strong> Preferences are
+organized top-down using distinct tabs, sidebars, and grouped lists,
+allowing all configurations to remain discoverable within a predictable,
+single-window structure.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

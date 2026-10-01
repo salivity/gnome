@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Shell Screen Sharing and Recording Indicators - gnome</title>
+    <meta name="description" content="This article explains how GNOME Shell visually alerts users when an application is actively recording or sharing the screen. GNOME Shell prioritizes user privacy through distinct top bar icons, interactive Quick Settings controls, and system-level securi">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-shell-screen-sharing-and-recording-indicators">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Shell Screen Sharing and Recording Indicators - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-shell-screen-sharing-and-recording-indicators" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how GNOME Shell visually alerts users when an application is actively recording or sharing the screen. GNOME Shell prioritizes user privacy through distinct top bar icons, interactive Quick Settings controls, and system-level securi" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-shell-screen-sharing-and-recording-indicators">GNOME Shell
+Screen Sharing and Recording Indicators</h1>
+<p>This article explains how GNOME Shell visually alerts users when an
+application is actively recording or sharing the screen. GNOME Shell
+prioritizes user privacy through distinct top bar icons, interactive
+Quick Settings controls, and system-level security prompts powered by
+modern Wayland and PipeWire standards.</p>
+<h2 id="the-top-bar-indicator">The Top Bar Indicator</h2>
+<p>Whenever a screen capture session begins, GNOME Shell places a
+prominent visual indicator directly into the top panel's system status
+area.</p>
+<ul>
+<li><strong>Screen Recording:</strong> When the built-in screen recorder
+or an external recording utility is active, GNOME Shell displays a
+bright red or orange dot with an elapsed-time counter in the panel.</li>
+<li><strong>Screen Sharing:</strong> When sharing your screen via web
+browsers or communication software, an icon depicting a monitor or
+casting symbol appears in the top bar.</li>
+</ul>
+<p>These persistent icons remain visible across all virtual workspaces,
+ensuring that background applications cannot silently capture the
+desktop without the user's knowledge.</p>
+<h2 id="quick-settings-integration">Quick Settings Integration</h2>
+<p>Clicking the system menu (Quick Settings) in the top-right corner
+provides deeper context and direct control over active streams. When
+screen sharing or recording is underway, GNOME Shell inserts an active
+session banner at the top of the menu.</p>
+<p>This banner explicitly names the application requesting the stream
+and displays a high-visibility button—typically labeled "Stop Sharing"
+or "Stop"—allowing you to immediately terminate the video feed with a
+single click without opening the client application.</p>
+<h2 id="desktop-portals-and-selection-prompts">Desktop Portals and
+Selection Prompts</h2>
+<p>Visual awareness begins before the capture even starts. Because GNOME
+Shell relies on <code>xdg-desktop-portal-gnome</code> and PipeWire for
+Wayland display management, applications cannot access display buffers
+directly.</p>
+<p>Instead, GNOME Shell generates a system-modal dialog prompting the
+user to grant permission. This prompt includes visual thumbnails of
+available monitors or individual application windows, ensuring users
+explicitly verify what will be captured before the visual indicators in
+the top bar engage. In recent GNOME releases, selecting a single window
+or virtual monitor may also highlight the targeted region with a subtle
+border to clearly distinguish what is being broadcast.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

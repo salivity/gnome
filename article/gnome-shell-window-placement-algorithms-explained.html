@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Shell Window Placement Algorithms Explained - gnome</title>
+    <meta name="description" content="This article explores how GNOME Shell determines the initial position of newly launched application windows on your desktop. In GNOME, window placement is governed by its underlying compositor and window manager, Mutter. Rather than scattering windows ra">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-shell-window-placement-algorithms-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Shell Window Placement Algorithms Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-shell-window-placement-algorithms-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how GNOME Shell determines the initial position of newly launched application windows on your desktop. In GNOME, window placement is governed by its underlying compositor and window manager, Mutter. Rather than scattering windows ra" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-shell-window-placement-algorithms-explained">GNOME Shell
+Window Placement Algorithms Explained</h1>
+<p>This article explores how GNOME Shell determines the initial position
+of newly launched application windows on your desktop. In GNOME, window
+placement is governed by its underlying compositor and window manager,
+Mutter. Rather than scattering windows randomly, Mutter applies an
+ordered set of heuristics—ranging from transient parent tracking and
+smart bounding-box evaluations to cascading fallbacks and multi-monitor
+awareness—to ensure new instances open predictably and
+unobtrusively.</p>
+<h3 id="the-role-of-mutter">The Role of Mutter</h3>
+<p>While users interact with GNOME Shell, all low-level window geometry,
+layout, and placement routines are handled by Mutter. Within Mutter's
+core placement engine, every newly mapped window passes through a
+sequence of validation checks and geometric constraints to find optimal
+coordinates on the active workspace before the window becomes
+visible.</p>
+<h3 id="application-launch-context-and-monitor-detection">Application
+Launch Context and Monitor Detection</h3>
+<p>Before calculating exact coordinates, Mutter determines which
+workspace and monitor the new window belongs to using launch
+contexts:</p>
+<ul>
+<li><strong>Startup Notifications:</strong> When an app is launched via
+the GNOME Shell dash, application grid, or an integrated launcher, a
+startup notification carries context, including the current monitor
+index and workspace ID.</li>
+<li><strong>Pointer Location Fallback:</strong> If an application spawns
+without startup metadata (such as from a terminal emulator), Mutter
+assigns the window to the monitor where the mouse pointer currently
+resides or the monitor displaying the currently focused window.</li>
+</ul>
+<h3 id="the-smart-placement-heuristic">The Smart Placement
+Heuristic</h3>
+<p>For standard, top-level application windows, Mutter attempts "smart
+placement." The goal of this algorithm is to place the new window in an
+unoccupied area of the screen to minimize overlap with existing
+windows.</p>
+<ol type="1">
+<li><strong>Free Area Detection:</strong> Mutter scans the target
+monitor’s usable area (excluding docks, top bars, and reserved panel
+struts) and compares it against the bounding boxes of existing, visible
+windows on that workspace.</li>
+<li><strong>First-Fit Allocation:</strong> It evaluates available
+rectangular gaps that can completely contain the dimensions of the new
+window without intersecting other surfaces.</li>
+<li><strong>Cascade Fallback:</strong> If the screen is crowded and no
+free space can accommodate the full size of the window, the algorithm
+abandons non-overlapping placement and applies a cascading algorithm.
+Cascading shifts the new window downward and to the right by a
+standardized offset relative to the previously focused window or the
+top-left edge of the usable screen area. If a cascade exceeds screen
+boundaries, it wraps back to the origin offset.</li>
+</ol>
+<h3 id="transient-and-dialog-window-handling">Transient and Dialog
+Window Handling</h3>
+<p>Transient windows, such as modal dialogs, preferences panes, or file
+pickers, bypass the smart placement algorithm:</p>
+<ul>
+<li><strong>Parent-Relative Centering:</strong> A modal dialog is
+automatically aligned to the center of its parent application
+window.</li>
+<li><strong>Modal Attachment:</strong> In standard GNOME configurations,
+modal dialogs are often physically attached to the title bar of the
+parent window, preventing them from being moved independently.</li>
+<li><strong>Screen Boundary Clamping:</strong> If centering a transient
+window on its parent would push parts of the dialog offscreen, Mutter
+clamps the coordinates to ensure the entire dialog remains fully visible
+within the monitor boundaries.</li>
+</ul>
+<h3 id="wayland-vs-x11-positioning-authority">Wayland vs. X11
+Positioning Authority</h3>
+<p>The display protocol impacts how strictly these algorithms are
+enforced:</p>
+<ul>
+<li><strong>Wayland:</strong> The compositor maintains total control
+over window coordinates. Wayland clients cannot dictate their global
+screen positions; they can only supply preferred buffer sizes and window
+types (e.g., top-level or popup). Mutter makes the final placement
+decision unilaterally.</li>
+<li><strong>X11:</strong> Legacy X11 applications can request specific
+absolute coordinates via standard window manager hints
+(<code>WM_NORMAL_HINTS</code>). Mutter honors these user- or
+client-specified positions if explicitly set, bypassing its internal
+placement logic.</li>
+</ul>
+<h3 id="user-configuration-center-new-windows">User Configuration:
+Center New Windows</h3>
+<p>Users can override Mutter's dynamic smart placement through
+GSettings:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsettings</span> set org.gnome.mutter center-new-windows true</span></code></pre></div>
+<p>When this property is enabled, Mutter skips the free-space evaluation
+and cascading steps entirely for top-level windows, placing every newly
+spawned application window directly in the geometric center of the
+target display.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

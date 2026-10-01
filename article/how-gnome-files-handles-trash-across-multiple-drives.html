@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Files Handles Trash Across Multiple Drives - gnome</title>
+    <meta name="description" content="GNOME Files (also known as Nautilus) provides trash management and restoration across multiple physical drives by adhering to the FreeDesktop.org (XDG) Trash Specification. Instead of transferring deleted files across different storage devices to a singl">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-files-handles-trash-across-multiple-drives">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Files Handles Trash Across Multiple Drives - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-files-handles-trash-across-multiple-drives" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Files (also known as Nautilus) provides trash management and restoration across multiple physical drives by adhering to the FreeDesktop.org (XDG) Trash Specification. Instead of transferring deleted files across different storage devices to a singl" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-files-handles-trash-across-multiple-drives">How GNOME
+Files Handles Trash Across Multiple Drives</h1>
+<p>GNOME Files (also known as Nautilus) provides trash management and
+restoration across multiple physical drives by adhering to the
+FreeDesktop.org (XDG) Trash Specification. Instead of transferring
+deleted files across different storage devices to a single central
+directory—which would cause severe performance bottlenecks and
+cross-filesystem copy operations—GNOME Files delegates trash storage
+directly to the drive where the files reside. It creates isolated,
+per-volume trash directories, merges these locations into a single
+unified view in the graphical interface, and leverages metadata files to
+execute instant, accurate restorations.</p>
+<h3 id="per-volume-trash-directories">Per-Volume Trash Directories</h3>
+<p>Moving a file between distinct physical drives or filesystem
+partitions requires copying data byte-for-byte and deleting the
+original, which violates the expected near-instantaneous behavior of
+moving a file to the trash. To prevent this, GNOME Files creates a
+localized trash folder on the root of each secondary physical drive or
+partition.</p>
+<p>When a file is deleted on a non-root drive, GNOME Files attempts to
+locate or create one of the following directories at the top-level mount
+point:</p>
+<ol type="1">
+<li><strong>Administrator-Created Directory
+(<code>.Trash/$UID</code>):</strong> If a top-level <code>.Trash</code>
+directory exists with appropriate permissions (sticky bit set), GNOME
+Files creates a subfolder named after the user’s numerical User ID
+(e.g., <code>.Trash/1000</code>).</li>
+<li><strong>User-Owned Fallback Directory
+(<code>.Trash-$UID</code>):</strong> If the shared <code>.Trash</code>
+folder does not exist or cannot be accessed, GNOME Files automatically
+creates a directory named <code>.Trash-$UID</code> (such as
+<code>.Trash-1000</code>) directly at the mount point root.</li>
+</ol>
+<p>Files deleted from the main system drive are stored in the user's
+home directory under <code>~/.local/share/Trash</code>. Files deleted on
+external or secondary drives remain physically located on those specific
+storage devices inside their respective <code>.Trash-$UID</code>
+directories.</p>
+<h3 id="directory-structure-and-metadata-storage">Directory Structure
+and Metadata Storage</h3>
+<p>Every trash container—whether the local home trash or an external
+drive trash—maintains an identical dual-folder hierarchy:</p>
+<ul>
+<li><strong><code>files/</code></strong>: Contains the raw, renamed or
+original data payload.</li>
+<li><strong><code>info/</code></strong>: Contains a companion metadata
+file with a <code>.trashinfo</code> extension for every corresponding
+item in the <code>files/</code> directory.</li>
+</ul>
+<p>The <code>.trashinfo</code> file records two critical pieces of data
+using a key-value format:</p>
+<ul>
+<li><strong><code>Path</code></strong>: The absolute path of the file
+prior to deletion, indicating its exact original location on that
+filesystem.</li>
+<li><strong><code>DeletionDate</code></strong>: An ISO 8601 timestamp
+recording when the item was moved to the trash.</li>
+</ul>
+<p>Because the path is relative to the mount point or fully qualified
+within the local filesystem, the item never leaves the physical storage
+boundaries of that specific disk.</p>
+<h3 id="the-unified-trash-interface">The Unified Trash Interface</h3>
+<p>In GNOME Files, navigating to the "Trash" sidebar entry opens a
+virtual URI (<code>trash:///</code>). The file manager scans the primary
+trash path in <code>~/.local/share/Trash</code> and concurrently polls
+every currently mounted volume for valid trash directories belonging to
+the current user.</p>
+<p>GNOME Files aggregates the contents of these disparate physical
+locations into a single, unified view. Users interact with deleted files
+as if they were stored together, regardless of how many external hard
+drives, USB flash drives, or secondary SSDs are attached to the system.
+If an external drive is safely unmounted or removed, its deleted
+contents simply disappear from the <code>trash:///</code> interface
+until the drive is reconnected.</p>
+<h3 id="cross-drive-restoration-mechanics">Cross-Drive Restoration
+Mechanics</h3>
+<p>When a user initiates the "Restore" action on an item in the trash,
+GNOME Files executes the following sequence:</p>
+<ol type="1">
+<li>It reads the corresponding <code>.trashinfo</code> file from the
+specific drive's <code>info/</code> directory.</li>
+<li>It extracts the original location recorded under the
+<code>Path</code> parameter.</li>
+<li>If the destination parent directory was deleted, GNOME Files
+recreates the missing folder hierarchy on that drive.</li>
+<li>It issues an atomic move operation (<code>rename</code> syscall),
+moving the payload from <code>.Trash-$UID/files/</code> directly back to
+its original path on the same drive.</li>
+<li>It removes the <code>.trashinfo</code> metadata entry.</li>
+</ol>
+<p>Because the entire operation occurs within the same physical
+filesystem boundary, restoration is virtually instantaneous, avoids data
+transfer over system buses, and ensures that file permissions and
+ownership attributes remain intact.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

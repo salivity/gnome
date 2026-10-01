@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Manages Flatpak Sandboxing Permissions - gnome</title>
+    <meta name="description" content="This article examines how the GNOME desktop environment handles application sandboxing permissions using Flatpak and the underlying XDG permission store architecture. By utilizing Bubblewrap for low-level process isolation, XDG Desktop Portals for dynami">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-manages-flatpak-sandboxing-permissions">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Manages Flatpak Sandboxing Permissions - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-manages-flatpak-sandboxing-permissions" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article examines how the GNOME desktop environment handles application sandboxing permissions using Flatpak and the underlying XDG permission store architecture. By utilizing Bubblewrap for low-level process isolation, XDG Desktop Portals for dynami" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-manages-flatpak-sandboxing-permissions">How GNOME
+Manages Flatpak Sandboxing Permissions</h1>
+<p>This article examines how the GNOME desktop environment handles
+application sandboxing permissions using Flatpak and the underlying XDG
+permission store architecture. By utilizing Bubblewrap for low-level
+process isolation, XDG Desktop Portals for dynamic API mediation, and a
+dedicated permission store backend to track user consents, GNOME
+enforces a zero-trust security model. Readers will understand how
+permission requests are intercepted, stored, and managed through native
+GNOME graphical interfaces.</p>
+<h3 id="the-foundation-of-flatpak-sandboxing">The Foundation of Flatpak
+Sandboxing</h3>
+<p>Flatpak isolates desktop applications using Bubblewrap, a low-level
+utility that leverages Linux kernel namespaces, cgroups, and seccomp
+filters. By default, a sandboxed application runs with no network
+access, an empty <code>/home</code> directory, no access to host devices
+(like webcams or microphones), and isolated IPC (Inter-Process
+Communication) mechanisms.</p>
+<p>Static permissions, such as baseline network access or specific
+directory mounts, are declared during application packaging and enforced
+at launch. However, dynamic access to sensitive resources requires a
+secure mediation layer to avoid granting broad, permanent system
+access.</p>
+<h3 id="the-bridge-xdg-desktop-portals">The Bridge: XDG Desktop
+Portals</h3>
+<p>Sandboxed applications cannot directly access hardware or host files;
+instead, they interact with the host through XDG Desktop Portals over
+D-Bus. When an application requests an action—such as opening a file,
+taking a picture, or reading the system location—it sends an IPC request
+to <code>xdg-desktop-portal</code>.</p>
+<p>The desktop portal forwards the request to the desktop-specific
+backend, which in GNOME is <code>xdg-desktop-portal-gnome</code>
+(formerly handled via <code>xdg-desktop-portal-gtk</code>). This backend
+draws native GNOME dialogs directly in the user's secure desktop
+session, outside the sandbox boundary. Because the application cannot
+forge or click these dialogs programmatically, malicious software cannot
+grant itself access.</p>
+<h3 id="the-flatpak-permission-store">The Flatpak Permission Store</h3>
+<p>The decisions made through portals are recorded and tracked by the
+Flatpak Permission Store (<code>xdg-permission-store</code>), a
+persistent D-Bus service managed by Flatpak.</p>
+<p>The permission store functions as follows:</p>
+<ul>
+<li><strong>Storage Engine:</strong> It maintains a database (typically
+located in <code>~/.local/share/flatpak/db/</code>) that maps
+application IDs (e.g., <code>org.gnome.Epiphany</code>) to specific
+permissions, resources, and access levels (such as "yes", "no", or
+"ask").</li>
+<li><strong>Permission Tables:</strong> Separate tables exist for
+various device classes and APIs, including camera, microphone, location,
+background running, and file access.</li>
+<li><strong>Lookup Sequence:</strong> When an app invokes a portal API:
+<ol type="1">
+<li>The portal queries the permission store using the application's
+unique ID.</li>
+<li>If the store contains an explicit grant or denial, the portal acts
+accordingly without prompting.</li>
+<li>If no entry exists, the portal initiates an interactive system
+prompt.</li>
+<li>The user's response is communicated back to the permission store,
+where it is written permanently for subsequent sessions.</li>
+</ol></li>
+</ul>
+<h3 id="dynamic-file-access-via-the-document-portal">Dynamic File Access
+via the Document Portal</h3>
+<p>File access receives specialized handling through the Document Portal
+(<code>xdg-document-portal</code>), which works in tandem with the
+permission store. When an application prompts the user to open or save a
+file via the FileChooser portal, the host presents a native GNOME file
+picker.</p>
+<p>Once the user selects a file, the Document Portal creates a unique
+FUSE (Filesystem in Userspace) mount point located inside the
+application's sandbox (usually mounted under
+<code>/run/user/$UID/doc/</code>). The permission store registers that
+specific file path to the calling application ID. This mechanism allows
+the app to read or write only the explicitly selected file without
+gaining broader access to the user's filesystem.</p>
+<h3 id="user-management-through-gnome-settings">User Management Through
+GNOME Settings</h3>
+<p>GNOME integrates directly with the permission store through its
+graphical Control Center (<code>gnome-control-center</code>). Under
+<strong>Settings &gt; Privacy</strong> and <strong>Settings &gt;
+Apps</strong>, GNOME queries the permission store to list all Flatpak
+applications that have requested access to hardware devices or host
+services.</p>
+<p>Users can toggle permissions (such as microphone, camera,
+notifications, or automatic background execution) on a per-app basis at
+any time. When a toggle is switched, GNOME updates the corresponding
+entry in the Flatpak permission store database via D-Bus, immediately
+revoking or granting the capability without requiring a rebuild or
+reinstallation of the application bundle.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Software Licensing Metadata Features Explained - gnome</title>
+    <meta name="description" content="GNOME Software relies on standardized packaging specifications, automated license analysis, and explicit visual tags to inform users whether an application is open source or proprietary. By processing upstream metadata through machine-readable formats an">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-software-licensing-metadata-features-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Software Licensing Metadata Features Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-software-licensing-metadata-features-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Software relies on standardized packaging specifications, automated license analysis, and explicit visual tags to inform users whether an application is open source or proprietary. By processing upstream metadata through machine-readable formats an" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-software-licensing-metadata-features-explained">GNOME
+Software Licensing Metadata Features Explained</h1>
+<p>GNOME Software relies on standardized packaging specifications,
+automated license analysis, and explicit visual tags to inform users
+whether an application is open source or proprietary. By processing
+upstream metadata through machine-readable formats and checking them
+against recognized software freedom definitions, the application
+provides transparent insight into each package's legal and philosophical
+distribution terms.</p>
+<h3 id="the-appstream-metadata-specification">The AppStream Metadata
+Specification</h3>
+<p>At the core of GNOME Software's ability to display licensing
+information is the AppStream standard. AppStream provides a
+cross-distribution framework where software authors supply
+machine-readable XML or YAML metadata alongside their software. Within
+these metadata files, developers specify the
+<code>&lt;project_license&gt;</code> tag. This tag explicitly declares
+the license governing the application's source code, serving as the
+primary source of truth for the desktop environment.</p>
+<h3 id="spdx-license-identifiers">SPDX License Identifiers</h3>
+<p>To prevent ambiguity in license naming, GNOME Software evaluates
+licenses using Software Package Data Exchange (SPDX) identifiers.
+Instead of parsing vague descriptions, the software looks for
+standardized strings such as <code>GPL-3.0-or-later</code>,
+<code>MIT</code>, <code>Apache-2.0</code>, or
+<code>LicenseRef-proprietary</code>. Using uniform identifiers allows
+GNOME Software to programmatically parse complex multi-licensing
+scenarios, such as when an application contains components under
+different terms combined with <code>AND</code> or <code>OR</code>
+operators.</p>
+<h3 id="automated-license-classification-logic">Automated License
+Classification Logic</h3>
+<p>GNOME Software integrates with libraries like
+<code>libappstream</code> to determine whether a declared license
+qualifies as free and open-source software (FOSS). The engine
+cross-references the detected SPDX tags against curated lists of
+licenses approved by the Free Software Foundation (FSF) and the Open
+Source Initiative (OSI).</p>
+<ul>
+<li><strong>Free/Open Source:</strong> If all core components map to
+approved FSF or OSI identifiers, the software categorizes the
+application as Free Software.</li>
+<li><strong>Proprietary:</strong> If the license tag contains
+non-standard commercial terms, proprietary designations, or fails the
+FOSS criteria, it is flagged as proprietary.</li>
+<li><strong>Special Cases:</strong> If the license metadata is missing
+or invalid, GNOME Software classifies the license status as
+unknown.</li>
+</ul>
+<h3 id="packaging-backend-integration">Packaging Backend
+Integration</h3>
+<p>GNOME Software does not generate metadata on its own; it aggregates
+data through modular packaging backends:</p>
+<ul>
+<li><strong>Flatpak:</strong> Manifests specify licenses via AppStream
+data embedded directly into the Flatpak build. Flathub enforces strict
+AppStream compliance, ensuring software entries have validated license
+tags.</li>
+<li><strong>PackageKit:</strong> Native distribution packages (like RPM
+or DEB) feed package-level license fields and AppStream collection data
+from distribution repositories into GNOME Software.</li>
+<li><strong>Snap:</strong> The Snap backend communicates with the Snap
+Store API, reading the license fields defined in the application's
+<code>snapcraft.yaml</code>.</li>
+</ul>
+<h3 id="user-interface-presentation">User Interface Presentation</h3>
+<p>Once the metadata is processed, GNOME Software displays the results
+directly to the user through specific UI elements:</p>
+<ul>
+<li><strong>Context Tiles:</strong> The main details page of any
+application features a dedicated "License" context tile.</li>
+<li><strong>Color-Coded Status:</strong> Free and open-source
+applications typically show a neutral or positive badge alongside a link
+to the full license text. Proprietary software displays a distinct
+warning-style indicator to alert users that the source code is not
+openly auditable.</li>
+<li><strong>Repository Disclaimers:</strong> When third-party or
+proprietary repositories are enabled, the interface surfaces alerts
+detailing that the repository may contain non-free software, linking the
+source origin directly to the software's freedom status.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

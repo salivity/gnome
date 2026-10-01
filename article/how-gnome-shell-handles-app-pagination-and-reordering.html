@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Handles App Pagination and Reordering - gnome</title>
+    <meta name="description" content="GNOME Shell provides an organized, gesture-driven application grid that arranges installed software across horizontal pages and supports full custom reordering. This article breaks down how GNOME Shell manages app launcher pagination, handles spatial nav">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-handles-app-pagination-and-reordering">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Handles App Pagination and Reordering - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-handles-app-pagination-and-reordering" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell provides an organized, gesture-driven application grid that arranges installed software across horizontal pages and supports full custom reordering. This article breaks down how GNOME Shell manages app launcher pagination, handles spatial nav" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-handles-app-pagination-and-reordering">How GNOME
+Shell Handles App Pagination and Reordering</h1>
+<p>GNOME Shell provides an organized, gesture-driven application grid
+that arranges installed software across horizontal pages and supports
+full custom reordering. This article breaks down how GNOME Shell manages
+app launcher pagination, handles spatial navigation, and executes
+drag-and-drop icon rearrangement and folder management under the
+hood.</p>
+<h3 id="paged-layout-architecture">Paged Layout Architecture</h3>
+<p>GNOME Shell’s application grid is structured as a discrete,
+horizontally paginated view managed primarily by the
+<code>AppDisplay</code> component within its Clutter-based Shell Toolkit
+(St). The layout abandons continuous vertical scrolling in favor of
+distinct pages, each with a fixed capacity defined by the user’s display
+resolution and scaling factors.</p>
+<p>Pagination state is handled by an internal page manager:</p>
+<ul>
+<li><strong>Grid Allocation:</strong> Icons are arranged in a dynamic
+matrix (commonly 4x6 or adjusted automatically based on screen aspect
+ratio). When an icon exceeds the capacity of the current page, GNOME
+Shell automatically instantiates a new page.</li>
+<li><strong>Navigation Indicators:</strong> Small navigation dots at the
+bottom of the grid indicate the total number of pages and the active
+index.</li>
+<li><strong>Input Mapping:</strong> Page transitions snap into place
+using spring physics. Users can navigate between pages using horizontal
+trackpad gestures (typically three-finger swipes), discrete mouse wheel
+scrolling, or arrow keys via keyboard focus.</li>
+</ul>
+<h3 id="drag-and-drop-implementation">Drag-and-Drop Implementation</h3>
+<p>Icon reordering relies on GNOME Shell’s internal Drag-and-Drop
+(<code>Dnd.js</code>) framework, which hooks into Clutter event actors
+to track pointer and touch states.</p>
+<p>When a user clicks and holds an application icon:</p>
+<ol type="1">
+<li><strong>Grab State:</strong> The icon enters a drag state, slightly
+scaling up and reducing opacity to indicate detachment from its fixed
+grid position.</li>
+<li><strong>Dynamic Slot Calculation:</strong> As the icon is dragged
+across the grid, GNOME Shell continuously calculates the closest valid
+grid coordinate based on pointer coordinates.</li>
+<li><strong>Reflow Animations:</strong> Neighboring icons dynamically
+slide out of the way in real time to open a visual placeholder for the
+dragged item, giving immediate visual feedback before the drop
+occurs.</li>
+</ol>
+<h3 id="boundary-detection-and-inter-page-movement">Boundary Detection
+and Inter-Page Movement</h3>
+<p>Moving an icon across pages involves boundary-sensing logic built
+into the grid viewport:</p>
+<ul>
+<li><strong>Edge Detection:</strong> When an icon is dragged near the
+left or right edge of the display, GNOME Shell triggers an edge-dwell
+timer.</li>
+<li><strong>Page Flipping:</strong> Holding the item at the screen
+boundary for a brief threshold triggers an automatic horizontal scroll
+to the adjacent page, allowing seamless multi-page organization without
+releasing the pointer.</li>
+</ul>
+<h3 id="folder-creation-and-state-persistence">Folder Creation and State
+Persistence</h3>
+<p>Drag-and-drop interactions also support grouping:</p>
+<ul>
+<li><strong>Folder Generation:</strong> Dropping an application icon
+directly onto another icon initiates folder creation. GNOME Shell
+generates a <code>FolderIcon</code> actor, combines the two
+applications, and assigns a default folder name based on desktop
+category metadata.</li>
+<li><strong>State Persistence:</strong> Custom icon layouts, page
+allocations, and folder structures do not rely on local file structures.
+Instead, GNOME Shell serializes the layout directly into
+<code>dconf</code> under the GSettings path
+<code>org.gnome.shell.app-picker-layout</code>. This dictionary stores
+the precise page index, position, and folder grouping for every
+application, ensuring the customized grid persists across reboots and
+shell restarts.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Per-Application Volume Control Explained - gnome</title>
+    <meta name="description" content="This article explores how the GNOME desktop environment dynamically manages audio stream volumes for individual applications. It covers the interaction between the GNOME user interface and underlying sound servers like PipeWire and PulseAudio, explaining">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-per-application-volume-control-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Per-Application Volume Control Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-per-application-volume-control-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how the GNOME desktop environment dynamically manages audio stream volumes for individual applications. It covers the interaction between the GNOME user interface and underlying sound servers like PipeWire and PulseAudio, explaining" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-per-application-volume-control-explained">GNOME
+Per-Application Volume Control Explained</h1>
+<p>This article explores how the GNOME desktop environment dynamically
+manages audio stream volumes for individual applications. It covers the
+interaction between the GNOME user interface and underlying sound
+servers like PipeWire and PulseAudio, explaining how audio streams are
+created, identified, adjusted in real time, and persisted across
+sessions.</p>
+<h3 id="the-underlying-sound-server-architecture">The Underlying Sound
+Server Architecture</h3>
+<p>GNOME does not process audio signals directly. Instead, it interfaces
+with a system sound server—traditionally PulseAudio, and in modern
+distributions, PipeWire operating via its PulseAudio-compatibility layer
+(<code>pipewire-pulse</code>).</p>
+<p>When an application plays sound, it creates a playback client that
+requests an audio output stream. The sound server represents this stream
+as an independent entity—a "sink input" in PulseAudio or a "stream node"
+in PipeWire. Each stream is isolated from other active streams,
+maintaining its own volume, mute state, channel map, and routing target
+before the server mixes them together into the hardware master output
+(the sink).</p>
+<h3 id="real-time-communication-via-libgvc">Real-Time Communication via
+libgvc</h3>
+<p>GNOME communicates with the audio server through an internal library
+known as <code>libgvc</code> (GNOME Volume Control), which wraps the
+standard PulseAudio client API.</p>
+<ol type="1">
+<li><strong>Event Listening:</strong> When an application opens an audio
+stream, the sound server broadcasts an event over a local UNIX domain
+socket. <code>libgvc</code> listens for these events and instantiates an
+internal representation of the stream.</li>
+<li><strong>Metadata Extraction:</strong> The sound server attaches
+metadata properties to the stream, such as
+<code>application.name</code>, <code>application.id</code>,
+<code>application.icon_name</code>, and process IDs (PID). GNOME uses
+this metadata to associate the stream with a visible desktop application
+and display the correct icon and label.</li>
+<li><strong>Volume Modulation:</strong> When a user moves an
+application's volume slider in GNOME Settings or a panel extension,
+GNOME sends an asynchronous command back to the sound server via the API
+(e.g., <code>pa_context_set_sink_input_volume</code>). The sound server
+applies digital gain adjustments directly to that specific stream buffer
+in memory without modifying the global hardware master volume.</li>
+</ol>
+<h3 id="dynamic-stream-lifecycle">Dynamic Stream Lifecycle</h3>
+<p>Audio streams in GNOME are strictly dynamic. An application does not
+appear in GNOME’s volume settings merely by being open; it must actively
+register an output stream with the sound server.</p>
+<p>Once an application ceases playback and closes its stream, the sound
+server destroys the sink input node. <code>libgvc</code> catches the
+removal event, causing GNOME to immediately remove the corresponding
+slider from the interface to prevent stale controls.</p>
+<h3 id="volume-persistence-with-session-managers">Volume Persistence
+with Session Managers</h3>
+<p>To prevent individual application volumes from resetting when an
+application closes or pauses playback, the sound server relies on a
+session manager:</p>
+<ul>
+<li><strong>PulseAudio:</strong> Uses
+<code>module-stream-restore</code>. This module stores volume levels in
+an internal database, keyed to the application identifier (such as the
+binary name or <code>.desktop</code> file name).</li>
+<li><strong>PipeWire:</strong> Employs WirePlumber or the legacy
+<code>pipewire-media-session</code>. WirePlumber maintains state files
+in the user's home directory that record routing preferences, stream
+volumes, and mute states mapped to application properties.</li>
+</ul>
+<p>When an application starts a new stream, the session manager
+intercepts the creation request, checks its persistent database for a
+matching application key, and applies the saved volume offset before the
+audio begins playing.</p>
+<h3 id="sandboxed-applications-and-portals">Sandboxed Applications and
+Portals</h3>
+<p>For sandboxed applications, such as those running via Flatpak,
+dynamic stream control involves the XDG Desktop Portal system. The
+sandboxed client interacts with PipeWire either directly or through the
+portal, which validates permissions. PipeWire preserves the
+application's unique sandbox ID throughout the pipeline, enabling GNOME
+to accurately identify, label, and isolate the sandboxed process's audio
+stream just like a native host process.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

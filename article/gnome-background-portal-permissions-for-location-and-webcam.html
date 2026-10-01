@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Background Portal Permissions for Location and Webcam - gnome</title>
+    <meta name="description" content="GNOME restricts unauthorized access to sensitive hardware and user data by utilizing the XDG Desktop Portal framework, a centralized permission store, and background runtime monitors. When sandboxed applications (such as Flatpaks) request access to webca">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-background-portal-permissions-for-location-and-webcam">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Background Portal Permissions for Location and Webcam - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-background-portal-permissions-for-location-and-webcam" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME restricts unauthorized access to sensitive hardware and user data by utilizing the XDG Desktop Portal framework, a centralized permission store, and background runtime monitors. When sandboxed applications (such as Flatpaks) request access to webca" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1
+id="gnome-background-portal-permissions-for-location-and-webcam">GNOME
+Background Portal Permissions for Location and Webcam</h1>
+<p>GNOME restricts unauthorized access to sensitive hardware and user
+data by utilizing the XDG Desktop Portal framework, a centralized
+permission store, and background runtime monitors. When sandboxed
+applications (such as Flatpaks) request access to webcam streams or
+geolocation while running in the background, GNOME coordinates between
+D-Bus interfaces, system daemons like PipeWire and Geoclue, and GNOME
+Shell indicators. This architecture ensures that background services
+cannot covertly capture video or track user movement without explicit,
+persistent user consent and continuous visual feedback.</p>
+<h3 id="the-portal-framework-and-d-bus-communication">The Portal
+Framework and D-Bus Communication</h3>
+<p>The core of GNOME's permission handling is
+<code>xdg-desktop-portal</code> combined with its desktop-specific
+backend, <code>xdg-desktop-portal-gnome</code>. When an application
+inside a sandbox attempts to access restricted resources, it bypasses
+direct device access (such as <code>/dev/video*</code>) and instead
+makes a request over the D-Bus session bus to the appropriate portal
+interface:</p>
+<ul>
+<li><strong>Camera Portal:</strong>
+<code>org.freedesktop.portal.Camera</code></li>
+<li><strong>Location Portal:</strong>
+<code>org.freedesktop.portal.Location</code></li>
+<li><strong>Background Portal:</strong>
+<code>org.freedesktop.portal.Background</code></li>
+</ul>
+<p><code>xdg-desktop-portal</code> routes these requests to
+<code>xdg-desktop-portal-gnome</code>, which triggers native GNOME Shell
+dialogs to request user approval if the permission has not already been
+granted.</p>
+<h3 id="managing-webcam-streams-via-pipewire">Managing Webcam Streams
+via PipeWire</h3>
+<p>GNOME does not grant applications raw device access to webcams.
+Instead, video streaming relies on PipeWire's multimedia routing
+framework:</p>
+<ol type="1">
+<li><strong>Request and Prompt:</strong> The application requests a
+camera session through the Camera portal. If not previously allowed,
+GNOME displays an access dialog.</li>
+<li><strong>PipeWire Node Assignment:</strong> Upon approval, the portal
+requests a restricted PipeWire stream. PipeWire creates a sandboxed file
+descriptor that points strictly to the negotiated video stream.</li>
+<li><strong>Handoff:</strong> The file descriptor is passed back across
+the sandbox boundary. The application interacts with PipeWire, having no
+awareness of or access to the underlying hardware node.</li>
+<li><strong>Revocation:</strong> If permissions are revoked or the
+session is terminated, GNOME signals PipeWire to sever the stream,
+instantly cutting access.</li>
+</ol>
+<h3 id="handling-geolocation-via-geoclue">Handling Geolocation via
+Geoclue</h3>
+<p>Location tracking is handled similarly through an integration between
+the Location portal and Geoclue, the system-level location service:</p>
+<ol type="1">
+<li><strong>Portal Mediation:</strong> An application requests
+continuous or one-off location updates through the Location portal.</li>
+<li><strong>Policy Evaluation:</strong> GNOME checks its internal
+permission database to determine whether the app is authorized and
+whether location services are globally enabled.</li>
+<li><strong>Accuracy Throttling:</strong> The portal allows GNOME to
+deliver differing accuracy tiers (city-level, street-level, or exact
+coordinates) depending on the configuration and permissions
+granted.</li>
+<li><strong>Data Delivery:</strong> Geoclue supplies location fixes to
+the portal, which forwards them to the application. If the global
+location switch is toggled off in GNOME Settings, the portal terminates
+the data feed immediately.</li>
+</ol>
+<h3 id="background-access-control">Background Access Control</h3>
+<p>Accessing data while an application lacks an open, focused window
+requires clearing the Background portal. GNOME implements specific
+safeguards to prevent background spying:</p>
+<ul>
+<li><strong>Background Registration:</strong> When an application seeks
+to persist without an active window, it calls the
+<code>Background</code> portal interface. GNOME records whether the
+application is permitted to autostart or run persistently.</li>
+<li><strong>Permission Checks on Stream Requests:</strong> If an
+application requests camera frames or location data while backgrounded,
+GNOME verifies both the hardware-specific permission (Camera/Location)
+and the background execution permission. If the app is suspended or
+denied background privileges, access requests are rejected.</li>
+<li><strong>Top Bar Privacy Indicators:</strong> When any
+application—foreground or background—receives location data or accesses
+a camera via PipeWire, GNOME Shell displays prominent privacy icons in
+the top panel. Clicking these indicators reveals which application is
+active, allowing users to close the app or revoke permissions
+immediately.</li>
+</ul>
+<h3 id="permission-storage-and-management">Permission Storage and
+Management</h3>
+<p>All user decisions are stored persistently in the
+<code>xdg-permission-store</code>, a dedicated database managed by the
+portal service.</p>
+<p>Users can view and alter these settings at any time within GNOME:</p>
+<ul>
+<li><strong>GNOME Settings (Control Center):</strong> The <em>Privacy
+&amp; Security</em> panel provides granular toggles for the Camera,
+Location Services, and Background Apps, enabling users to grant, modify,
+or revoke permissions on a per-application basis.</li>
+<li><strong>Command-Line Administration:</strong> Flatpak users can
+inspect and reset these permissions manually using the
+<code>flatpak permission-show</code> and
+<code>flatpak permission-reset</code> commands to alter entries in the
+permission store directly.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

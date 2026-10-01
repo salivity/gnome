@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Does GNOME Web Integrate With WebKitGTK? - gnome</title>
+    <meta name="description" content="GNOME Web, codenamed Epiphany, delivers a tailored browsing experience by combining the GNOME application framework with WebKitGTK, the official GTK port of the open-source WebKit rendering engine. Rather than treating the browser engine as an isolated b">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-does-gnome-web-integrate-with-web-kit-gtk">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Does GNOME Web Integrate With WebKitGTK? - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-does-gnome-web-integrate-with-web-kit-gtk" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Web, codenamed Epiphany, delivers a tailored browsing experience by combining the GNOME application framework with WebKitGTK, the official GTK port of the open-source WebKit rendering engine. Rather than treating the browser engine as an isolated b" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-does-gnome-web-integrate-with-webkitgtk">How Does GNOME Web
+Integrate With WebKitGTK?</h1>
+<p>GNOME Web, codenamed Epiphany, delivers a tailored browsing
+experience by combining the GNOME application framework with WebKitGTK,
+the official GTK port of the open-source WebKit rendering engine. Rather
+than treating the browser engine as an isolated black box, GNOME Web
+embeds WebKitGTK directly into the desktop environment's software stack.
+This article explores the architecture behind this integration,
+examining how the browser leverages GTK widgets, Linux desktop
+technologies, process isolation, and multimedia pipelines to create a
+fast, cohesive, and deeply integrated web client.</p>
+<h2 id="the-architecture-webkitgtk-as-a-native-component">The
+Architecture: WebKitGTK as a Native Component</h2>
+<p>At the foundation of GNOME Web is WebKitGTK, which packages WebKit’s
+core layout, styling, and JavaScript execution engines into native
+GObject-based APIs.</p>
+<p>Unlike cross-platform browsers such as Mozilla Firefox or Google
+Chrome—which rely on custom UI toolkits and abstraction layers—GNOME Web
+is constructed directly on GTK and Libadwaita. Through the
+<code>WebKitWebView</code> widget, WebKitGTK can be placed into a GTK
+container just like any standard button, label, or layout box. This
+enables the browser to share the same event loops, drawing contexts, and
+accessibility hooks used by standard desktop utilities.</p>
+<p>Because WebKitGTK implements standard GNOME conventions, development
+remains modular. The Epiphany codebase focuses on user-facing features,
+session state, tab management, and UI polish, offloading web standard
+parsing, CSS rendering, and DOM manipulation to the underlying
+library.</p>
+<h2 id="deep-desktop-integration">Deep Desktop Integration</h2>
+<p>The use of WebKitGTK gives GNOME Web structural advantages when
+running within Linux desktop environments:</p>
+<ul>
+<li><strong>Theme and UI Consistency:</strong> WebKitGTK styles standard
+HTML form controls—such as buttons, text fields, and dropdowns—using the
+active GTK theme rather than generic web styles. The browser window,
+header bars, and navigation dialogs follow GNOME's Human Interface
+Guidelines (HIG) natively via Libadwaita.</li>
+<li><strong>GSettings Configuration:</strong> Network proxy rules,
+security lockdowns, and browser configuration options integrate directly
+with GSettings and the GNOME Control Center, allowing system
+administrators to enforce kiosk modes and central configurations.</li>
+<li><strong>Hardware and Display Pipelines:</strong> WebKitGTK uses
+Wayland protocols natively, supporting smooth kinetic scrolling,
+touchpad gestures (such as two-finger swipe navigation), and HiDPI
+scaling without relying on X11 emulation.</li>
+<li><strong>System Keyring:</strong> Web credential management
+interfaces with the GNOME Keyring via Secret Service APIs, ensuring
+saved passwords align with system security policies.</li>
+</ul>
+<h2 id="multi-process-isolation-and-security">Multi-Process Isolation
+and Security</h2>
+<p>Modern web standards require strong security boundaries between
+untrusted site content and the local operating system. GNOME Web
+utilizes WebKitGTK’s multi-process model to separate execution
+environments:</p>
+<ol type="1">
+<li><strong>UI Process:</strong> The main GNOME Web process handles user
+input, tab bars, history, and top-level interface rendering.</li>
+<li><strong>Web Process:</strong> WebKitGTK spawns independent web
+processes responsible for executing JavaScript, DOM parsing, and layout
+calculation for active tabs.</li>
+<li><strong>Network Process:</strong> Network requests, cookie stores,
+and cache operations run in their own dedicated thread space, separating
+data transport from script execution.</li>
+</ol>
+<p>On modern Linux installations, these WebKit subprocesses are
+sandboxed using Bubblewrap. Untrusted web assets are restricted from
+accessing arbitrary paths in the user's home directory or making
+unauthorized IPC calls, matching modern containerized security
+models.</p>
+<h2 id="native-media-handling-with-gstreamer">Native Media Handling with
+GStreamer</h2>
+<p>Video and audio decoding can be a significant source of overhead in
+generic web browsers. WebKitGTK delegates media processing directly to
+GStreamer, the core multimedia framework of GNOME.</p>
+<p>By relying on GStreamer pipelines, GNOME Web automatically gains
+hardware-accelerated video decoding via VA-API and VDPAU when compatible
+GPU drivers are installed. Furthermore, WebKitGTK supports Media Source
+Extensions (MSE) through GStreamer elements, delivering smooth playback
+for modern streaming platforms without bundling redundant third-party
+codecs.</p>
+<h2 id="a-cohesive-web-platform">A Cohesive Web Platform</h2>
+<p>By embedding WebKitGTK as a first-class GTK widget, GNOME Web avoids
+the bloat and interface friction typical of foreign browser toolkits.
+The integration allows Epiphany to act as an authentic component of the
+desktop while maintaining full support for modern web standards,
+hardware acceleration, and process-level isolation.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

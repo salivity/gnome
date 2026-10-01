@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Cellular Configuration via ModemManager - gnome</title>
+    <meta name="description" content="The GNOME desktop environment provides seamless cellular broadband integration through a unified software stack consisting of the GNOME Control Center, NetworkManager, and ModemManager. By abstracting complex cellular hardware protocols behind system D-B">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-cellular-configuration-via-modem-manager">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Cellular Configuration via ModemManager - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-cellular-configuration-via-modem-manager" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop environment provides seamless cellular broadband integration through a unified software stack consisting of the GNOME Control Center, NetworkManager, and ModemManager. By abstracting complex cellular hardware protocols behind system D-B" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-cellular-configuration-via-modemmanager">GNOME Cellular
+Configuration via ModemManager</h1>
+<p>The GNOME desktop environment provides seamless cellular broadband
+integration through a unified software stack consisting of the GNOME
+Control Center, NetworkManager, and ModemManager. By abstracting complex
+cellular hardware protocols behind system D-Bus interfaces, GNOME allows
+users to discover mobile modems, select service providers, unlock SIM
+cards, and establish mobile data connections directly from the graphical
+user interface.</p>
+<h3 id="the-underlying-software-architecture">The Underlying Software
+Architecture</h3>
+<p>GNOME does not interact with cellular hardware directly. Instead, it
+relies on a layered architecture:</p>
+<ul>
+<li><strong>ModemManager:</strong> A system daemon that controls mobile
+broadband devices (2G, 3G, 4G, and 5G modems). It supports multiple
+hardware protocols, including legacy AT commands, Qualcomm MSM Interface
+(QMI), and Mobile Broadband Interface Model (MBIM).</li>
+<li><strong>NetworkManager:</strong> The core Linux network management
+daemon. It treats ModemManager as a backend for cellular devices,
+translating modem states into standard network connections.</li>
+<li><strong>GNOME Control Center &amp; GNOME Shell:</strong> The
+graphical frontend. GNOME Settings communicates with NetworkManager via
+D-Bus to display network controls, while the GNOME Shell top panel
+displays connection status, signal strength, and quick-toggle
+options.</li>
+</ul>
+<h3 id="hardware-detection-and-initialization">Hardware Detection and
+Initialization</h3>
+<p>When an internal M.2/PCIe modem or an external USB dongle is
+connected, Linux kernel drivers (such as <code>cdc_mbim</code>,
+<code>qmi_wwan</code>, or serial drivers) expose device nodes.
+ModemManager detects these devices via <code>udev</code> rules and
+begins probing the hardware.</p>
+<p>Once initialized, ModemManager reads essential data from the SIM card
+and modem, including the International Mobile Subscriber Identity
+(IMSI), International Mobile Equipment Identity (IMEI), and available
+network technologies. It then creates a D-Bus object representing the
+modem. NetworkManager detects this object and registers a new cellular
+device available for configuration.</p>
+<h3 id="configuration-via-gnome-settings">Configuration via GNOME
+Settings</h3>
+<p>When a cellular device is detected, a "Cellular" panel automatically
+appears in the GNOME Settings application. The configuration workflow
+proceeds as follows:</p>
+<ol type="1">
+<li><strong>SIM Management:</strong> If the SIM card requires a PIN,
+GNOME prompts the user with an authentication dialog. ModemManager
+handles the verification against the SIM card.</li>
+<li><strong>Provider and APN Setup:</strong> GNOME includes a wizard
+that queries the <code>mobile-broadband-provider-info</code> database.
+By reading the Mobile Country Code (MCC) and Mobile Network Code (MNC)
+provided by ModemManager, GNOME can automatically identify the carrier
+and pre-populate the Access Point Name (APN), username, and
+password.</li>
+<li><strong>Manual Customization:</strong> Users can manually override
+APN settings, configure roaming preferences, and switch between network
+modes (such as preferring 4G or 5G) directly from the connection profile
+settings.</li>
+</ol>
+<h3 id="connection-lifecycle-management">Connection Lifecycle
+Management</h3>
+<p>Once the profile is saved, toggling the cellular switch in GNOME
+triggers NetworkManager to activate the connection. NetworkManager
+instructs ModemManager to register with the cellular network and
+initiate a packet data session (PDP context).</p>
+<p>After the cellular carrier assigns an IP address and DNS servers,
+ModemManager returns the configuration to NetworkManager, which sets up
+network routes and IP configurations on the associated network
+interface. During an active session, ModemManager continually monitors
+signal quality and network state, passing real-time signal strength
+indicators and network generation labels (e.g., LTE, 5G) to the GNOME
+Shell status bar.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

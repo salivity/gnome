@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Extensions One-Click Installation Works - gnome</title>
+    <meta name="description" content="The GNOME Extensions website facilitates seamless, one-click installation of community add-ons by bridging the gap between web browsers and the local desktop environment. This capability relies on a multi-tiered communication pipeline consisting of a ded">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-extensions-one-click-installation-works">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Extensions One-Click Installation Works - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-extensions-one-click-installation-works" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Extensions website facilitates seamless, one-click installation of community add-ons by bridging the gap between web browsers and the local desktop environment. This capability relies on a multi-tiered communication pipeline consisting of a ded" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-extensions-one-click-installation-works">How GNOME
+Extensions One-Click Installation Works</h1>
+<p>The GNOME Extensions website facilitates seamless, one-click
+installation of community add-ons by bridging the gap between web
+browsers and the local desktop environment. This capability relies on a
+multi-tiered communication pipeline consisting of a dedicated browser
+extension, a native messaging host on the operating system, and the
+GNOME Shell's internal D-Bus application programming interfaces (APIs).
+Together, these components translate a user's web interaction into
+real-time desktop configuration changes without requiring manual file
+downloads, command-line usage, or desktop restarts.</p>
+<h3 id="the-three-part-architecture">The Three-Part Architecture</h3>
+<p>The one-click installation system relies on three interconnected
+components:</p>
+<ol type="1">
+<li><strong>The Web Interface and Browser Extension:</strong> The
+official website serves extension metadata and provides a simple on/off
+toggle switch for each add-on. Because standard web pages are isolated
+in a sandbox and cannot directly modify operating system files, a
+companion browser extension (available for Firefox, Chrome, and
+Chromium-based browsers) acts as the web-side intermediary.</li>
+<li><strong>The Native Messaging Connector:</strong> Operating systems
+running GNOME include a native package—traditionally called
+<code>chrome-gnome-shell</code> or <code>gnome-browser-connector</code>.
+This component implements the browser's Native Messaging API, allowing
+the sandboxed browser extension to execute a specific, pre-approved
+native binary.</li>
+<li><strong>GNOME Shell D-Bus Interface:</strong> The GNOME Shell
+desktop environment exposes an inter-process communication (IPC) service
+over D-Bus under the interface name
+<code>org.gnome.Shell.Extensions</code>. This interface handles requests
+to query installed extensions, install new ones, enable or disable them,
+and open configuration windows.</li>
+</ol>
+<h3 id="the-step-by-step-installation-process">The Step-by-Step
+Installation Process</h3>
+<p>When a user visits an extension page and flips the toggle switch to
+"ON," the system executes the following sequence:</p>
+<ul>
+<li><strong>Detection:</strong> The browser extension verifies that the
+native connector is present on the host system and queries the GNOME
+Shell version. The website updates its interface to match the user's
+desktop state, displaying currently installed extensions and compatible
+versions.</li>
+<li><strong>Instruction Dispatch:</strong> When the toggle is clicked,
+the website sends an instruction to the browser extension, which formats
+a message and passes it via native messaging to the local
+connector.</li>
+<li><strong>D-Bus Call:</strong> The local connector invokes the
+<code>InstallRemoteExtension</code> method on the GNOME Shell D-Bus
+interface, passing the unique UUID of the extension.</li>
+<li><strong>Confirmation Prompt:</strong> GNOME Shell displays a native
+desktop modal dialog asking the user to confirm the installation of the
+third-party code.</li>
+<li><strong>Download and Extraction:</strong> Once approved by the user,
+GNOME Shell directly downloads the extension package (<code>.zip</code>)
+from the GNOME infrastructure, verifies its structure, and extracts it
+to the user's local directory
+(<code>~/.local/share/gnome-shell/extensions/&lt;uuid&gt;</code>).</li>
+<li><strong>Instant Activation:</strong> GNOME Shell dynamically links
+the extension into its JavaScript runtime (GJS). The extension begins
+running immediately, and the website's toggle switch flips to the active
+state to reflect the live status.</li>
+</ul>
+<h3 id="removal-and-state-synchronization">Removal and State
+Synchronization</h3>
+<p>The same architecture handles updates and uninstallation. Toggling an
+extension to "OFF" or clicking the delete icon sends a corresponding
+disable or uninstall command through the D-Bus interface. The GNOME
+Shell disables the code in memory and, if requested, deletes the
+extension files from the filesystem. This bidirectional communication
+ensures that any change made directly through native system utilities
+(such as the GNOME Extensions app) is immediately mirrored on the
+website when the page is refreshed.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

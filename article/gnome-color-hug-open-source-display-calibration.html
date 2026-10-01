@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME ColorHug Open Source Display Calibration - gnome</title>
+    <meta name="description" content="The GNOME ColorHug project was created to provide the open-source community with an affordable, fully open-source hardware colorimeter for display calibration. Designed primarily for Linux environments, it bridges the gap between high-cost, proprietary d">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-color-hug-open-source-display-calibration">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME ColorHug Open Source Display Calibration - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-color-hug-open-source-display-calibration" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME ColorHug project was created to provide the open-source community with an affordable, fully open-source hardware colorimeter for display calibration. Designed primarily for Linux environments, it bridges the gap between high-cost, proprietary d" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-colorhug-open-source-display-calibration">GNOME ColorHug
+Open Source Display Calibration</h1>
+<p>The GNOME ColorHug project was created to provide the open-source
+community with an affordable, fully open-source hardware colorimeter for
+display calibration. Designed primarily for Linux environments, it
+bridges the gap between high-cost, proprietary display calibration tools
+and the need for accurate color management in free and open-source
+software workflows. This article explores the purpose, architectural
+significance, and lasting impact of the ColorHug project in the
+open-source hardware and digital imaging ecosystems.</p>
+<p>Before the introduction of ColorHug, display calibration on Linux was
+notoriously difficult. Most commercial colorimeters relied on
+proprietary, closed-source drivers, Windows- or macOS-only software
+suites, and locked firmware. Linux users were forced to rely on
+reverse-engineered drivers through projects like ArgyllCMS, which, while
+capable, often suffered when manufacturers silently altered device
+hardware or firmware revisions.</p>
+<p>Developed by GNOME developer Richard Hughes, the primary purpose of
+the ColorHug project was to eliminate these proprietary barriers. By
+releasing the complete hardware schematics, bill of materials, firmware,
+and companion software under open-source licenses, ColorHug ensured that
+users had total control over their calibration hardware. It was
+explicitly built to integrate seamlessly with standard open-source color
+infrastructure, including the system daemon <code>colord</code> and
+GNOME’s native Color Management settings.</p>
+<p>At its core, the device functions as an optical sensor that measures
+test color patches displayed on a monitor. The hardware uses a sensor to
+convert light into frequency, which the onboard microcontroller
+translates into color coordinates via simple USB-HID communication. This
+data is then used to generate standard International Color Consortium
+(ICC) profiles, ensuring that displays render colors accurately across
+various creative workflows, such as photography, graphic design, and
+video editing.</p>
+<p>Beyond functionality, the project aimed to dramatically lower the
+cost of entry for display calibration. Commercial colorimeters often
+cost hundreds of dollars, placing accurate color calibration out of
+reach for casual users and open-source hobbyists. ColorHug achieved a
+sub-$100 price point by utilizing off-the-shelf electronic components
+and minimalist, functional packaging.</p>
+<p>Although advancements in monitor technologies—such as wide-gamut LED,
+OLED, and complex backlight spectrums—eventually highlighted the
+limitations of the original ColorHug's sensor design, the project
+achieved its core mission. It demonstrated that open-source hardware
+could successfully interface with desktop operating systems, proved that
+vendor lock-in in display profiling was unnecessary, and established a
+foundation for open color management standards that Linux systems
+continue to benefit from today.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

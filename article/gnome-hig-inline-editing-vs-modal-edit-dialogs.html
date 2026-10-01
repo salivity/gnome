@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME HIG: Inline Editing vs Modal Edit Dialogs - gnome</title>
+    <meta name="description" content="The GNOME Human Interface Guidelines (HIG) provide clear direction on when to implement direct inline editing versus modal edit dialogs to balance workflow efficiency with user safety. This article examines the core purposes behind these guidelines, deta">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-hig-inline-editing-vs-modal-edit-dialogs">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME HIG: Inline Editing vs Modal Edit Dialogs - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-hig-inline-editing-vs-modal-edit-dialogs" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Human Interface Guidelines (HIG) provide clear direction on when to implement direct inline editing versus modal edit dialogs to balance workflow efficiency with user safety. This article examines the core purposes behind these guidelines, deta" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-hig-inline-editing-vs-modal-edit-dialogs">GNOME HIG:
+Inline Editing vs Modal Edit Dialogs</h1>
+<p>The GNOME Human Interface Guidelines (HIG) provide clear direction on
+when to implement direct inline editing versus modal edit dialogs to
+balance workflow efficiency with user safety. This article examines the
+core purposes behind these guidelines, detailing how direct manipulation
+maintains user flow and context, while modal dialogs are reserved for
+complex, high-stakes tasks requiring explicit confirmation.</p>
+<h3 id="the-purpose-of-direct-inline-editing">The Purpose of Direct
+Inline Editing</h3>
+<p>Direct inline editing allows users to modify content directly in
+place within the main application view, rather than opening a secondary
+window or overlay.</p>
+<p>The primary goals of inline editing in the GNOME HIG are:</p>
+<ul>
+<li><strong>Preserving Context and Flow:</strong> Users can edit text,
+labels, or properties without losing sight of the surrounding interface.
+By keeping the user in the primary view, the interface minimizes mental
+context switching and avoids interrupting the user's primary task.</li>
+<li><strong>Direct Manipulation:</strong> Aligned with GNOME's core
+design philosophy, direct manipulation makes digital objects behave more
+intuitively. Clicking on an item to edit it directly—such as renaming a
+file in GNOME Files or editing a contact detail—creates a more seamless,
+physical-like interaction.</li>
+<li><strong>Reducing Interface Clutter:</strong> Avoiding pop-up dialogs
+reduces window proliferation on the desktop. It removes unnecessary
+"OK/Cancel" decision points for trivial, easily reversible edits.</li>
+</ul>
+<h3 id="the-purpose-of-modal-edit-dialogs">The Purpose of Modal Edit
+Dialogs</h3>
+<p>Modal edit dialogs temporarily block interaction with the parent
+window until the user completes the action or dismisses the dialog.</p>
+<p>The GNOME HIG restricts modal dialogs to specific scenarios for
+several reasons:</p>
+<ul>
+<li><strong>Handling Complexity:</strong> When an editing task involves
+multiple interdependent fields, complex validation rules, or advanced
+configuration options, a dedicated dialog provides the structured space
+required to organize these controls cleanly.</li>
+<li><strong>Preventing Accidental Changes:</strong> For destructive,
+irreversible, or sensitive modifications, a modal dialog introduces
+necessary friction. It creates an explicit boundary where changes are
+only applied once the user clicks a definitive action button, such as
+"Save" or "Apply."</li>
+<li><strong>Focused Attention:</strong> Modal dialogs are designed to
+capture complete focus when an action requires critical user attention
+or system-level configuration, ensuring that background tasks do not
+interfere with the ongoing decision.</li>
+</ul>
+<h3 id="summary-of-application">Summary of Application</h3>
+<p>Under the GNOME HIG, inline editing is the preferred default for
+simple, discrete, and easily undoable modifications. Modal dialogs serve
+as an intentional fallback, reserved strictly for complex forms,
+high-risk operations, or tasks that require explicit confirmation before
+state changes take effect.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

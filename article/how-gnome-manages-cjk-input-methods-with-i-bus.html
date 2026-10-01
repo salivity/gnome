@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Manages CJK Input Methods with IBus - gnome</title>
+    <meta name="description" content="The GNOME desktop manages complex script input for languages such as Chinese, Japanese, and Korean (CJK) by deeply integrating the Intelligent Input Bus (IBus) directly into its core shell and settings architecture. Rather than treating input method engi">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-manages-cjk-input-methods-with-i-bus">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Manages CJK Input Methods with IBus - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-manages-cjk-input-methods-with-i-bus" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop manages complex script input for languages such as Chinese, Japanese, and Korean (CJK) by deeply integrating the Intelligent Input Bus (IBus) directly into its core shell and settings architecture. Rather than treating input method engi" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-manages-cjk-input-methods-with-ibus">How GNOME Manages
+CJK Input Methods with IBus</h1>
+<p>The GNOME desktop manages complex script input for languages such as
+Chinese, Japanese, and Korean (CJK) by deeply integrating the
+Intelligent Input Bus (IBus) directly into its core shell and settings
+architecture. Rather than treating input method engines as separate,
+third-party overlay applications, GNOME embeds IBus control into
+<code>gnome-shell</code> and <code>gnome-control-center</code>. This
+system intercepts keystrokes, delegates character composition to
+specialized language engines, and renders candidate selection popups
+natively within the desktop environment, ensuring a uniform typing
+experience across both Wayland and X11 sessions.</p>
+<h3 id="native-integration-in-gnome-shell">Native Integration in GNOME
+Shell</h3>
+<p>Historically, input method frameworks ran as separate daemon
+processes with independent tray icons and floating candidate windows.
+Starting with GNOME 3.6, GNOME integrated IBus directly into the
+desktop's core infrastructure.</p>
+<p>When an input source requiring an Input Method Editor (IME) is added,
+<code>gnome-shell</code> acts as the interface manager for IBus. It uses
+the <code>ibus-daemon</code> as a background service via D-Bus IPC
+(Inter-Process Communication). Instead of allowing the IBus daemon to
+draw its own candidate panels, GNOME Shell queries IBus state and
+renders candidate lookup tables using native Clutter/Mutter UI
+components. This eliminates visual inconsistencies and avoids
+focus-stealing bugs common with standalone window overlays.</p>
+<h3 id="specialized-engines-for-cjk-scripts">Specialized Engines for CJK
+Scripts</h3>
+<p>Complex scripts cannot be mapped directly to a standard keyboard
+because thousands of logographic characters or phonetic syllabaries
+correspond to a limited number of Latin keys. IBus resolves this using
+modular language engines:</p>
+<ul>
+<li><strong>Chinese:</strong> Engines like <code>ibus-libpinyin</code>
+or <code>ibus-rime</code> process Pinyin or Cangjie inputs, mapping
+Latin keystrokes to Hanzi characters while applying frequency
+dictionaries and predictive algorithms.</li>
+<li><strong>Japanese:</strong> Engines such as <code>ibus-mozc</code>
+(based on Google Japanese Input) or <code>ibus-anthy</code> convert
+phonetic Kana or Romaji strings into mixed Hiragana, Katakana, and Kanji
+forms.</li>
+<li><strong>Korean:</strong> Engines like <code>ibus-hangul</code>
+combine individual Jamo consonants and vowels into rectangular Hangul
+syllable blocks in real time.</li>
+</ul>
+<p>When a user switches to a CJK input source using standard shortcuts
+(such as <code>Super + Space</code>), GNOME activates the corresponding
+engine through the IBus daemon.</p>
+<h3 id="the-input-processing-pipeline">The Input Processing
+Pipeline</h3>
+<p>The journey of a keystroke in GNOME occurs through a structured event
+pipeline:</p>
+<ol type="1">
+<li><strong>Interception:</strong> A key is pressed inside an
+application. The client application communicates through a client-side
+Input Method (IM) module (such as GTK's built-in IM module, Qt's IBus
+plugin, or standard Wayland text-input protocols).</li>
+<li><strong>Delegation:</strong> The IM module forwards the raw key
+event over D-Bus to the <code>ibus-daemon</code>, bypassing regular text
+insertion.</li>
+<li><strong>Composition:</strong> The active language engine evaluates
+the keystroke. It generates a "pre-edit" string (the unconverted
+phonetic text) and a list of matching candidate characters.</li>
+<li><strong>Display:</strong> GNOME Shell receives the candidate list
+and positions the candidate popup directly adjacent to the text cursor,
+providing visual options to the user.</li>
+<li><strong>Commit:</strong> When the user confirms a selection
+(typically with the Space key, a number key, or Return), IBus instructs
+the application's IM module to clear the pre-edit state and "commit" the
+resolved Unicode characters into the active text buffer.</li>
+</ol>
+<h3 id="modern-wayland-compatibility">Modern Wayland Compatibility</h3>
+<p>Under traditional X11 environments, input methods could inspect
+global keystrokes and position overlay windows freely. Wayland’s
+security model isolates applications from one another, preventing
+arbitrary windows from tracking keystrokes or detecting screen
+coordinates of text cursors in other apps.</p>
+<p>GNOME overcomes this limitation by implementing the
+<code>zwp_text_input_v3</code> Wayland protocol. The compositor (Mutter)
+directly mediates communication between the sandboxed application and
+IBus. Because the compositor knows the exact coordinates of the
+application's text cursor, GNOME Shell can reliably draw candidate
+popups in the correct position without violating Wayland's security
+boundaries.</p>
+<h3 id="centralized-configuration">Centralized Configuration</h3>
+<p>Users configure and switch CJK input engines directly through the
+"Keyboard" section of GNOME Settings, where IBus engines appear
+alongside standard keyboard layouts under "Input Sources." This unified
+approach allows GNOME to automatically manage input engine switching,
+layout-specific shortcuts, and per-window or system-wide input states
+without requiring external configuration utilities.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

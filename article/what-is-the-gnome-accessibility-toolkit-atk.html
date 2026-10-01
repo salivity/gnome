@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is the GNOME Accessibility Toolkit (ATK)? - gnome</title>
+    <meta name="description" content="The GNOME Accessibility Toolkit (ATK) is a foundational software library designed to make graphical user interfaces accessible to users with disabilities. By providing a standardized set of interfaces for user interface components, ATK enables assistive">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/what-is-the-gnome-accessibility-toolkit-atk">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="What Is the GNOME Accessibility Toolkit (ATK)? - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/what-is-the-gnome-accessibility-toolkit-atk" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Accessibility Toolkit (ATK) is a foundational software library designed to make graphical user interfaces accessible to users with disabilities. By providing a standardized set of interfaces for user interface components, ATK enables assistive" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="what-is-the-gnome-accessibility-toolkit-atk">What Is the GNOME
+Accessibility Toolkit (ATK)?</h1>
+<p>The GNOME Accessibility Toolkit (ATK) is a foundational software
+library designed to make graphical user interfaces accessible to users
+with disabilities. By providing a standardized set of interfaces for
+user interface components, ATK enables assistive technologies—such as
+screen readers, screen magnifiers, and alternative input devices—to
+query and interact with an application's visual elements. It acts as an
+essential bridge between standard desktop software and tools that adapt
+that software for diverse user needs.</p>
+<h3 id="the-role-of-atk-in-application-development">The Role of ATK in
+Application Development</h3>
+<p>At its core, ATK defines an abstraction layer between an
+application’s user interface (UI) and the underlying accessibility
+infrastructure. Rather than forcing developers to write custom hooks for
+every type of assistive device, ATK establishes a common language. When
+developers build applications using UI toolkits that implement ATK (such
+as GTK), standard widgets like buttons, text fields, checkboxes, and
+menus automatically convey their semantic meaning, state, and structure
+to external tools.</p>
+<h3 id="key-capabilities-and-interfaces">Key Capabilities and
+Interfaces</h3>
+<p>ATK functions through a collection of interfaces that describe the
+properties and behaviors of GUI components:</p>
+<ul>
+<li><strong>Roles and States:</strong> ATK defines the specific function
+of an element (such as a slider, push button, or dialog) and its current
+state (such as focused, checked, expanded, or sensitive).</li>
+<li><strong>Text and Value Manipulation:</strong> For dynamic
+components, ATK provides interfaces to read and manipulate text content,
+selections, attributes, and numerical ranges (such as volume controls or
+progress bars).</li>
+<li><strong>Actions:</strong> It allows assistive tools to
+programmatically trigger standard interactions, such as clicking a
+button or opening a dropdown menu.</li>
+<li><strong>Component Relations:</strong> ATK describes logical
+relationships between different UI elements, such as identifying which
+label describes a specific input field or which panel controls another
+view.</li>
+</ul>
+<h3 id="the-broader-accessibility-ecosystem">The Broader Accessibility
+Ecosystem</h3>
+<p>Within the Linux desktop environment, ATK does not communicate
+directly with assistive hardware. Instead, it feeds data into the
+Assistive Technology Service Provider Interface (AT-SPI) over an
+Inter-Process Communication (IPC) bus, typically D-Bus. Assistive
+applications, such as the Orca screen reader, read this AT-SPI data to
+present audio or braille feedback to the user. While newer developments
+in the GNOME ecosystem have integrated these features directly into GTK
+via modern protocols, ATK established the architectural blueprint for
+Linux UI accessibility.</p>
+<h3 id="developer-benefits">Developer Benefits</h3>
+<p>For developers, utilizing ATK-compliant toolkits eliminates the
+complexity of building accessibility features from scratch. By using
+native widgets, developers gain baseline accessibility by default. For
+custom or non-standard UI components, ATK provides the necessary APIs to
+manually expose accessibility data, ensuring that specialized software
+remains usable by everyone without compromising custom design.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

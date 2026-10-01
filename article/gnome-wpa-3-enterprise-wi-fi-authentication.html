@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME WPA3 Enterprise Wi-Fi Authentication - gnome</title>
+    <meta name="description" content="This article examines how the GNOME desktop environment handles authentication dialogs for WPA3 Enterprise Wi-Fi networks. It covers the underlying architecture involving NetworkManager and wpasupplicant, the interactive credential and certificate prompt">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-wpa-3-enterprise-wi-fi-authentication">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME WPA3 Enterprise Wi-Fi Authentication - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-wpa-3-enterprise-wi-fi-authentication" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article examines how the GNOME desktop environment handles authentication dialogs for WPA3 Enterprise Wi-Fi networks. It covers the underlying architecture involving NetworkManager and wpasupplicant, the interactive credential and certificate prompt" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-wpa3-enterprise-wi-fi-authentication">GNOME WPA3
+Enterprise Wi-Fi Authentication</h1>
+<p>This article examines how the GNOME desktop environment handles
+authentication dialogs for WPA3 Enterprise Wi-Fi networks. It covers the
+underlying architecture involving NetworkManager and
+<code>wpa_supplicant</code>, the interactive credential and certificate
+prompts presented to the user, and how GNOME safeguards enterprise
+connections using modern cryptographic standards and secure keyring
+storage.</p>
+<h3 id="the-underlying-architecture">The Underlying Architecture</h3>
+<p>GNOME does not handle Wi-Fi protocols directly. Instead, it relies on
+a layered stack:</p>
+<ol type="1">
+<li><strong><code>wpa_supplicant</code></strong>: Operates at the lowest
+level to manage IEEE 802.11i/802.1X handshakes, cipher suites, and the
+advanced cryptographic operations required by WPA3 Enterprise (such as
+Suite-B-192).</li>
+<li><strong>NetworkManager</strong>: The core Linux network daemon that
+controls connections, stores connection profiles, and requests missing
+credentials from desktop frontends via D-Bus.</li>
+<li><strong>GNOME Shell</strong>: Acts as the user interface agent. It
+listens for authentication requests from NetworkManager and renders the
+appropriate graphical dialogs.</li>
+</ol>
+<p>When you select a WPA3 Enterprise Service Set Identifier (SSID) in
+GNOME, NetworkManager recognizes the 802.1X security requirement. If a
+complete, valid configuration profile does not already exist,
+NetworkManager triggers an authentication secret request via D-Bus,
+prompting GNOME Shell to draw an authentication modal.</p>
+<h3 id="the-authentication-dialog">The Authentication Dialog</h3>
+<p>The dialog presented by GNOME dynamically adapts to the specific
+Extensible Authentication Protocol (EAP) method required by the network.
+For WPA3 Enterprise, common methods include <strong>EAP-TLS</strong>,
+<strong>PEAP</strong>, and <strong>EAP-TTLS</strong>.</p>
+<p>Depending on the configuration, the dialog prompts for:</p>
+<ul>
+<li><strong>EAP Method</strong>: A dropdown allowing users to select the
+authentication framework.</li>
+<li><strong>Identity and Passwords</strong>: Usernames, outer/anonymous
+identities, and passwords or private key passphrases.</li>
+<li><strong>CA Certificates</strong>: Selection of the root certificate
+authority file used to verify the authentication server.</li>
+<li><strong>User Certificates and Private Keys</strong>: File pickers
+for client-side authentication when using EAP-TLS.</li>
+<li><strong>Domain Validation</strong>: Fields to pin the expected
+server domain name, preventing credential forwarding to rogue access
+points.</li>
+</ul>
+<h3 id="wpa3-192-bit-security-mode-support">WPA3 192-Bit Security Mode
+Support</h3>
+<p>WPA3 Enterprise introduces a mandatory 192-bit security mode (often
+used in government and high-security enterprise environments) relying on
+Suite-B cryptography.</p>
+<p>When configured for 192-bit mode:</p>
+<ul>
+<li>The GNOME Network settings restrict cipher selection to GCMP-256 and
+require SHA-384-based certificate suites.</li>
+<li>The authentication dialog enforces strict validation rules,
+preventing connection attempts if the imported certificates do not meet
+Suite-B compliance (such as ECDSA with P-384 or RSA with 3072-bit
+minimum keys).</li>
+</ul>
+<h3 id="certificate-handling-and-security-warnings">Certificate Handling
+and Security Warnings</h3>
+<p>A critical aspect of the GNOME authentication process is server
+certificate verification:</p>
+<ul>
+<li><strong>Missing CA Certificates</strong>: If a user attempts to
+authenticate using PEAP or EAP-TTLS without specifying a Certificate
+Authority (CA) certificate, GNOME displays an explicit security warning.
+The UI flags the connection as insecure, requiring the user to manually
+check a bypass box acknowledging the risk of man-in-the-middle
+attacks.</li>
+<li><strong>System Trust Store Integration</strong>: Modern GNOME
+versions allow selecting certificates directly from the system trust
+anchor directory (<code>/etc/ssl/certs</code> or
+<code>/etc/pki/tls/certs</code>), streamlining setup on managed
+systems.</li>
+</ul>
+<h3 id="credential-storage-and-re-authentication">Credential Storage and
+Re-authentication</h3>
+<p>Once the user inputs credentials and accepts the dialog:</p>
+<ol type="1">
+<li>GNOME sends the parameters back to NetworkManager over D-Bus.</li>
+<li>Sensitive secrets (like passwords and private key passphrases) are
+securely saved to <strong>GNOME Keyring</strong> (via
+<code>libsecret</code>) or stored directly in NetworkManager’s keyfile
+depending on user permissions.</li>
+<li>NetworkManager provisions <code>wpa_supplicant</code> with the
+configuration to complete the EAP 4-way handshake.</li>
+<li>If an authentication failure occurs (e.g., expired credentials,
+incorrect inner identity), <code>wpa_supplicant</code> drops the
+association, and GNOME immediately re-prompts the user with an
+error-flagged dialog requesting revised credentials.</li>
+</ol></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

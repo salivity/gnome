@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Window Maximize Animations in GNOME Shell - gnome</title>
+    <meta name="description" content="GNOME Shell achieves fluid, stutter-free window maximize animations by decoupling visual transitions from client-side layout updates. Rather than waiting for an application to continuously recalculate its layout and draw new content for every intermediat">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/smooth-window-maximize-animations-in-gnome-shell">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Smooth Window Maximize Animations in GNOME Shell - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/smooth-window-maximize-animations-in-gnome-shell" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell achieves fluid, stutter-free window maximize animations by decoupling visual transitions from client-side layout updates. Rather than waiting for an application to continuously recalculate its layout and draw new content for every intermediat" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="smooth-window-maximize-animations-in-gnome-shell">Smooth Window
+Maximize Animations in GNOME Shell</h1>
+<p>GNOME Shell achieves fluid, stutter-free window maximize animations
+by decoupling visual transitions from client-side layout updates. Rather
+than waiting for an application to continuously recalculate its layout
+and draw new content for every intermediate frame, GNOME’s window
+manager, Mutter, uses GPU-accelerated texture scaling and asynchronous
+buffer updates to bridge the gap between initial click and the final
+maximized state.</p>
+<h3 id="the-problem-with-traditional-resizing">The Problem with
+Traditional Resizing</h3>
+<p>In a standard desktop environment, resizing a window requires
+continuous round-trip communication. The compositor sends a configure
+event to the application, the application recomputes its internal UI
+layout (via GTK, Qt, or web engines), renders a new frame, and submits
+the updated buffer back to the display server. Because complex user
+interfaces cannot reliably render at display refresh rates (60Hz, 120Hz,
+or higher), relying on real-time client redraws during a fast maximize
+animation causes dropped frames, visual tearing, and lag.</p>
+<h3 id="decoupling-animation-via-gpu-texture-scaling">Decoupling
+Animation via GPU Texture Scaling</h3>
+<p>Mutter circumvents client redraw latency by treating the window's
+existing content as a static texture on the GPU. When a user maximizes a
+window:</p>
+<ol type="1">
+<li><strong>Clutter Actor Transformation:</strong> Mutter takes the
+client’s current visual surface and maps it to a 2D scene-graph element
+(a Clutter actor).</li>
+<li><strong>Hardware-Accelerated Interpolation:</strong> Instead of
+resizing the underlying application surface frame-by-frame, Mutter
+animates the actor's coordinates and scale factors. The GPU stretches
+and translates this texture linearly or along an easing curve toward the
+target monitor geometry.</li>
+<li><strong>Continuous Frame Pacing:</strong> Because this operation
+takes place purely inside the compositor using shaders and hardware
+transforms, it reliably matches the monitor's refresh rate without
+relying on client performance.</li>
+</ol>
+<h3 id="asynchronous-client-synchronization">Asynchronous Client
+Synchronization</h3>
+<p>While the visual maximize animation is actively running on the GPU,
+Mutter concurrently coordinates with the underlying application:</p>
+<ul>
+<li><strong>Single Configure Event:</strong> Mutter sends a single
+resize request (<code>xdg_toplevel.configure</code> in Wayland or
+<code>ConfigureNotify</code> in X11) to the application with the final
+maximized dimensions.</li>
+<li><strong>Background Rendering:</strong> The client application
+renders its new layout at the final resolution in the background.</li>
+<li><strong>Buffer Swapping:</strong> Once the application submits its
+full-resolution maximized buffer and the animation finishes, Mutter
+swaps the scaled texture for the freshly rendered native-resolution
+buffer. This prevents the blurry appearance of stretched textures from
+lingering after the transition concludes.</li>
+</ul>
+<h3 id="dynamic-triple-buffering">Dynamic Triple Buffering</h3>
+<p>To prevent micro-stutter caused by rendering bottlenecks, recent
+versions of GNOME Shell integrate dynamic triple buffering. When Mutter
+detects that a frame cannot be completed within the allotted VBlank
+interval—often triggered by demanding compositor transitions or heavy
+GPU load—it temporarily switches from double buffering to triple
+buffering. This extra buffer provides an additional frame of leeway,
+ensuring that the GPU never starves for work and that the maximize
+animation maintains a flat frame-time line.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

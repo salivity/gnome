@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PipeWire Audio and Video Streaming in GNOME - gnome</title>
+    <meta name="description" content="PipeWire serves as the foundational multimedia subsystem in the modern GNOME desktop, acting as a low-latency routing engine for both audio and video streams. By replacing legacy audio servers like PulseAudio and JACK, while integrating directly with Way">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/pipe-wire-audio-and-video-streaming-in-gnome">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="PipeWire Audio and Video Streaming in GNOME - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/pipe-wire-audio-and-video-streaming-in-gnome" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="PipeWire serves as the foundational multimedia subsystem in the modern GNOME desktop, acting as a low-latency routing engine for both audio and video streams. By replacing legacy audio servers like PulseAudio and JACK, while integrating directly with Way" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="pipewire-audio-and-video-streaming-in-gnome">PipeWire Audio and
+Video Streaming in GNOME</h1>
+<p>PipeWire serves as the foundational multimedia subsystem in the
+modern GNOME desktop, acting as a low-latency routing engine for both
+audio and video streams. By replacing legacy audio servers like
+PulseAudio and JACK, while integrating directly with Wayland and
+sandboxed application environments, PipeWire delivers a unified, secure,
+and high-performance processing graph. This article examines how
+PipeWire enables robust audio control, native Wayland screen sharing,
+and secure media access across the GNOME ecosystem.</p>
+<h3 id="unified-audio-architecture">Unified Audio Architecture</h3>
+<p>Historically, Linux audio was fragmented between PulseAudio for
+general desktop use and JACK for professional, low-latency production.
+PipeWire resolves this division by providing a single daemon that
+natively handles both paradigms. In GNOME, PipeWire handles all input
+and output routing, offering drop-in compatibility layers
+(<code>pipewire-pulse</code> and <code>pipewire-jack</code>) that allow
+legacy desktop software and professional digital audio workstations to
+run simultaneously without configuration conflicts.</p>
+<p>Within GNOME Settings (GNOME Control Center), PipeWire manages
+dynamic audio switching, volume leveling, and Bluetooth audio codec
+negotiation. Its support for modern Bluetooth codecs—such as LDAC, aptX,
+and AAC—ensures higher-fidelity wireless audio playback natively within
+GNOME.</p>
+<h3 id="secure-video-capture-and-wayland-integration">Secure Video
+Capture and Wayland Integration</h3>
+<p>Under the Wayland display server protocol, individual applications
+are isolated from one another and cannot capture the screen or other
+windows directly. PipeWire solves this limitation by mediating video
+stream sharing through the <code>xdg-desktop-portal</code>
+architecture.</p>
+<p>When a user initiates screen sharing or recording in a GNOME session,
+GNOME Shell prompts the user to grant permission through an interface
+dialog. Once approved, the desktop video stream is encoded into memory
+buffers and passed securely to the requesting application via PipeWire.
+This mechanism enables seamless, secure screen casting in web browsers
+(via WebRTC), video conferencing applications, and native GNOME screen
+recorders without compromising Wayland’s core security model.</p>
+<h3 id="webcam-handling-and-hardware-sharing">Webcam Handling and
+Hardware Sharing</h3>
+<p>In addition to desktop capture, PipeWire manages hardware video
+inputs such as webcams. Traditional Linux video routing allowed only a
+single application to access a <code>/dev/video*</code> node at a time.
+PipeWire abstracts these V4L2 (Video4Linux) devices into shareable nodes
+within its graph. Multiple applications can access a single camera feed
+simultaneously, while GNOME enforces user-level permissions to prevent
+unauthorized background access.</p>
+<h3 id="sandboxed-applications-and-flatpak-support">Sandboxed
+Applications and Flatpak Support</h3>
+<p>PipeWire is purpose-built for modern containerized desktop formats,
+particularly Flatpak. Because Flatpak applications operate in isolated
+environments, they lack direct access to raw audio and video hardware
+nodes. PipeWire integrates with Flatpak permissions to broker access
+dynamically. Sandboxed applications can read audio streams, capture
+microphone inputs, and access video devices only after explicit user
+consent, maintaining strict system security while delivering fully
+functional multimedia capabilities.</p>
+<h3 id="resource-efficiency-and-graph-based-processing">Resource
+Efficiency and Graph-Based Processing</h3>
+<p>At its core, PipeWire operates as a dynamic processing graph where
+multimedia devices, filters, and applications are represented as
+interconnected nodes. It utilizes zero-copy shared memory buffer passing
+(via <code>memfd</code> and DMA-BUF), allowing 4K video frames and
+multi-channel high-resolution audio to move between GNOME Shell,
+PipeWire, and client applications with minimal CPU overhead. This
+architecture provides high throughput, battery-efficient operation, and
+real-time responsiveness across the entire GNOME desktop.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME HIG Guidelines for Application Empty States - gnome</title>
+    <meta name="description" content="The GNOME Human Interface Guidelines (HIG) provide detailed design patterns for application empty states to ensure users are never left facing confusing, blank screens when an app has no content to display. These guidelines define how applications should">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-hig-guidelines-for-application-empty-states">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME HIG Guidelines for Application Empty States - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-hig-guidelines-for-application-empty-states" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Human Interface Guidelines (HIG) provide detailed design patterns for application empty states to ensure users are never left facing confusing, blank screens when an app has no content to display. These guidelines define how applications should" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-hig-guidelines-for-application-empty-states">GNOME HIG
+Guidelines for Application Empty States</h1>
+<p>The GNOME Human Interface Guidelines (HIG) provide detailed design
+patterns for application empty states to ensure users are never left
+facing confusing, blank screens when an app has no content to display.
+These guidelines define how applications should inform users why a view
+is empty, reassure them that the software is functioning properly, and
+provide intuitive, actionable pathways to populate the interface with
+data.</p>
+<h3 id="preventing-confusion-and-reassurance">Preventing Confusion and
+Reassurance</h3>
+<p>When a user opens an application or navigates to a view with no
+existing data—such as a new music library, an empty document list, or a
+clean inbox—a completely blank window can appear broken, unmaintained,
+or frozen. The primary purpose of an empty state in the GNOME HIG is
+reassurance. By presenting a deliberate, well-structured screen instead
+of void space, the application explicitly communicates that it is
+working as intended and is simply waiting for input or data.</p>
+<h3 id="providing-context-and-education">Providing Context and
+Education</h3>
+<p>Empty states serve an educational role by explaining what belongs in
+a particular space. Rather than requiring users to read external
+documentation, the empty state uses concise messaging to describe the
+view's purpose. GNOME HIG emphasizes brevity and clarity:</p>
+<ul>
+<li><strong>Header:</strong> A short, descriptive title summarizing the
+situation (e.g., "No Bookmarks").</li>
+<li><strong>Body Text:</strong> A brief explanation offering context on
+what the view handles and how data appears there.</li>
+</ul>
+<p>This contextual information ensures that first-time users immediately
+grasp the functionality of the interface without guesswork.</p>
+<h3 id="guiding-user-action">Guiding User Action</h3>
+<p>A fundamental principle of GNOME's empty state design is
+actionability. An empty screen should not be a dead end; it should
+actively guide the user on what to do next. The guidelines recommend
+embedding a primary call-to-action (CTA) button directly within the
+empty state layout. For instance, an empty photo manager might include
+an "Import Photos" button, or an empty contact list might display an
+"Add Contact" button. Providing a direct trigger eliminates friction and
+encourages immediate engagement.</p>
+<h3 id="differentiating-scenarios-gracefully">Differentiating Scenarios
+Gracefully</h3>
+<p>GNOME HIG distinguishes between various types of empty states,
+advising developers to tailor the presentation based on the root
+cause:</p>
+<ul>
+<li><strong>First Run:</strong> Welcoming the user and prompting initial
+setup or content creation.</li>
+<li><strong>Cleared Content:</strong> Acknowledging that all items have
+been resolved or deleted (e.g., an empty task list or cleared
+notifications).</li>
+<li><strong>No Search or Filter Results:</strong> Clarifying that no
+items match the current query, suggesting users check their spelling or
+broaden their search terms.</li>
+</ul>
+<h3 id="ecosystem-consistency">Ecosystem Consistency</h3>
+<p>GNOME establishes standardized visual patterns for empty
+states—typically featuring a large symbolic icon, a bold heading,
+secondary explanatory text, and a suggested action button centered in
+the view. Adhering to these patterns ensures visual and behavioral
+consistency across all native GNOME applications, allowing users to
+navigate new tools using familiar paradigms.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

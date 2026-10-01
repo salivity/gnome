@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Maps Uses OpenStreetMap for Navigation - gnome</title>
+    <meta name="description" content="GNOME Maps is the default map and navigation client for the GNOME desktop environment, built entirely around the open-source ecosystem. Rather than maintaining proprietary cartographic databases, the application leverages OpenStreetMap (OSM) as its found">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-maps-uses-open-street-map-for-navigation">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Maps Uses OpenStreetMap for Navigation - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-maps-uses-open-street-map-for-navigation" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Maps is the default map and navigation client for the GNOME desktop environment, built entirely around the open-source ecosystem. Rather than maintaining proprietary cartographic databases, the application leverages OpenStreetMap (OSM) as its found" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-maps-uses-openstreetmap-for-navigation">How GNOME Maps
+Uses OpenStreetMap for Navigation</h1>
+<p>GNOME Maps is the default map and navigation client for the GNOME
+desktop environment, built entirely around the open-source ecosystem.
+Rather than maintaining proprietary cartographic databases, the
+application leverages OpenStreetMap (OSM) as its foundational data
+provider to render interactive maps, geocode addresses, calculate
+routes, and deliver real-time location tracking. This integration
+creates a lightweight, privacy-respecting alternative to commercial
+mapping services on Linux systems.</p>
+<h3 id="map-rendering-and-vector-data">Map Rendering and Vector
+Data</h3>
+<p>GNOME Maps relies on OpenStreetMap's crowd-sourced geographic
+database to generate visual maps. The client retrieves map information
+primarily in the form of vector and raster tiles fetched from OSM-based
+tile servers. Utilizing libraries such as <code>libshumate</code> (and
+previously <code>clutter-gtk</code>), the application parses OSM's raw
+data—including node coordinates, ways, and boundary relations—to render
+streets, terrain, waterways, and buildings smoothly on the user's
+screen. Because OSM is continuously updated by global contributors,
+changes made to the base map appear in GNOME Maps as tile caches
+refresh.</p>
+<h3 id="search-and-geocoding-via-nominatim">Search and Geocoding via
+Nominatim</h3>
+<p>To convert text queries into geographic coordinates (and vice versa),
+GNOME Maps connects to Nominatim, the dedicated search engine powered by
+OpenStreetMap data. When a user searches for an address, business, or
+point of interest (POI), GNOME Maps sends the query to Nominatim's API.
+The service parses OSM tags such as <code>amenity</code>,
+<code>shop</code>, <code>name</code>, and address attributes, returning
+precise latitude and longitude coordinates that allow the interface to
+center on the requested target and display relevant metadata.</p>
+<h3 id="turn-by-turn-routing-and-navigation">Turn-by-Turn Routing and
+Navigation</h3>
+<p>Routing functionality in GNOME Maps requires an algorithmic engine
+capable of traversing the topological networks defined by OpenStreetMap.
+GNOME Maps does not calculate routes locally on the desktop; instead, it
+delegates route computations to external routing backends that ingest
+OSM road and path networks:</p>
+<ul>
+<li><strong>Pedestrian, Cycling, and Driving Routes:</strong> The
+application communicates with routing services like GraphHopper, which
+process OSM road attributes (such as speed limits, turn restrictions,
+one-way systems, and surface types) to generate turn-by-turn navigation
+instructions.</li>
+<li><strong>Public Transit:</strong> For train, bus, and tram travel,
+GNOME Maps integrates with the OpenTripPlanner (OTP) service, merging
+OSM route tags with standardized transit data (GTFS feeds) to compute
+schedules and multi-modal transfers.</li>
+</ul>
+<h3 id="real-time-location-tracking-with-geoclue">Real-Time Location
+Tracking with GeoClue</h3>
+<p>While OpenStreetMap provides the geographic backdrop and road
+networks, location tracking relies on GNOME's underlying
+<code>geoclue</code> system. GeoClue detects the user's physical
+position through available hardware sensors, Wi-Fi network positioning,
+3G/4G modems, or IP address geolocation. Once GeoClue outputs spatial
+coordinates, GNOME Maps plots the device's location atop the OSM canvas
+as a dynamic marker. If the user moves while navigation mode is engaged,
+the marker updates in real time, matching the user's progress against
+the calculated OSM route geometry.</p>
+<h3 id="community-contribution-and-direct-editing">Community
+Contribution and Direct Editing</h3>
+<p>The relationship between GNOME Maps and OpenStreetMap is
+bidirectional. Users can log into their OSM accounts directly within the
+GNOME Maps application to edit existing points of interest or add new
+locations, such as restaurants, parks, or opening hours. These desktop
+edits are committed directly to the OpenStreetMap database via the OSM
+API, immediately enriching the mapping data used by GNOME Maps and the
+broader open-source community.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

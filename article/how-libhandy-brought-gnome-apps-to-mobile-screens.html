@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Libhandy Brought GNOME Apps to Mobile Screens - gnome</title>
+    <meta name="description" content="The libhandy library served as the crucial bridge that transformed traditional desktop GNOME applications into adaptive, mobile-friendly software. Developed during the initial push for Linux-based smartphones, it introduced a collection of responsive use">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-libhandy-brought-gnome-apps-to-mobile-screens">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How Libhandy Brought GNOME Apps to Mobile Screens - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-libhandy-brought-gnome-apps-to-mobile-screens" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The libhandy library served as the crucial bridge that transformed traditional desktop GNOME applications into adaptive, mobile-friendly software. Developed during the initial push for Linux-based smartphones, it introduced a collection of responsive use" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-libhandy-brought-gnome-apps-to-mobile-screens">How Libhandy
+Brought GNOME Apps to Mobile Screens</h1>
+<p>The <code>libhandy</code> library served as the crucial bridge that
+transformed traditional desktop GNOME applications into adaptive,
+mobile-friendly software. Developed during the initial push for
+Linux-based smartphones, it introduced a collection of responsive user
+interface widgets for GTK 3, enabling developers to target both desktop
+monitors and phone displays using a single, unified codebase. By proving
+that convergent user interfaces were viable within the GNOME ecosystem,
+libhandy laid the architectural and philosophical groundwork for modern
+mobile Linux environments and directly influenced the development of GTK
+4's <code>libadwaita</code>.</p>
+<p>Prior to libhandy, the GNOME user interface and its underlying
+toolkit, GTK 3, were strictly optimized for desktop interactions
+characterized by large horizontal screen real estate and precise pointer
+inputs. When Purism began developing the Librem 5 smartphone and its
+accompanying mobile shell, Phosh (Phone Shell), running desktop GTK 3
+applications on small, portrait-oriented touchscreens posed a
+significant usability issue. Interfaces clipped off-screen, sidebars
+occupied the entire display, and touch targets were often too small or
+unwieldy for finger input.</p>
+<p>To resolve this without forcing developers to maintain separate
+codebases for mobile and desktop versions of their software, Purism
+engineers created libhandy. The library provided drop-in adaptive
+widgets that dynamically reorganized an application’s layout based on
+the available window dimensions.</p>
+<p>Key components of libhandy addressed the primary hurdles of small
+screens:</p>
+<ul>
+<li><strong>HdyLeaflet and HdyDeck:</strong> These widgets enabled
+responsive multi-pane layouts. On a wide desktop display, a leaflet
+displays a sidebar and content view side-by-side; on a narrow phone
+screen, it automatically folds them into separate layers with smooth
+back-and-forth swipe transitions.</li>
+<li><strong>HdyClamp:</strong> This widget constrained the width of
+content areas on wider screens while expanding to fill narrower
+displays, preventing forms and settings pages from looking stretched on
+desktops while remaining usable on phones.</li>
+<li><strong>HdyCarousel:</strong> It provided touch-friendly, paginated
+horizontal scrolling suitable for mobile navigation patterns.</li>
+<li><strong>Adaptive Titlebars and Views:</strong> Libhandy allowed
+header bars and navigation elements to adjust dynamically, shifting
+toolbars to the bottom of the screen where they are easier to reach with
+one hand.</li>
+</ul>
+<p>The adoption of libhandy by upstream GNOME marked a major shift
+toward convergence. Core applications like GNOME Web (Epiphany), GNOME
+Settings, Contacts, and Calculator integrated the library, allowing them
+to scale effortlessly down to mobile screen sizes. This eliminated the
+historical divide between desktop Linux apps and dedicated mobile apps,
+proving that the GNOME platform could function effectively across
+diverse hardware form factors.</p>
+<p>Ultimately, libhandy played its role so effectively that its
+paradigms were made permanent. As GNOME transitioned to GTK 4, the
+patterns, widgets, and mobile-friendly design principles pioneered in
+libhandy were expanded and migrated into <code>libadwaita</code>.
+Libhandy historically turned mobile Linux from an experimental concept
+into a functional reality by embedding responsive design directly into
+the GNOME development workflow.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

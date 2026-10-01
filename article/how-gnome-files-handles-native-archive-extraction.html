@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Files Handles Native Archive Extraction - gnome</title>
+    <meta name="description" content="GNOME Files, formerly and often known as Nautilus, provides a streamlined experience for handling compressed files directly within its active directory view. Rather than relying on external archive manager windows, modern GNOME Files manages archive extr">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-files-handles-native-archive-extraction">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Files Handles Native Archive Extraction - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-files-handles-native-archive-extraction" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Files, formerly and often known as Nautilus, provides a streamlined experience for handling compressed files directly within its active directory view. Rather than relying on external archive manager windows, modern GNOME Files manages archive extr" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-files-handles-native-archive-extraction">How GNOME
+Files Handles Native Archive Extraction</h1>
+<p>GNOME Files, formerly and often known as Nautilus, provides a
+streamlined experience for handling compressed files directly within its
+active directory view. Rather than relying on external archive manager
+windows, modern GNOME Files manages archive extraction in place using
+built-in backend libraries, asynchronous execution, and automated safety
+logic. This native integration ensures that compressed contents are
+unpacked smoothly into the current parent directory while automatically
+preventing clutter and keeping the user interface fully responsive.</p>
+<h3 id="backend-integration-with-libarchive">Backend Integration with
+libarchive</h3>
+<p>GNOME Files relies directly on the <code>libarchive</code> library to
+read, decompress, and write archive contents. Previously, the desktop
+environment delegated decompression tasks to external graphical
+utilities such as File Roller. By integrating <code>libarchive</code>
+directly into the file manager’s runtime operations, GNOME Files treats
+extraction as a native file system operation similar to copying or
+moving files. This backend supports a wide range of common compression
+formats, including <code>.tar.gz</code>, <code>.tar.xz</code>,
+<code>.zip</code>, and <code>.7z</code>, handling format parsing and
+decompression internally without spawning external process windows.</p>
+<h3 id="smart-extraction-and-directory-detection">Smart Extraction and
+Directory Detection</h3>
+<p>When a user initiates an extraction within a parent folder, GNOME
+Files scans the internal structure of the archive before writing files
+to the disk. This mechanism, known as "smart extraction," prevents the
+directory view from becoming cluttered with loose files:</p>
+<ul>
+<li><strong>Single-Root Archives:</strong> If the archive already
+contains all its files within a single top-level folder, GNOME Files
+extracts that folder directly into the parent listing.</li>
+<li><strong>Multi-Item Archives (Tarbombs):</strong> If the archive
+contains multiple loose files and folders at the root level, GNOME Files
+automatically creates a new directory named after the archive and places
+the unpacked contents inside it.</li>
+</ul>
+<p>This dynamic check ensures that unpacking an archive containing
+hundreds of loose files does not disrupt the parent directory
+layout.</p>
+<h3 id="asynchronous-operations-and-view-updates">Asynchronous
+Operations and View Updates</h3>
+<p>Decompressing files can consume significant system resources and time
+depending on the file size. GNOME Files executes extraction tasks
+asynchronously through GLib’s <code>GTask</code> infrastructure and the
+GNOME Virtual File System (GVfs).</p>
+<p>Because decompression runs in separate worker threads, the main
+graphical interface remains interactive. Progress is reported via an
+operational popover in the window's top bar rather than blocking modal
+dialogs.</p>
+<p>As files are extracted, GVfs file monitors continuously notify the
+file listing model of newly created nodes. The view model updates its
+list or grid view instantly, displaying extracted folders and items in
+real time without requiring the user to manually reload or refresh the
+current folder.</p>
+<h3 id="integrated-action-history-and-undo-support">Integrated Action
+History and Undo Support</h3>
+<p>Because extraction operations are integrated directly into the file
+manager's native transaction pipeline, they hook into the universal undo
+system. GNOME Files registers the newly created files and directories as
+an atomic operation. If an archive is extracted accidentally, pressing
+the standard undo shortcut (<code>Ctrl+Z</code>) prompts the file
+manager to reverse the operation by deleting the extracted contents from
+the parent listing in a single step.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

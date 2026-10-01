@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Implements Rounded Bottom Corners - gnome</title>
+    <meta name="description" content="This article explains the technical mechanism behind how the modern GNOME desktop environment renders rounded bottom corners on native application windows. Historically restricted to square edges, native bottom-corner rounding is achieved through the tra">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-implements-rounded-bottom-corners">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Implements Rounded Bottom Corners - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-implements-rounded-bottom-corners" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains the technical mechanism behind how the modern GNOME desktop environment renders rounded bottom corners on native application windows. Historically restricted to square edges, native bottom-corner rounding is achieved through the tra" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-implements-rounded-bottom-corners">How GNOME
+Implements Rounded Bottom Corners</h1>
+<p>This article explains the technical mechanism behind how the modern
+GNOME desktop environment renders rounded bottom corners on native
+application windows. Historically restricted to square edges, native
+bottom-corner rounding is achieved through the transition to GTK4 and
+Libadwaita, utilizing Client-Side Decorations (CSD), GTK Scene Kit (GSK)
+clip nodes, and transparent buffer regions coordinated with the Mutter
+compositor.</p>
+<h3 id="client-side-decorations-csd">Client-Side Decorations (CSD)</h3>
+<p>In traditional desktop environments, the window manager draws the
+outer frame and title bar. GNOME uses Client-Side Decorations (CSD),
+meaning the application itself is responsible for rendering its entire
+frame, including header bars, borders, shadows, and corners.</p>
+<p>Because the application controls the entire window surface, it is not
+bound by rigid window-manager constraints. Instead, the application
+passes a fully rendered graphical buffer—already shaped and
+stylized—directly to GNOME’s compositor, Mutter, via the Wayland
+protocol (or X11).</p>
+<h3 id="libadwaita-and-css-theming">Libadwaita and CSS Theming</h3>
+<p>The visual standardization of rounded bottom corners arrived with
+GNOME 42 and the introduction of Libadwaita, the styling library built
+on top of GTK4.</p>
+<p>In older GTK3 applications, bottom corners were typically kept sharp
+to simplify resizing operations and prevent rendering artifacts.
+Libadwaita standardized the window geometry by applying CSS
+border-radius rules to top-level window containers
+(<code>AdwApplicationWindow</code> or <code>AdwWindow</code>). The
+application style sheet defines a border radius on both the top and
+bottom corners of the primary window widget, instructing the rendering
+engine to curve all four extremities uniformly.</p>
+<h3 id="gtk-scene-kit-gsk-and-clip-nodes">GTK Scene Kit (GSK) and Clip
+Nodes</h3>
+<p>Applying a <code>border-radius</code> in a GUI toolkit requires that
+child widgets (such as text views, sidebars, or status bars) do not
+bleed over the rounded edge. GTK4 solves this through the GTK Scene Kit
+(GSK).</p>
+<p>GSK represents the interface as a tree of render nodes passed to a
+rendering backend (such as Vulkan or OpenGL). To create rounded
+corners:</p>
+<ol type="1">
+<li><strong>Clip Node Creation:</strong> GSK creates a
+<code>GskRoundedClipNode</code> encompassing the window boundary.</li>
+<li><strong>GPU-Accelerated Clipping:</strong> The GPU shader tests
+pixels against the mathematical bounds of the rounded rectangle.</li>
+<li><strong>Anti-Aliased Edges:</strong> The fragment shader computes
+smooth, anti-aliased edges along the curve, ensuring that underlying
+child components are clipped without jagged borders.</li>
+</ol>
+<h3 id="buffer-padding-shadows-and-input-regions">Buffer Padding,
+Shadows, and Input Regions</h3>
+<p>A window with rounded corners requires transparent space in the
+corners so that the underlying desktop or other windows remain visible
+through the curved edges.</p>
+<ul>
+<li><strong>Subsurfaces and Alpha Channels:</strong> The client
+allocates a buffer that includes the window content plus an extended
+transparent perimeter for the drop shadow. The corners are simply pixels
+with an alpha value of zero.</li>
+<li><strong>Input Shape Regions:</strong> Because the buffer rectangle
+is strictly rectangular, the application must define an input region
+using Wayland protocols (<code>wl_surface.set_input_region</code>). This
+ensures that mouse clicks in the transparent pixels just outside the
+rounded corner pass through to whatever window is beneath it, rather
+than being captured by the foreground application.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Display Server Fallback on Proprietary Hardware - gnome</title>
+    <meta name="description" content="GNOME manages display server fallback primarily through automated hardware detection rules in the GNOME Display Manager (GDM) and runtime validation within the Mutter compositor. While modern GNOME environments default to the Wayland protocol, systems ut">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-display-server-fallback-on-proprietary-hardware">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Display Server Fallback on Proprietary Hardware - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-display-server-fallback-on-proprietary-hardware" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME manages display server fallback primarily through automated hardware detection rules in the GNOME Display Manager (GDM) and runtime validation within the Mutter compositor. While modern GNOME environments default to the Wayland protocol, systems ut" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-display-server-fallback-on-proprietary-hardware">GNOME
+Display Server Fallback on Proprietary Hardware</h1>
+<p>GNOME manages display server fallback primarily through automated
+hardware detection rules in the GNOME Display Manager (GDM) and runtime
+validation within the Mutter compositor. While modern GNOME environments
+default to the Wayland protocol, systems utilizing proprietary graphics
+hardware—most notably NVIDIA GPUs—rely on a sequence of udev
+configurations and kernel checks to automatically revert to the legacy
+X.Org (X11) display server if hardware capabilities, kernel parameters,
+or driver implementations cannot guarantee a stable Wayland session.</p>
+<h3 id="hardware-and-driver-detection-via-udev">Hardware and Driver
+Detection via Udev</h3>
+<p>The fallback process begins before the desktop environment launches.
+GDM evaluates system configuration files, specifically standard udev
+rules such as <code>/usr/lib/udev/rules.d/61-gdm.rules</code>. These
+rules inspect the active kernel modules, checking for the presence of
+proprietary drivers.</p>
+<p>When a proprietary driver like NVIDIA is detected, the rules check
+for specific prerequisites:</p>
+<ul>
+<li><strong>Kernel Mode Setting (KMS):</strong> The proprietary driver
+must have DRM KMS enabled (e.g., via the
+<code>nvidia-drm.modeset=1</code> kernel parameter). If KMS is disabled,
+modern Wayland compositors cannot initialize, prompting GDM to trigger
+an immediate fallback to X11.</li>
+<li><strong>Power Management Services:</strong> Modern NVIDIA drivers
+require systemd services (such as <code>nvidia-suspend.service</code>,
+<code>nvidia-hibernate.service</code>, and
+<code>nvidia-resume.service</code>) to handle sleep states properly
+under Wayland. If these are missing or disabled, GDM rules disallow
+Wayland to prevent post-suspend system freezes.</li>
+<li><strong>Driver Version Compatibility:</strong> Older legacy drivers
+that lack modern memory allocation interfaces are explicitly blacklisted
+from running Wayland.</li>
+</ul>
+<h3 id="session-selection-in-gdm">Session Selection in GDM</h3>
+<p>If any required hardware checks fail, GDM alters its runtime behavior
+by overriding the session type. It flags Wayland as unavailable, unsets
+the Wayland session option from the user interface, and assigns the
+standard <code>gnome-xorg</code> session as the default target. The user
+is seamlessly directed to an X11 desktop without manual
+intervention.</p>
+<p>On hybrid GPU systems (such as laptops featuring an integrated Intel
+or AMD processor alongside a discrete proprietary NVIDIA GPU), GDM
+inspects whether the discrete GPU is handling primary display output. If
+the system relies on dynamic offloading and the integrated GPU supports
+standard open-source display pipelines, Wayland may remain active; if
+the proprietary hardware directly drives external display ports or the
+primary display without proper KMS, the fallback rule triggers.</p>
+<h3 id="mutter-compositor-initialization-and-runtime-failure">Mutter
+Compositor Initialization and Runtime Failure</h3>
+<p>If a system passes the initial udev checks, GNOME proceeds to launch
+the Wayland compositor within Mutter. Mutter attempts to allocate
+rendering buffers using the Generic Buffer Management (GBM) API, which
+is supported on modern versions of proprietary drivers (version 495 and
+later).</p>
+<p>If Mutter encounters a critical failure during this
+initialization—such as an inability to acquire a Direct Rendering
+Manager (DRM) master device or a failure to bind to required EGL
+extensions—the compositor aborts. GDM captures this abnormal
+termination, increments an internal failure counter, and temporarily
+disables Wayland for that user session, relaunching the login screen or
+session using the fallback X11 server.</p>
+<h3 id="current-evolution">Current Evolution</h3>
+<p>Historically, proprietary hardware support required workarounds, such
+as specialized EGLStreams code paths within Mutter. Because modern
+proprietary drivers have largely adopted standardized Linux graphics
+infrastructure like GBM and DRM KMS, fallback scenarios have decreased.
+However, GNOME preserves these fallback layers to protect against black
+screens, driver mismatches, and graphics freezes caused by misconfigured
+proprietary driver stacks.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

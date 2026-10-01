@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Handles Laptop Lid Close Suspension - gnome</title>
+    <meta name="description" content="When a laptop lid is closed within the GNOME desktop environment, the system initiates a coordinated power-management workflow between low-level hardware listeners and high-level desktop services. GNOME intercepts the hardware switch signal through syste">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-handles-laptop-lid-close-suspension">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Handles Laptop Lid Close Suspension - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-handles-laptop-lid-close-suspension" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="When a laptop lid is closed within the GNOME desktop environment, the system initiates a coordinated power-management workflow between low-level hardware listeners and high-level desktop services. GNOME intercepts the hardware switch signal through syste" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-handles-laptop-lid-close-suspension">How GNOME Handles
+Laptop Lid Close Suspension</h1>
+<p>When a laptop lid is closed within the GNOME desktop environment, the
+system initiates a coordinated power-management workflow between
+low-level hardware listeners and high-level desktop services. GNOME
+intercepts the hardware switch signal through
+<code>systemd-logind</code>, checks the current system state—such as
+whether external monitors are connected or media is playing—and applies
+user-configured power policies before signaling the operating system to
+enter a sleep state.</p>
+<h3 id="the-detection-chain">The Detection Chain</h3>
+<p>The process begins at the hardware layer. Closing the laptop lid
+triggers an ACPI (Advanced Configuration and Power Interface) lid switch
+event. The Linux kernel captures this event and passes it to
+<code>systemd-logind</code>, the system daemon responsible for managing
+user logins, seats, and power events.</p>
+<p>By default, <code>systemd-logind</code> is configured to suspend the
+machine when a lid close is detected. However, GNOME alters this
+behavior to implement desktop-level controls.</p>
+<h3 id="the-role-of-gnome-settings-daemon-and-inhibitors">The Role of
+<code>gnome-settings-daemon</code> and Inhibitors</h3>
+<p>GNOME manages user sessions through
+<code>gnome-settings-daemon</code>, specifically its power plugin
+(<code>gsd-power</code>). To prevent <code>systemd-logind</code> from
+prematurely suspending the machine, <code>gsd-power</code> places an
+inhibitor lock (<code>Inhibit</code>) on system-level lid-switch
+handling.</p>
+<p>By holding this lock, GNOME tells <code>systemd-logind</code>: "Do
+not act on the lid switch; the desktop environment will handle the
+logic." This mechanism allows GNOME to evaluate dynamic runtime
+conditions before initiating a suspend.</p>
+<h3 id="gnomes-decision-logic">GNOME's Decision Logic</h3>
+<p>Once GNOME captures the lid-close event via D-Bus, it evaluates
+several conditions:</p>
+<ol type="1">
+<li><strong>Clamshell Mode (External Displays):</strong> If the laptop
+is connected to an external monitor, GNOME enters "clamshell mode."
+Instead of suspending, GNOME reconfigures the display layout via Mutter
+(the Wayland compositor / window manager), turns off the internal laptop
+panel, and shifts all active workspaces to the external screen.</li>
+<li><strong>Power Source:</strong> GNOME checks whether the machine is
+running on battery power or connected to an AC adapter. Depending on
+configuration, it can apply different suspend behaviors to optimize
+battery conservation.</li>
+<li><strong>Application Inhibit Requests:</strong> Applications such as
+media players, presentation software, or virtual machines can request
+sleep inhibition via the FreeDesktop Power Management API, preventing an
+automatic sleep state while active tasks are running.</li>
+</ol>
+<h3 id="executing-the-suspend-state">Executing the Suspend State</h3>
+<p>If no external displays are present and no active processes block the
+event, GNOME executes the suspend action. Rather than manipulating
+kernel power interfaces directly, <code>gsd-power</code> communicates
+back to <code>systemd-logind</code> over D-Bus, issuing a request to
+suspend the system.</p>
+<p><code>systemd-logind</code> executes the suspend sequence, calling
+the kernel to transition the hardware into a low-power sleep
+state—typically standard ACPI S3 (Suspend to RAM) or modern
+<code>s2idle</code> (Suspend-to-Idle), depending on the hardware
+platform and kernel configuration.</p>
+<h3 id="customization-and-overrides">Customization and Overrides</h3>
+<p>Users can modify this suspension behavior without altering
+system-level files:</p>
+<ul>
+<li><strong>GNOME Tweaks:</strong> The "General" tab provides an option
+to toggle "Suspend when laptop lid is closed." Disabling this keeps the
+laptop awake regardless of monitor configuration.</li>
+<li><strong>GSettings:</strong> The underlying D-Bus settings can be
+adjusted directly via the terminal using the
+<code>org.gnome.settings-daemon.plugins.power</code> schema, targeting
+keys such as <code>lid-close-ac-action</code> and
+<code>lid-close-battery-action</code>.</li>
+<li><strong>System-Level Overrides:</strong> If GNOME's power plugin is
+disabled or not running, the system falls back directly to the
+directives specified in <code>/etc/systemd/logind.conf</code> (such as
+<code>HandleLidSwitch=suspend</code>).</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

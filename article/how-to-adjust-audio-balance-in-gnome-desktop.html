@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Adjust Audio Balance in GNOME Desktop - gnome</title>
+    <meta name="description" content="The GNOME desktop environment handles audio balance between the left and right speakers through an intuitive graphical interface backed by modern Linux audio subsystems. By routing user adjustments from the GNOME Control Center to underlying sound server">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-to-adjust-audio-balance-in-gnome-desktop">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How to Adjust Audio Balance in GNOME Desktop - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-to-adjust-audio-balance-in-gnome-desktop" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop environment handles audio balance between the left and right speakers through an intuitive graphical interface backed by modern Linux audio subsystems. By routing user adjustments from the GNOME Control Center to underlying sound server" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-to-adjust-audio-balance-in-gnome-desktop">How to Adjust
+Audio Balance in GNOME Desktop</h1>
+<p>The GNOME desktop environment handles audio balance between the left
+and right speakers through an intuitive graphical interface backed by
+modern Linux audio subsystems. By routing user adjustments from the
+GNOME Control Center to underlying sound servers such as PipeWire or
+PulseAudio, the desktop provides seamless, real-time control over stereo
+channel distribution. This article details where to locate these
+settings, how GNOME interfaces with the audio system to manage stereo
+channels, and how auxiliary features like mono mixing impact
+balance.</p>
+<h2 id="graphical-audio-balance-controls">Graphical Audio Balance
+Controls</h2>
+<p>In GNOME, primary audio balance settings are integrated directly into
+the system settings application:</p>
+<ol type="1">
+<li>Open <strong>Settings</strong> from the system menu or application
+launcher.</li>
+<li>Navigate to the <strong>Sound</strong> panel.</li>
+<li>Under the <strong>Output</strong> section, locate the active output
+device (e.g., built-in speakers or headphones).</li>
+<li>Use the <strong>Balance</strong> slider to shift audio output toward
+the left or right channel.</li>
+</ol>
+<p>Moving the slider completely to one side isolates that channel
+entirely, while centering the slider distributes equal amplitude to both
+channels. Changes take effect immediately without requiring a restart or
+manual saving.</p>
+<h2 id="underlying-sound-server-integration">Underlying Sound Server
+Integration</h2>
+<p>GNOME does not process audio data directly; instead, it relies on
+system-level sound servers—most commonly <strong>PipeWire</strong>
+(managed via WirePlumber) in modern distributions, or
+<strong>PulseAudio</strong> in older releases.</p>
+<p>When the user moves the balance slider in the GNOME Settings UI:</p>
+<ul>
+<li>GNOME sends an API call (typically via <code>libpulse</code> or
+D-Bus interfaces) to the active sound server.</li>
+<li>The sound server adjusts the volume sink inputs or channel volumes
+independently.</li>
+<li>For a balanced stereo track, shifting right decreases the gain of
+the left channel while maintaining or normalizing the right channel's
+volume, preserving the user's master volume ceiling.</li>
+</ul>
+<p>Because GNOME interfaces directly with these standard daemons,
+adjustments made via terminal tools like <code>pactl</code>,
+<code>wpctl</code>, or <code>alsamixer</code> are automatically
+synchronized and reflected back in the GNOME Settings interface in real
+time.</p>
+<h2 id="channel-configurations-and-hardware-detection">Channel
+Configurations and Hardware Detection</h2>
+<p>GNOME automatically detects the topology of connected audio hardware
+through the sound server:</p>
+<ul>
+<li><strong>Stereo (2.0):</strong> GNOME displays a single horizontal
+balance slider for left and right channels.</li>
+<li><strong>Surround Sound (e.g., 5.1, 7.1):</strong> Depending on the
+hardware profile and specific GNOME version, an additional "Fade" slider
+may appear to balance audio between front and rear speakers, alongside a
+"Subwoofer" level adjustment.</li>
+<li><strong>Mono Devices:</strong> If an output device only reports a
+single channel, the balance controls are automatically hidden or
+disabled.</li>
+</ul>
+<h2 id="accessibility-mono-audio-output">Accessibility: Mono Audio
+Output</h2>
+<p>For users with hearing impairments or environments where stereo
+separation is not ideal, GNOME provides an override via accessibility
+settings:</p>
+<ol type="1">
+<li>Go to <strong>Settings</strong> &gt;
+<strong>Accessibility</strong>.</li>
+<li>Select the <strong>Hearing</strong> section.</li>
+<li>Toggle on <strong>Mono Audio</strong>.</li>
+</ol>
+<p>When Mono Audio is enabled, GNOME instructs the sound server to
+downmix the left and right channels into a single identical stream sent
+to both speakers. This eliminates stereo separation entirely, rendering
+the individual left-right balance slider less relevant, as both audio
+channels will emit the combined signal equally.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

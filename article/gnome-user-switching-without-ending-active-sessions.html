@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME User Switching Without Ending Active Sessions - gnome</title>
+    <meta name="description" content="The GNOME desktop environment allows multiple users to remain logged in simultaneously without terminating ongoing processes through a coordinated architecture involving the GNOME Display Manager (GDM), systemd-logind, and display server resource arbitra">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-user-switching-without-ending-active-sessions">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME User Switching Without Ending Active Sessions - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-user-switching-without-ending-active-sessions" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop environment allows multiple users to remain logged in simultaneously without terminating ongoing processes through a coordinated architecture involving the GNOME Display Manager (GDM), systemd-logind, and display server resource arbitra" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-user-switching-without-ending-active-sessions">GNOME User
+Switching Without Ending Active Sessions</h1>
+<p>The GNOME desktop environment allows multiple users to remain logged
+in simultaneously without terminating ongoing processes through a
+coordinated architecture involving the GNOME Display Manager (GDM),
+systemd-logind, and display server resource arbitration. When a user
+chooses to switch accounts, GNOME does not log out the current user;
+instead, it retains the active session's state in memory, relinquishes
+access to physical input and output hardware, and prompts GDM to spawn
+or switch to another graphical session. This article explains the
+technical mechanisms behind this seamless user switching.</p>
+<h3 id="session-management-with-systemd-logind">Session Management with
+systemd-logind</h3>
+<p>The core of session persistence in modern Linux distributions running
+GNOME is <code>systemd-logind</code>. Whenever a user logs in,
+<code>systemd-logind</code> creates a distinct session registered under
+a dedicated user slice (<code>user-&lt;UID&gt;.slice</code>).</p>
+<p>All applications, background tasks, and desktop components launched
+by the user belong to control groups (cgroups) under this user slice.
+Because these processes are tied to the systemd user instance rather
+than the active display hardware, they continue running in the
+background even when the display is switched away from their graphical
+environment.</p>
+<h3 id="the-role-of-gdm-gnome-display-manager">The Role of GDM (GNOME
+Display Manager)</h3>
+<p>GDM handles the authentication interface and manages the graphical
+lifecycles of user sessions. When a user requests a switch:</p>
+<ol type="1">
+<li>GNOME Shell sends a D-Bus call to GDM requesting user
+switching.</li>
+<li>GDM either activates an existing session belonging to another user
+or launches its own display greeter session on an available Virtual
+Terminal (VT) or display seat.</li>
+<li>GDM keeps the original session alive in the background rather than
+issuing a session termination signal (<code>SIGTERM</code> or
+<code>SIGHUP</code>).</li>
+</ol>
+<h3 id="virtual-terminals-and-hardware-access-control">Virtual Terminals
+and Hardware Access Control</h3>
+<p>Physical screen and input device assignment are mediated via Linux
+Virtual Terminals (VTs) and Direct Rendering Manager (DRM) subsystem
+controls:</p>
+<ul>
+<li><strong>X11 Environments:</strong> Traditionally, GDM allocates
+separate Virtual Terminals (e.g., VT7, VT8) for each concurrent
+graphical session. When switching users, <code>systemd-logind</code>
+simply switches the active VT. The inactive user's X server pauses
+rendering to the screen, while the active user's X server takes control
+of the physical display.</li>
+<li><strong>Wayland Environments:</strong> Under Wayland, the GNOME
+Shell compositor (Mutter) interacts directly with
+<code>systemd-logind</code> using the logind D-Bus API to manage device
+file descriptors. When a switch occurs, <code>systemd-logind</code>
+revokes DRM master permissions and input device access from the current
+session's compositor and transfers them to the target session. Mutter
+pauses its rendering pipeline, retaining the desktop buffers in video
+memory (VRAM) and system RAM.</li>
+</ul>
+<h3 id="process-continuity-and-resource-retention">Process Continuity
+and Resource Retention</h3>
+<p>Because the kernel retains process memory and systemd maintains the
+user session, all running tasks—such as long-running scripts, downloads,
+and unsaved documents—persist uninterrupted. When the original user logs
+back in, GDM re-engages their session, <code>systemd-logind</code>
+restores input and DRM access, and GNOME Shell resumes rendering the
+desktop exactly as it was left.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Dictionary and DICT Server Lookups Explained - gnome</title>
+    <meta name="description" content="GNOME Dictionary functions as a dedicated graphical front-end that queries online and local dictionaries using the DICT protocol (RFC 2229). By connecting to DICT servers, the application allows users to search across multiple reference databases simulta">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-dictionary-and-dict-server-lookups-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Dictionary and DICT Server Lookups Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-dictionary-and-dict-server-lookups-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Dictionary functions as a dedicated graphical front-end that queries online and local dictionaries using the DICT protocol (RFC 2229). By connecting to DICT servers, the application allows users to search across multiple reference databases simulta" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-dictionary-and-dict-server-lookups-explained">GNOME
+Dictionary and DICT Server Lookups Explained</h1>
+<p>GNOME Dictionary functions as a dedicated graphical front-end that
+queries online and local dictionaries using the DICT protocol (RFC
+2229). By connecting to DICT servers, the application allows users to
+search across multiple reference databases simultaneously, offering
+centralized access to definitions, translations, etymologies, and
+technical jargon directly from the Linux desktop.</p>
+<h3 id="the-role-of-the-dict-protocol">The Role of the DICT
+Protocol</h3>
+<p>At the core of GNOME Dictionary's lookup capability is the DICT
+protocol, an open client-server architecture operating over TCP port
+2628. Unlike standard web browsers that load full HTML pages containing
+definitions surrounded by styling and advertisements, GNOME Dictionary
+sends structured text commands to remote or local DICT daemons. The
+server processes the query against its indexed databases and returns
+plain, standardized text that GNOME Dictionary formats cleanly for the
+user.</p>
+<h3 id="cross-database-querying">Cross-Database Querying</h3>
+<p>One of the primary capabilities of GNOME Dictionary is its ability to
+aggregate results from distinct reference databases configured on a
+single server, such as <code>dict.org</code>. When a search is
+initiated, the application can query:</p>
+<ul>
+<li><strong>General Lexicons:</strong> Authoritative English resources
+like the Collaborative International Dictionary of English (GCIDE) and
+WordNet.</li>
+<li><strong>Specialized Glossaries:</strong> Domain-specific databases,
+such as the Jargon File for computer terminology or the Free On-line
+Dictionary of Computing (FOLDOC).</li>
+<li><strong>Translation Dictionaries:</strong> Bilingual databases
+translating words between languages.</li>
+</ul>
+<p>Users can instruct the application to look up a word across all
+available databases on the selected server simultaneously or restrict
+the search to a specific source database for targeted results.</p>
+<h3 id="search-strategies-and-matching">Search Strategies and
+Matching</h3>
+<p>GNOME Dictionary relies on the underlying DICT server to implement
+advanced search strategies. Beyond standard exact-word lookups, the
+client can request the server to apply different matching algorithms,
+including:</p>
+<ul>
+<li><strong>Prefix matching:</strong> Finding words that begin with a
+specific sequence of letters.</li>
+<li><strong>Suffix matching:</strong> Finding words that end with a
+specific sequence.</li>
+<li><strong>Soundex/Levenshtein matching:</strong> Locating words based
+on phonetic similarity or approximate spelling, which aids in finding
+misspelled terms.</li>
+<li><strong>Regular expressions:</strong> Pattern-based searches across
+the entire dictionary index.</li>
+</ul>
+<h3 id="dictionary-source-management">Dictionary Source Management</h3>
+<p>GNOME Dictionary allows users to manage multiple "Dictionary
+Sources." Each source defines the target hostname (or IP address), the
+port number, and the specific database identifier. This flexibility
+enables users to switch seamlessly between public online servers and
+local <code>dictd</code> servers running on their local network or
+<code>localhost</code>, ensuring uninterrupted definition lookups even
+when working entirely offline.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

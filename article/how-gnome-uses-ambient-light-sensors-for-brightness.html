@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Uses Ambient Light Sensors for Brightness - gnome</title>
+    <meta name="description" content="The GNOME desktop environment handles automatic display brightness through a modular pipeline that connects physical ambient light sensors (ALS) to the display backlight. This process relies on the Linux Industrial I/O (IIO) kernel subsystem, a middlewar">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-uses-ambient-light-sensors-for-brightness">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Uses Ambient Light Sensors for Brightness - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-uses-ambient-light-sensors-for-brightness" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop environment handles automatic display brightness through a modular pipeline that connects physical ambient light sensors (ALS) to the display backlight. This process relies on the Linux Industrial I/O (IIO) kernel subsystem, a middlewar" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-uses-ambient-light-sensors-for-brightness">How GNOME
+Uses Ambient Light Sensors for Brightness</h1>
+<p>The GNOME desktop environment handles automatic display brightness
+through a modular pipeline that connects physical ambient light sensors
+(ALS) to the display backlight. This process relies on the Linux
+Industrial I/O (IIO) kernel subsystem, a middleware daemon called
+<code>iio-sensor-proxy</code>, and the GNOME Settings Daemon. Together,
+these components detect changing room lighting, smooth the raw sensor
+readings to avoid abrupt screen flickering, and programmatically adjust
+the screen backlight to match user comfort.</p>
+<h3 id="hardware-detection-via-the-linux-kernel">Hardware Detection via
+the Linux Kernel</h3>
+<p>Modern laptops and tablets integrate ambient light sensors via ACPI,
+I2C, or HID-over-I2C interfaces. The Linux kernel initializes these
+devices using drivers within the Industrial I/O (IIO) subsystem. Once
+loaded, the kernel exposes the hardware's data through the virtual
+filesystem at <code>/sys/bus/iio/devices/iio:deviceX</code>. In this
+interface, raw illuminance data is provided as integer values
+representing light intensity, typically measured in or convertible to
+lux.</p>
+<h3 id="the-middleware-iio-sensor-proxy">The Middleware:
+<code>iio-sensor-proxy</code></h3>
+<p>GNOME does not read directly from the <code>/sys</code> filesystem.
+Instead, it relies on <code>iio-sensor-proxy</code>, a background system
+service created specifically to bridge Linux sensor data to desktop
+environments.</p>
+<p><code>iio-sensor-proxy</code> interacts with the kernel's IIO device
+nodes, polls the sensor or listens to hardware threshold interrupts, and
+standardizes the readings. It then broadcasts the current ambient light
+levels over the system D-Bus at <code>net.hadess.SensorProxy</code>.
+This layer abstracts vendor-specific quirks and hardware variations,
+presenting a uniform API for higher-level desktop services.</p>
+<h3 id="gnome-settings-daemon-gsd-power">GNOME Settings Daemon
+(<code>gsd-power</code>)</h3>
+<p>The power plugin inside the GNOME Settings Daemon
+(<code>gsd-power</code>) actively monitors the D-Bus interface provided
+by <code>iio-sensor-proxy</code>. When the "Automatic Brightness" toggle
+is turned on in GNOME Control Center (under <strong>Settings &gt;
+Power</strong>), <code>gsd-power</code> claims the light sensor via
+D-Bus and registers for change notifications.</p>
+<p>When the room lighting shifts, the daemon processes the updated lux
+levels using several internal calculations:</p>
+<ol type="1">
+<li><strong>Mapping Lux to Brightness:</strong> Human perception of
+light is non-linear (logarithmic). <code>gsd-power</code> maps the
+ambient lux reading onto a predefined curve to determine the
+mathematically appropriate screen brightness percentage.</li>
+<li><strong>Hysteresis and Smoothing:</strong> To avoid sudden,
+distracting jumps in brightness caused by minor shadows or brief light
+flashes, the daemon employs hysteresis. It ignores negligible
+fluctuations and applies a smoothing algorithm over time, ensuring
+gradual transitions between illumination levels.</li>
+<li><strong>User Bias Tracking:</strong> If a user manually adjusts the
+brightness slider while automatic brightness is enabled, GNOME shifts
+the baseline curve to accommodate the user's personal preference for a
+brighter or dimmer screen relative to the environment.</li>
+</ol>
+<h3 id="applying-the-backlight-change">Applying the Backlight
+Change</h3>
+<p>Once <code>gsd-power</code> calculates the target brightness
+percentage, it delegates the change to the system's backlight
+controller. On systemd-based installations, it uses D-Bus calls to
+<code>org.freedesktop.login1</code> (systemd-logind), which safely
+handles unprivileged writes to
+<code>/sys/class/backlight/&lt;device&gt;/brightness</code>. The
+graphics driver receives the request and fades the display panel's
+backlight to the target value smoothly.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

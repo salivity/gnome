@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Inhibits Suspend in Brasero Burning - gnome</title>
+    <meta name="description" content="Optical disc burning is an uninterrupted, real-time operation where any system interruption—such as entering sleep or suspend mode—corrupts the media and results in a failed write. To prevent this, GNOME coordinates with Brasero using system-level po">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-inhibits-suspend-in-brasero-burning">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Inhibits Suspend in Brasero Burning - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-inhibits-suspend-in-brasero-burning" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Optical disc burning is an uninterrupted, real-time operation where any system interruption—such as entering sleep or suspend mode—corrupts the media and results in a failed write. To prevent this, GNOME coordinates with Brasero using system-level po" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-inhibits-suspend-in-brasero-burning">How GNOME
+Inhibits Suspend in Brasero Burning</h1>
+<p>Optical disc burning is an uninterrupted, real-time operation where
+any system interruption—such as entering sleep or suspend mode—corrupts
+the media and results in a failed write. To prevent this, GNOME
+coordinates with Brasero using system-level power management APIs and
+D-Bus interfaces to establish sleep inhibitors. This article explains
+how Brasero requests suspend inhibition, how GNOME processes and
+enforces this lock through <code>systemd-logind</code> and
+<code>gnome-session</code>, and how the system safely releases the lock
+once burning is finished.</p>
+<p>When a write task begins, Brasero must guarantee continuous execution
+for external burning backends like <code>growisofs</code>,
+<code>wodim</code>, or <code>cdrtools</code>. Because optical media
+requires a steady stream of data to prevent buffer underruns, Brasero
+communicates with GNOME's session layer over D-Bus before the burning
+backend initiates.</p>
+<p>Brasero requests an inhibitor lock by invoking the
+<code>Inhibit</code> method on the <code>org.gnome.SessionManager</code>
+D-Bus interface. The call includes four parameters: the application's
+name (<code>Brasero</code>), the window identifier of the running
+process, a human-readable reason (such as "Burning CD/DVD"), and a
+bitwise flag defining what to block. To prevent the computer from
+automatically sleeping or being manually suspended, Brasero specifies
+the flag corresponding to suspend inhibition
+(<code>GSM_INHIBITOR_FLAG_SUSPEND</code>).</p>
+<p>Once the request is received, <code>gnome-session</code> generates a
+unique integer cookie, registers the inhibition, and returns the cookie
+to Brasero. In modern GNOME environments, <code>gnome-session</code>
+relays this constraint down to the system supervisor via
+<code>systemd-logind</code>. This is done by taking a sleep inhibitor
+lock through the <code>org.freedesktop.login1.Manager</code> interface
+using the <code>Inhibit</code> method, which holds open a specific file
+descriptor preventing the <code>sleep</code> target.</p>
+<p>While this inhibitor is active, GNOME power settings and system-level
+triggers adjust their behavior:</p>
+<ul>
+<li><strong>Idle Timeouts:</strong> Automatic suspend triggers caused by
+user inactivity are suppressed for the duration of the burn.</li>
+<li><strong>Power Key Events:</strong> Normal suspend actions initiated
+by pressing the hardware sleep button are ignored or blocked.</li>
+<li><strong>Lid Close Actions:</strong> Depending on the system's
+<code>logind.conf</code> configuration (specifically
+<code>HandleLidSwitch</code>), closing a laptop lid will either be
+ignored or delayed to ensure the disc is not ruined.</li>
+</ul>
+<p>When the burning process completes—or if the operation aborts due to
+an error—Brasero calls the <code>Uninhibit</code> method on
+<code>org.gnome.SessionManager</code>, passing the cookie it received at
+the start. GNOME then drops the registration and closes the
+corresponding file descriptor with <code>systemd-logind</code>. If
+Brasero crashes unexpectedly, the D-Bus connection drops automatically,
+causing the GNOME session manager to immediately release the inhibitor
+lock and return normal power management behavior to the system.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

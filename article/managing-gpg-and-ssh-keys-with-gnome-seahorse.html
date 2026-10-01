@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Managing GPG and SSH Keys with GNOME Seahorse - gnome</title>
+    <meta name="description" content="GNOME Seahorse, often labeled simply as "Passwords and Keys" in Linux desktop environments, serves as a centralized graphical interface for managing encryption keys, credentials, and keyrings. This article explains how Seahorse facilitates the creation,">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/managing-gpg-and-ssh-keys-with-gnome-seahorse">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Managing GPG and SSH Keys with GNOME Seahorse - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/managing-gpg-and-ssh-keys-with-gnome-seahorse" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Seahorse, often labeled simply as "Passwords and Keys" in Linux desktop environments, serves as a centralized graphical interface for managing encryption keys, credentials, and keyrings. This article explains how Seahorse facilitates the creation," />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="managing-gpg-and-ssh-keys-with-gnome-seahorse">Managing GPG and
+SSH Keys with GNOME Seahorse</h1>
+<p>GNOME Seahorse, often labeled simply as "Passwords and Keys" in Linux
+desktop environments, serves as a centralized graphical interface for
+managing encryption keys, credentials, and keyrings. This article
+explains how Seahorse facilitates the creation, storage,
+synchronization, and deployment of GNU Privacy Guard (GPG) keys and
+Secure Shell (SSH) credentials, eliminating the need to manage these
+security assets solely through the command line.</p>
+<h3 id="what-is-gnome-seahorse">What Is GNOME Seahorse?</h3>
+<p>Seahorse is the official GNOME application designed to interface with
+backend security frameworks, primarily GnuPG (gpg) and OpenSSH (ssh).
+Rather than replacing these core utilities, Seahorse acts as an
+intuitive front-end, interacting directly with the system's keyring
+daemon (<code>gnome-keyring-daemon</code>) to provide secure credential
+storage and simplified cryptographic operations.</p>
+<h3 id="managing-gpg-keys">Managing GPG Keys</h3>
+<p>GPG keys are widely used for signing data, verifying software
+packages, and encrypting email communications. Seahorse streamlines
+several critical GPG tasks:</p>
+<ul>
+<li><strong>Key Generation:</strong> Users can generate new PGP/GPG key
+pairs through a guided wizard, defining parameters such as key type
+(e.g., RSA or elliptic curves), key strength in bits, expiration dates,
+and owner identification details (name, email, and comment).</li>
+<li><strong>Key Properties and Trust Settings:</strong> Seahorse
+displays technical details such as key IDs, fingerprints, and subkeys.
+Users can modify trust levels, change passphrases, extend expiration
+dates, and revoke compromised or obsolete keys.</li>
+<li><strong>Keyserver Synchronization:</strong> The application
+integrates with public keyservers. Users can search for and import other
+individuals' public keys directly from the interface, or publish their
+own public keys so others can verify their signatures and send encrypted
+messages.</li>
+<li><strong>Import and Export:</strong> Public and private keys can be
+exported to text-based ASCII-armored files (<code>.asc</code>) for
+backup or distribution. Existing key files can also be dragged and
+dropped into the application to import them into the local GPG
+keyring.</li>
+</ul>
+<h3 id="managing-ssh-credentials">Managing SSH Credentials</h3>
+<p>SSH keys are standard for authenticating to remote servers and
+services like GitHub or GitLab without relying on passwords. Seahorse
+simplifies OpenSSH workflows:</p>
+<ul>
+<li><strong>SSH Key Pair Creation:</strong> Seahorse allows users to
+generate new SSH identity files (both public and private components). It
+prompts for key types, comments, and optional passphrases for encrypting
+the private key on disk.</li>
+<li><strong>Deploying Keys to Remote Servers:</strong> A standout
+feature of Seahorse is the "Configure Key for Secure Shell" tool. This
+provides a graphical equivalent of the <code>ssh-copy-id</code> command,
+allowing users to enter a remote server's hostname and login credentials
+to automatically install their public key into the remote
+<code>authorized_keys</code> file.</li>
+<li><strong>Viewing and Copying Public Keys:</strong> Users can inspect
+the fingerprint of any SSH key and copy the raw public key string
+directly to the clipboard for pasting into web-based authentication
+settings.</li>
+</ul>
+<h3 id="integration-with-gnome-keyring-and-ssh-agent">Integration with
+GNOME Keyring and SSH Agent</h3>
+<p>Beyond manual management, Seahorse works alongside the background
+keyring services to enhance usability:</p>
+<ul>
+<li><strong>Passphrase Caching:</strong> When an SSH or GPG key is
+accessed, the GNOME Keyring daemon can securely store the decrypted
+passphrase in memory for the duration of a desktop session, preventing
+repeated password prompts.</li>
+<li><strong>Automatic Agent Forwarding:</strong> Keys managed within the
+desktop environment are made automatically available to
+<code>ssh-agent</code> and <code>gpg-agent</code>, ensuring consistent
+authentication behavior in both terminal sessions and graphical
+applications.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

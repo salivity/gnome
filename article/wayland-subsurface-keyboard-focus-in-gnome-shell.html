@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wayland Subsurface Keyboard Focus in GNOME Shell - gnome</title>
+    <meta name="description" content="This article examines how GNOME Shell, through its underlying window manager and Wayland compositor Mutter, handles keyboard input focus across nested Wayland subsurfaces. While modern client applications frequently utilize nested trees of subsurfaces to">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/wayland-subsurface-keyboard-focus-in-gnome-shell">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Wayland Subsurface Keyboard Focus in GNOME Shell - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/wayland-subsurface-keyboard-focus-in-gnome-shell" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article examines how GNOME Shell, through its underlying window manager and Wayland compositor Mutter, handles keyboard input focus across nested Wayland subsurfaces. While modern client applications frequently utilize nested trees of subsurfaces to" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="wayland-subsurface-keyboard-focus-in-gnome-shell">Wayland
+Subsurface Keyboard Focus in GNOME Shell</h1>
+<p>This article examines how GNOME Shell, through its underlying window
+manager and Wayland compositor Mutter, handles keyboard input focus
+across nested Wayland subsurfaces. While modern client applications
+frequently utilize nested trees of subsurfaces to isolate rendering
+tasks or render mixed-content components, the Wayland protocol and GNOME
+Shell manage keyboard focus exclusively at the toplevel window boundary.
+Consequently, GNOME Shell routes keyboard events to the root surface,
+requiring the client application to handle any internal focus
+dispatching across its own subsurface hierarchy.</p>
+<h3 id="the-wayland-subsurface-model">The Wayland Subsurface Model</h3>
+<p>In the Wayland core architecture, subsurfaces are managed using the
+<code>wl_subcompositor</code> and <code>wl_subsurface</code> interfaces.
+A subsurface is designed to allow a client application to composite
+offscreen buffers—such as video streams, UI overlays, or web
+content—directly onto the screen alongside other surfaces without
+incurring extra copying overhead.</p>
+<p>Unlike toplevel surfaces (<code>xdg_toplevel</code>), subsurfaces do
+not represent distinct application windows. They are fundamentally
+dependent on a parent surface, forming an ordered tree of surfaces that
+share the same lifecycle, state transitions, and coordinate space.
+Because of this architectural relationship, the core Wayland protocol
+explicitly does not assign independent keyboard focus to
+<code>wl_subsurface</code> primitives.</p>
+<h3 id="mutters-keyboard-focus-tracking">Mutter's Keyboard Focus
+Tracking</h3>
+<p>GNOME Shell relies on Mutter to handle input processing via
+<code>libinput</code>. Mutter maintains the global keyboard focus
+through its <code>MetaWaylandSeat</code> and
+<code>MetaWaylandKeyboard</code> abstractions.</p>
+<p>When a user focuses an application—whether by clicking a surface,
+using an application switcher (Alt+Tab), or triggering a
+focus-follows-mouse policy—Mutter identifies the corresponding
+<code>MetaWindow</code> associated with that target. Mutter traverses up
+the hierarchy of any clicked or targeted subsurface until it resolves
+the root surface, which is bound to the toplevel application window.</p>
+<p>Once the active window is established, Mutter sends the
+<code>wl_keyboard.enter</code> event exclusively to the root
+<code>wl_surface</code> of that toplevel window. From Mutter’s
+perspective, the entire subsurface tree acts as a single logical entity
+for keyboard interaction. Even if a user clicks directly on a deeply
+nested subsurface, Mutter assigns the keyboard focus to the root surface
+of the client that owns the tree.</p>
+<h3 id="client-side-focus-dispatching">Client-Side Focus
+Dispatching</h3>
+<p>Because Mutter delivers keyboard events strictly to the toplevel
+surface, the responsibility of determining which specific subsurface or
+UI component should respond to keystrokes falls entirely on the client
+application.</p>
+<p>Application toolkits like GTK and Qt manage their own internal focus
+chains:</p>
+<ol type="1">
+<li>The toolkit receives the raw <code>wl_keyboard.key</code> events
+from Mutter over the client’s Wayland event queue.</li>
+<li>The toolkit inspects its internal widget hierarchy.</li>
+<li>The toolkit routes the keystrokes to the specific active element,
+text field, or nested subsurface widget currently selected within the
+application.</li>
+</ol>
+<p>If an application embeds a third-party nested subsurface (for
+example, a browser engine embedding an external rendering process), the
+host application must bridge the input focus internally by forwarding
+the relevant events to that child component.</p>
+<h3 id="subsurfaces-versus-popups">Subsurfaces Versus Popups</h3>
+<p>It is important to differentiate nested subsurfaces from popup
+surfaces (<code>xdg_popup</code>). While nested
+<code>wl_subsurface</code> objects can never independently request or
+hold keyboard focus, <code>xdg_popup</code> surfaces are designed with
+an explicit grabbing mechanism (<code>xdg_popup.grab</code>).</p>
+<p>When an <code>xdg_popup</code> takes an input grab, Mutter routes
+keyboard focus specifically to handle the popup's transient interaction
+(such as a context menu or dropdown). In contrast, standard nested
+subsurfaces remain permanently tied to the toplevel window's keyboard
+focus state, without any mechanism to preempt or isolate keyboard input
+from the rest of the application.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

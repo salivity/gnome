@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Mouse Speed, Acceleration, and Scrolling - gnome</title>
+    <meta name="description" content="This article explains how the GNOME desktop environment manages input preferences for mice and touchpads. Users can configure pointer speed, acceleration profiles, and natural scrolling through the built-in Settings application, the GNOME Tweaks utility,">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-mouse-speed-acceleration-and-scrolling">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Mouse Speed, Acceleration, and Scrolling - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-mouse-speed-acceleration-and-scrolling" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how the GNOME desktop environment manages input preferences for mice and touchpads. Users can configure pointer speed, acceleration profiles, and natural scrolling through the built-in Settings application, the GNOME Tweaks utility," />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-mouse-speed-acceleration-and-scrolling">GNOME Mouse Speed,
+Acceleration, and Scrolling</h1>
+<p>This article explains how the GNOME desktop environment manages input
+preferences for mice and touchpads. Users can configure pointer speed,
+acceleration profiles, and natural scrolling through the built-in
+Settings application, the GNOME Tweaks utility, or directly via
+command-line tools using <code>gsettings</code>. Beneath the graphical
+interface, GNOME relies on the <code>libinput</code> library to deliver
+consistent, fine-tuned pointer behavior across both Wayland and X11
+sessions.</p>
+<h2 id="built-in-gnome-settings">Built-In GNOME Settings</h2>
+<p>The standard way to configure primary input devices is through the
+GNOME Control Center.</p>
+<ol type="1">
+<li>Open <strong>Settings</strong> from the application menu or system
+tray.</li>
+<li>Select <strong>Mouse &amp; Touchpad</strong> from the sidebar.</li>
+</ol>
+<p>Within this panel, GNOME separates settings into dedicated sections
+for the mouse and touchpad:</p>
+<ul>
+<li><strong>Mouse Speed and Touchpad Speed:</strong> Sliders adjust the
+pointer velocity. These sliders modify the sensitivity multiplier
+applied by the system to input events.</li>
+<li><strong>Natural Scrolling:</strong> A toggle switch allows users to
+invert the scroll direction. When enabled, content moves in the same
+direction as your fingers (replicating smartphone touchscreen behavior).
+When disabled, scrolling follows traditional desktop behavior.</li>
+<li><strong>Touchpad Gestures and Tapping:</strong> This section also
+includes toggles for "Tap to Click" and two-finger right-clicking, which
+directly influence how the touchpad handles navigation.</li>
+</ul>
+<h2 id="pointer-acceleration-profiles">Pointer Acceleration
+Profiles</h2>
+<p>While the main Settings menu provides a speed slider, it does not
+expose pointer acceleration profiles. By default, GNOME uses an
+"adaptive" acceleration profile, meaning the cursor moves faster when
+the physical device is moved quickly and slower during precise
+movements.</p>
+<p>To switch between acceleration curves, users can employ <strong>GNOME
+Tweaks</strong>:</p>
+<ol type="1">
+<li>Install and launch <strong>GNOME Tweaks</strong>.</li>
+<li>Navigate to the <strong>Keyboard &amp; Mouse</strong> section.</li>
+<li>Locate <strong>Acceleration Profile</strong> under the Pointer
+section.</li>
+<li>Choose between:
+<ul>
+<li><strong>Adaptive:</strong> Scales cursor speed dynamically based on
+physical movement velocity.</li>
+<li><strong>Flat:</strong> Disables acceleration entirely, ensuring a
+1:1 linear relationship between physical movement and on-screen movement
+(often preferred for gaming and precision design work).</li>
+</ul></li>
+</ol>
+<h2 id="command-line-configuration-with-gsettings">Command-Line
+Configuration with Gsettings</h2>
+<p>For automation, remote administration, or scripting, GNOME exposes
+all input properties through its <code>dconf</code> database via the
+<code>gsettings</code> command-line utility.</p>
+<h3 id="adjusting-pointer-speed">Adjusting Pointer Speed</h3>
+<p>Pointer speed values range from <code>-1.0</code> (slowest) to
+<code>1.0</code> (fastest), with <code>0.0</code> representing the
+default.</p>
+<ul>
+<li>For Mouse:
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsettings</span> set org.gnome.desktop.peripherals.mouse speed 0.2</span></code></pre></div></li>
+<li>For Touchpad:
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsettings</span> set org.gnome.desktop.peripherals.touchpad speed 0.2</span></code></pre></div></li>
+</ul>
+<h3 id="setting-the-acceleration-profile">Setting the Acceleration
+Profile</h3>
+<p>Values can be set to <code>'flat'</code> or
+<code>'adaptive'</code>.</p>
+<ul>
+<li>For Mouse:
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsettings</span> set org.gnome.desktop.peripherals.mouse accel-profile <span class="st">&#39;flat&#39;</span></span></code></pre></div></li>
+<li>For Touchpad:
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsettings</span> set org.gnome.desktop.peripherals.touchpad accel-profile <span class="st">&#39;flat&#39;</span></span></code></pre></div></li>
+</ul>
+<h3 id="toggling-natural-scrolling">Toggling Natural Scrolling</h3>
+<p>Natural scrolling accepts a boolean value (<code>true</code> or
+<code>false</code>).</p>
+<ul>
+<li>For Mouse:
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsettings</span> set org.gnome.desktop.peripherals.mouse natural-scroll true</span></code></pre></div></li>
+<li>For Touchpad:
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsettings</span> set org.gnome.desktop.peripherals.touchpad natural-scroll true</span></code></pre></div></li>
+</ul>
+<h2 id="underlying-architecture-libinput">Underlying Architecture:
+libinput</h2>
+<p>GNOME delegates physical event processing to <code>libinput</code>, a
+library that provides a unified input stack for Linux display servers.
+When you alter mouse or touchpad settings in GNOME, the desktop
+environment translates these user configurations into properties
+accepted by <code>libinput</code>. Under modern Wayland sessions, the
+GNOME display compositor (<code>mutter</code>) communicates directly
+with <code>libinput</code>, ensuring minimal input latency and
+eliminating the configuration conflicts historically encountered with
+legacy Xorg drivers.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

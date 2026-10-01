@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Release Team Role in Tagging Stable Software - gnome</title>
+    <meta name="description" content="The GNOME Release Engineering Team oversees the development lifecycle of the GNOME desktop environment, acting as the central authority that transitions software from active development to official production releases. In tagging stable software versions">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-release-team-role-in-tagging-stable-software">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Release Team Role in Tagging Stable Software - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-release-team-role-in-tagging-stable-software" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Release Engineering Team oversees the development lifecycle of the GNOME desktop environment, acting as the central authority that transitions software from active development to official production releases. In tagging stable software versions" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-release-team-role-in-tagging-stable-software">GNOME
+Release Team Role in Tagging Stable Software</h1>
+<p>The GNOME Release Engineering Team oversees the development lifecycle
+of the GNOME desktop environment, acting as the central authority that
+transitions software from active development to official production
+releases. In tagging stable software versions, the team enforces strict
+development freezes, validates integration across hundreds of
+interdependent components, verifies release artifacts, and applies
+official version tags across repositories. Their work ensures that
+downstream distributors, such as Fedora, Ubuntu, and openSUSE, receive a
+reliable, synchronized, and stable codebase ready for deployment to
+millions of users.</p>
+<h3 id="enforcing-development-freezes">Enforcing Development
+Freezes</h3>
+<p>Before any stable version can be tagged, the Release Team enforces a
+progressive series of freezes outlined in the GNOME release schedule.
+These include the Feature Freeze, UI Freeze, String Freeze, and Code
+Freeze, culminating in the Hard Code Freeze. During these periods,
+developers cannot commit breaking changes, alter user-facing text, or
+add new features without explicit approval from the Release Team. This
+gatekeeping ensures that documentation, translations, and stability are
+preserved prior to tagging.</p>
+<h3 id="coordinating-release-sets-and-module-readiness">Coordinating
+Release Sets and Module Readiness</h3>
+<p>GNOME is composed of core system components, libraries, and
+user-facing applications maintained by independent developers.
+Individual module maintainers are responsible for preparing their
+individual module releases. The Release Team coordinates these
+maintainers, ensuring that all individual components adhere to semantic
+versioning guidelines, maintain API/ABI stability, and update their
+respective <code>NEWS</code> and change logs. Once all core and
+peripheral modules submit their individual versions, the Release Team
+brings them together into a unified release candidate.</p>
+<h3 id="automated-integration-and-build-validation">Automated
+Integration and Build Validation</h3>
+<p>The Release Team relies on automated infrastructure, primarily GitLab
+CI/CD and BuildStream, to test the entire GNOME ecosystem
+simultaneously. Before stable tags are generated, the complete software
+stack is compiled from source in an isolated environment. This step
+catches dependency mismatches, broken symbol references, and compilation
+errors that individual maintainers might miss within isolated
+repositories. A stable tag is only approved once the integration build
+completes successfully without critical defects.</p>
+<h3 id="generating-official-tarballs-and-git-tags">Generating Official
+Tarballs and Git Tags</h3>
+<p>Once the stack passes verification, the Release Team initiates the
+final tagging procedure:</p>
+<ol type="1">
+<li><strong>Tagging Central Manifests:</strong> The team creates Git
+tags within the central build repositories that define the exact commit
+hashes and tarball versions comprising that specific release (e.g.,
+GNOME 45.0 or 46.0).</li>
+<li><strong>Uploading Release Tarballs:</strong> Official source
+tarballs are generated, cryptographically signed, and uploaded to
+GNOME's central download servers (<code>download.gnome.org</code>).</li>
+<li><strong>Generating Hashes and Metadata:</strong> The team publishes
+<code>sha256sum</code> files and release manifests, providing packagers
+with the data necessary to verify download integrity.</li>
+</ol>
+<h3 id="publishing-downstream-notifications">Publishing Downstream
+Notifications</h3>
+<p>Tagging a stable release marks the formal handover to downstream
+distributions and the wider Linux community. The Release Team publishes
+official announcements on the GNOME Discourse platform and mailing
+lists, detailing highlights, updated dependencies, and direct links to
+release artifacts. By maintaining rigorous standards throughout the
+tagging process, the GNOME Release Engineering Team ensures that each
+stable milestone represents a predictable, secure, and cohesive
+release.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

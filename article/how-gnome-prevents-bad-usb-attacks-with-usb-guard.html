@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Prevents BadUSB Attacks with USBGuard - gnome</title>
+    <meta name="description" content="The GNOME desktop environment mitigates BadUSB attacks by integrating with the Linux kernel's USB authorization subsystem through an open-source software framework called USBGuard. By dynamically controlling device authorization states, GNOME automatical">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-prevents-bad-usb-attacks-with-usb-guard">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Prevents BadUSB Attacks with USBGuard - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-prevents-bad-usb-attacks-with-usb-guard" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop environment mitigates BadUSB attacks by integrating with the Linux kernel's USB authorization subsystem through an open-source software framework called USBGuard. By dynamically controlling device authorization states, GNOME automatical" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-prevents-badusb-attacks-with-usbguard">How GNOME
+Prevents BadUSB Attacks with USBGuard</h1>
+<p>The GNOME desktop environment mitigates BadUSB attacks by integrating
+with the Linux kernel's USB authorization subsystem through an
+open-source software framework called USBGuard. By dynamically
+controlling device authorization states, GNOME automatically blocks
+rogue USB hardware—such as malicious keyboards, network adapters, and
+thumbdrives—from executing automated payloads when an untrusted
+peripheral is inserted or while the user's workstation is locked.</p>
+<h3 id="the-badusb-threat">The BadUSB Threat</h3>
+<p>BadUSB attacks exploit the inherent trust operating systems place in
+USB hardware classes. Rather than relying on malicious files, a BadUSB
+device uses modified firmware to disguise itself as a Human Interface
+Device (HID), such as a keyboard or mouse, or as a network interface.
+Once connected, it can rapidly inject keystrokes, execute terminal
+commands, or redirect network traffic without requiring explicit user
+interaction.</p>
+<h3 id="the-architecture-linux-kernel-and-usbguard">The Architecture:
+Linux Kernel and USBGuard</h3>
+<p>To prevent these attacks, the system must intercept the device before
+the operating system binds a driver to it. GNOME accomplishes this using
+two primary components:</p>
+<ol type="1">
+<li><strong>Linux Kernel USB Authorization:</strong> The Linux kernel
+provides native sysfs attributes (<code>authorized</code> and
+<code>authorized_default</code>) for every connected USB device. When
+<code>authorized_default</code> is set to deny, the kernel detects the
+device on the physical bus but refuses to load device drivers or process
+I/O until the device is explicitly authorized by a user-space
+application.</li>
+<li><strong>USBGuard Daemon:</strong> USBGuard is an independent
+background daemon that enforces a strict allowlist policy based on
+attributes such as vendor ID, product ID, device class, serial number,
+and connection interface. It manages device permissions and communicates
+status updates via a D-Bus interface.</li>
+</ol>
+<h3 id="gnome-integration-via-gnome-settings-daemon">GNOME Integration
+via gnome-settings-daemon</h3>
+<p>GNOME does not reinvent the device-filtering engine; instead, it
+provides native graphical and policy management layers on top of
+USBGuard. This functionality is managed by the
+<code>usb-protection</code> plugin inside
+<code>gnome-settings-daemon</code>.</p>
+<p>When a user enables USB protection in GNOME:</p>
+<ul>
+<li><strong>D-Bus Communication:</strong> The
+<code>gnome-settings-daemon</code> establishes a connection to the
+USBGuard system service using its IPC interface.</li>
+<li><strong>Screen Lock Interception:</strong> GNOME Shell continuously
+monitors the workstation's lock state. When the screen is locked, GNOME
+signals USBGuard to reject or hold all newly connected devices. If a
+BadUSB device is inserted while the user is away from their desk, the
+system refuses to authorize it, preventing the device from injecting
+keystrokes into the lock screen or executing blind shell commands.</li>
+<li><strong>Session Restoration:</strong> When the user unlocks the
+desktop, GNOME can automatically authorize previously recognized devices
+or prompt the user to approve newly attached hardware.</li>
+</ul>
+<h3 id="configuration-and-control">Configuration and Control</h3>
+<p>Users can manage USB protection directly through the <strong>GNOME
+Control Center</strong> under the <strong>Privacy &amp;
+Security</strong> settings.</p>
+<p>The security policy can also be managed programmatically via
+<code>gsettings</code> under the schema
+<code>org.gnome.desktop.privacy</code>:</p>
+<ul>
+<li><code>usb-protection</code>: A boolean switch that enables or
+disables the integration.</li>
+<li><code>usb-protection-level</code>: Determines the strictness of the
+enforcement. Setting this to <code>lockscreen</code> ensures that new
+USB devices are denied execution strictly when the screen is locked,
+while existing authorized devices remain functional.</li>
+</ul>
+<p>By decoupling hardware detection from automatic driver configuration
+and binding authorization to user authentication states, GNOME
+effectively neutralizes the primary attack vectors utilized by BadUSB
+hardware.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

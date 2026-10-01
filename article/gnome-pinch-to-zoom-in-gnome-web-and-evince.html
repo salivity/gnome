@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Pinch-to-Zoom in GNOME Web and Evince - gnome</title>
+    <meta name="description" content="This article examines how the GNOME desktop environment handles multi-touch pinch-to-zoom gestures within GNOME Web (Epiphany) and the Evince document viewer. It details the complete input and rendering pipeline, tracing touch interactions from the Linux">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-pinch-to-zoom-in-gnome-web-and-evince">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Pinch-to-Zoom in GNOME Web and Evince - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-pinch-to-zoom-in-gnome-web-and-evince" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article examines how the GNOME desktop environment handles multi-touch pinch-to-zoom gestures within GNOME Web (Epiphany) and the Evince document viewer. It details the complete input and rendering pipeline, tracing touch interactions from the Linux" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-pinch-to-zoom-in-gnome-web-and-evince">GNOME Pinch-to-Zoom
+in GNOME Web and Evince</h1>
+<p>This article examines how the GNOME desktop environment handles
+multi-touch pinch-to-zoom gestures within GNOME Web (Epiphany) and the
+Evince document viewer. It details the complete input and rendering
+pipeline, tracing touch interactions from the Linux kernel and
+<code>libinput</code> through the Mutter Wayland compositor down to
+application-level GTK gesture controllers and specialized rendering
+engines.</p>
+<h3 id="the-input-pipeline-libinput-and-wayland">The Input Pipeline:
+libinput and Wayland</h3>
+<p>Multi-touch gestures begin at the hardware level with a
+touch-sensitive surface, such as a precision touchpad or a touchscreen.
+The Linux kernel processes raw electrical signals and exposes them
+through the <code>evdev</code> interface. The <code>libinput</code>
+library analyzes these events, identifies multi-finger contact
+geometries, and classifies patterns such as two-finger pinch
+motions.</p>
+<p>Once classified, <code>libinput</code> dispatches gesture events
+(<code>LIBINPUT_EVENT_GESTURE_PINCH_BEGIN</code>, <code>UPDATE</code>,
+and <code>END</code>) to GNOME’s display server and window manager,
+Mutter. Under a modern Wayland session, Mutter forwards these gestures
+directly to the focused application using the
+<code>pointer-gestures-unstable-v1</code> protocol extension. This
+protocol enables true continuous 1:1 direct manipulation, distinct from
+legacy X11 environments that typically translate multi-touch gestures
+into stepped, discrete <code>Ctrl + Mouse Wheel</code> scroll
+increments.</p>
+<h3 id="pinch-to-zoom-in-gnome-web-epiphany">Pinch-to-Zoom in GNOME Web
+(Epiphany)</h3>
+<p>GNOME Web relies on the WebKitGTK engine to display web pages.
+Handling pinch-to-zoom in this environment requires balancing immediate
+responsiveness with the computational cost of document reflow:</p>
+<ol type="1">
+<li><strong>Gesture Capture:</strong> WebKitGTK creates GTK gesture
+controllers (<code>GtkGestureZoom</code>) bound to its main display
+widget. These controllers track the focal point (anchor) between fingers
+and compute continuous scale deltas.</li>
+<li><strong>Compositor-Driven Scaling:</strong> To maintain 60 or 120
+frames per second, WebKitGTK decouples visual scaling from page layout.
+When a pinch begins, the engine applies an affine scale transformation
+directly to the root compositing layer using the GPU. This provides
+instant visual feedback that moves directly with the user's fingers
+without waiting for DOM recalculations.</li>
+<li><strong>Re-rasterization:</strong> Web content scaled purely by
+affine transforms will eventually appear blurry or pixelated if enlarged
+significantly. Once the gesture concludes—or dynamically during pauses
+in the gesture—WebKitGTK updates the viewport's device scale factor. The
+engine then re-rasterizes text glyphs, vector paths, and media at the
+new target resolution to restore crisp image quality.</li>
+</ol>
+<h3 id="pinch-to-zoom-in-evince">Pinch-to-Zoom in Evince</h3>
+<p>Evince manages document rendering (such as PDFs, PostScript, and
+TIFFs) through a document view widget called <code>EvView</code>, which
+interacts directly with rendering backends like Poppler.</p>
+<ol type="1">
+<li><strong>Event Interception:</strong> <code>EvView</code> attaches a
+<code>GtkGestureZoom</code> controller to the document canvas. When a
+user executes a pinch gesture, the controller captures the anchor
+coordinate relative to the document page and calculates the incremental
+scale factor.</li>
+<li><strong>Buffer Transformation:</strong> PDF rendering through
+Poppler is CPU-bound and vector-heavy, making full real-time
+re-rendering during active motion impractical. To achieve smooth
+manipulation, Evince intercepts the <code>scale-changed</code> signals
+from the gesture controller and applies a temporary 2D matrix
+transformation to the already-rendered Cairo surface backing the visible
+page. The page expands or contracts smoothly in real time relative to
+the focal point between the touch points.</li>
+<li><strong>Tile Re-rendering:</strong> When the user lifts their
+fingers, the <code>GtkGestureZoom</code> controller fires an
+<code>end</code> signal. Evince locks in the new zoom percentage,
+recalculates the target dimensions, and invalidates the cached Cairo
+surface. A background job requests newly rasterized page tiles from
+Poppler at the target resolution, replacing the scaled buffer with
+sharp, native-resolution vector output.</li>
+</ol></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

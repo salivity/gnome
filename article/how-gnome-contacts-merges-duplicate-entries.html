@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Contacts Merges Duplicate Entries - gnome</title>
+    <meta name="description" content="GNOME Contacts simplifies address book management by detecting and combining redundant contact records into a unified view. This article explores the core features and underlying architecture—most notably the integration with the Folks library, Evoluti">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-contacts-merges-duplicate-entries">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Contacts Merges Duplicate Entries - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-contacts-merges-duplicate-entries" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Contacts simplifies address book management by detecting and combining redundant contact records into a unified view. This article explores the core features and underlying architecture—most notably the integration with the Folks library, Evoluti" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-contacts-merges-duplicate-entries">How GNOME Contacts
+Merges Duplicate Entries</h1>
+<p>GNOME Contacts simplifies address book management by detecting and
+combining redundant contact records into a unified view. This article
+explores the core features and underlying architecture—most notably the
+integration with the Folks library, Evolution Data Server, and
+attribute-matching heuristics—that empower GNOME Contacts to
+automatically identify and merge duplicate address entries across
+multiple local and online accounts.</p>
+<h3 id="the-libfolks-persona-and-individual-model">The
+<code>libfolks</code> Persona and Individual Model</h3>
+<p>The primary feature enabling automatic merging in GNOME Contacts is
+its reliance on <strong>libfolks</strong>, a contact aggregation
+library. Instead of treating contact records as flat database entries,
+<code>libfolks</code> introduces a two-tier data model:</p>
+<ul>
+<li><strong>Personas:</strong> The individual contact records sourced
+directly from specific backends (such as a local vCard file, Google
+Contacts, or Nextcloud).</li>
+<li><strong>Individuals:</strong> The composite contacts presented to
+the user, constructed by automatically grouping related Personas
+together.</li>
+</ul>
+<p>When GNOME Contacts launches or syncs with a service,
+<code>libfolks</code> analyzes the incoming personas and merges them
+into a single individual entry if matching rules are satisfied, without
+overwriting the raw data on the original service.</p>
+<h3 id="normalized-multi-attribute-matching-heuristics">Normalized
+Multi-Attribute Matching Heuristics</h3>
+<p>GNOME Contacts relies on automated heuristic algorithms to determine
+whether two or more entries represent the same real-world person. The
+matching engine evaluates several standardized criteria:</p>
+<ul>
+<li><strong>Normalized Email Addresses:</strong> Identical email
+addresses serve as strong unique identifiers, triggering an immediate
+merge regardless of slight differences in name formatting.</li>
+<li><strong>Phone Number Normalization:</strong> Phone numbers are
+parsed and matched according to international dialing formats (E.164
+standardization), ignoring discrepancies caused by spaces, dashes, or
+country codes.</li>
+<li><strong>Fuzzy Name Matching:</strong> The software compares display
+names, given names, and family names, tolerating minor typographical
+differences or alternate ordering (e.g., "Doe, John" versus "John
+Doe").</li>
+</ul>
+<p>When these attributes cross a predefined confidence threshold, the
+application links the entries automatically.</p>
+<h3 id="evolution-data-server-eds-multi-account-integration">Evolution
+Data Server (EDS) Multi-Account Integration</h3>
+<p>The backend power behind GNOME Contacts is the <strong>Evolution Data
+Server (EDS)</strong>. EDS centralizes data from multiple protocols,
+including CardDAV, Microsoft Exchange, and local address books. By
+routing all contact streams through EDS into <code>libfolks</code>,
+GNOME Contacts does not need manual import/export routines to find
+duplicates. It cross-references contacts across completely different
+cloud providers in real time, merging duplicates that exist between
+separate platforms (such as a Google contact and a Nextcloud contact)
+into a single cohesive profile.</p>
+<h3 id="non-destructive-merging-mechanism">Non-Destructive Merging
+Mechanism</h3>
+<p>A critical characteristic of the merging feature in GNOME Contacts is
+that it is non-destructive. When the system merges duplicate entries
+automatically:</p>
+<ul>
+<li>No source data is permanently deleted or overwritten on the remote
+servers.</li>
+<li>Conflicting information (such as different mailing addresses or
+secondary phone numbers) is combined additively within the unified
+profile.</li>
+<li>If an automated merge occurs in error, the underlying architecture
+retains the original persona boundaries, allowing users to manually
+unlink the combined records at any time.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

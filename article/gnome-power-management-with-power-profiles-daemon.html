@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Power Management with power-profiles-daemon - gnome</title>
+    <meta name="description" content="This article explores how the modern GNOME desktop environment manages system power states and optimizes battery life through its integration with power-profiles-daemon. It covers the system architecture, how the D-Bus communication works between GNOME S">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-power-management-with-power-profiles-daemon">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Power Management with power-profiles-daemon - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-power-management-with-power-profiles-daemon" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how the modern GNOME desktop environment manages system power states and optimizes battery life through its integration with power-profiles-daemon. It covers the system architecture, how the D-Bus communication works between GNOME S" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-power-management-with-power-profiles-daemon">GNOME Power
+Management with power-profiles-daemon</h1>
+<p>This article explores how the modern GNOME desktop environment
+manages system power states and optimizes battery life through its
+integration with <code>power-profiles-daemon</code>. It covers the
+system architecture, how the D-Bus communication works between GNOME
+Shell and the kernel, the characteristics of the three main power
+profiles, and how hardware-specific ACPI drivers are leveraged to
+balance performance and energy consumption dynamically.</p>
+<h2 id="the-role-of-power-profiles-daemon">The Role of
+power-profiles-daemon</h2>
+<p>The <code>power-profiles-daemon</code> is a low-level,
+desktop-agnostic system service designed to offer system-wide power
+management via standard D-Bus APIs. Historically, Linux power management
+was fragmented across various tools like <code>tlp</code>,
+<code>powertop</code>, and manual CPU governor scripts. The
+<code>power-profiles-daemon</code> simplifies this by acting as a
+central mediator between user-space desktop environments and Linux
+kernel interfaces.</p>
+<p>Instead of micro-managing individual hardware parameters like
+specific CPU frequencies or PCI bus states directly, the daemon adjusts
+system-level power behaviors based on pre-configured platform profiles
+provided by the Linux kernel.</p>
+<h2 id="how-gnome-integrates-with-the-daemon">How GNOME Integrates with
+the Daemon</h2>
+<p>GNOME communicates directly with <code>power-profiles-daemon</code>
+over the system D-Bus bus. This integration manifests in two primary
+areas:</p>
+<ul>
+<li><strong>Quick Settings:</strong> Accessible from the top-right
+system status area, the Quick Settings menu exposes a power toggle
+allowing users to switch between available profiles on the fly.</li>
+<li><strong>GNOME Settings (Power Panel):</strong> Located within the
+main Settings application, the Power panel provides a more comprehensive
+view, displaying the active profile, battery health, charging status,
+and per-device power behaviors.</li>
+</ul>
+<p>When a user selects a profile in the GNOME interface, GNOME Shell
+sends a method call across D-Bus to <code>power-profiles-daemon</code>,
+which immediately handles the hardware adjustment without requiring root
+permissions from the graphical session.</p>
+<h2 id="the-three-core-power-profiles">The Three Core Power
+Profiles</h2>
+<p>The daemon provides three distinct states, dynamically presented in
+GNOME based on system hardware support:</p>
+<ol type="1">
+<li><strong>Performance:</strong> Focuses on maximum compute capability
+at the expense of higher energy usage and heat generation. It sets CPU
+scaling drivers to aggressive states, elevates thermal thresholds, and
+activates vendor-specific performance boosts. This profile is often
+disabled or restricted when running solely on battery power or on
+unsupported hardware.</li>
+<li><strong>Balanced:</strong> The default profile for most
+installations. It utilizes dynamic CPU governors (such as
+<code>schedutil</code> or active P-states) to scale processor
+frequencies according to current workloads, offering a compromise
+between responsiveness and battery preservation.</li>
+<li><strong>Power Saver:</strong> Maximizes battery life by aggressively
+throttling maximum CPU frequencies, engaging deeper sleep states,
+reducing screen brightness, and lowering the thermal budget. GNOME can
+be configured to switch to this mode automatically when the battery
+reaches critically low levels.</li>
+</ol>
+<h2 id="kernel-and-hardware-interaction">Kernel and Hardware
+Interaction</h2>
+<p>Under the hood, <code>power-profiles-daemon</code> interfaces
+directly with Linux kernel drivers via <code>sysfs</code>. Its primary
+mechanism is the kernel’s ACPI platform profile interface
+(<code>/sys/firmware/acpi/platform_profile</code>).</p>
+<p>Through this interface, the daemon translates profile selections into
+hardware-native commands for vendor platforms, including:</p>
+<ul>
+<li><strong>Lenovo ThinkPads</strong> (via
+<code>thinkpad_acpi</code>)</li>
+<li><strong>Dell systems</strong> (via <code>dell-wmi</code> or
+<code>alienware-wmi</code>)</li>
+<li><strong>HP laptops</strong> (via <code>hp-wmi</code>)</li>
+<li><strong>ASUS laptops</strong> (via <code>asus-wmi</code>)</li>
+</ul>
+<p>When platform profile support is unavailable, the daemon falls back
+to controlling CPU frequency scaling drivers directly, adjusting
+governors such as Intel's <code>intel_pstate</code> or AMD's
+<code>amd_pstate</code> to manage performance and power envelopes.</p>
+<h2 id="profile-holds-and-application-requests">Profile Holds and
+Application Requests</h2>
+<p>The integration also allows individual applications to request
+temporary power profile modifications using "profile holds." For
+example, software performing intensive tasks—such as 3D rendering or OS
+updates—can ask <code>power-profiles-daemon</code> to switch temporarily
+to a higher performance profile, or prevent the system from entering
+Power Saver mode. Once the process completes or the application closes,
+the daemon automatically reverts to the user's previously selected
+profile.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

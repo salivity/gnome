@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Get a Traditional Taskbar in GNOME - gnome</title>
+    <meta name="description" content="GNOME’s modern interface favors a minimalist, workspace-driven workflow that hides open applications behind an overview screen, which can be a difficult adjustment for users accustomed to traditional desktop environments like Windows or KDE Plasma. GNO">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-to-get-a-traditional-taskbar-in-gnome">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How to Get a Traditional Taskbar in GNOME - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-to-get-a-traditional-taskbar-in-gnome" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME’s modern interface favors a minimalist, workspace-driven workflow that hides open applications behind an overview screen, which can be a difficult adjustment for users accustomed to traditional desktop environments like Windows or KDE Plasma. GNO" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-to-get-a-traditional-taskbar-in-gnome">How to Get a
+Traditional Taskbar in GNOME</h1>
+<p>GNOME’s modern interface favors a minimalist, workspace-driven
+workflow that hides open applications behind an overview screen, which
+can be a difficult adjustment for users accustomed to traditional
+desktop environments like Windows or KDE Plasma. GNOME Shell extensions
+bridge this divide by directly modifying the interface, allowing users
+to restore persistent taskbars, visible running application lists, and
+familiar system trays without changing their underlying operating
+system.</p>
+<h2 id="the-gap-between-gnome-and-traditional-workflows">The Gap Between
+GNOME and Traditional Workflows</h2>
+<p>By default, modern GNOME (versions 40 and newer) eliminates the
+persistent bottom panel that defined desktop computing for decades.
+Instead, users must press the "Super" key or click "Activities" to see
+running applications, switch between windows, or launch pinned
+software.</p>
+<p>For users migrating from Windows, ChromeOS, or traditional Linux
+desktops like XFCE and Cinnamon, this design introduces unnecessary
+friction. A traditional workflow relies on glanceability—the ability to
+see all open windows, system status, and launch shortcuts simultaneously
+on a static bar. Without this, multi-tasking can feel slower for
+mouse-driven workflows.</p>
+<h2 id="how-gnome-extensions-modify-the-desktop">How GNOME Extensions
+Modify the Desktop</h2>
+<p>GNOME extensions are modular software add-ons written in JavaScript
+and CSS that hook directly into the GNOME Shell. Because they run within
+the window manager’s process, they can fundamentally alter the layout,
+appearance, and behavior of the desktop interface.</p>
+<p>Rather than requiring a complete switch to a different desktop
+environment, extensions allow users to retain GNOME’s stability,
+performance, and modern core while restructuring the user interface to
+meet classic expectations.</p>
+<h2 id="essential-extensions-for-a-classic-taskbar">Essential Extensions
+for a Classic Taskbar</h2>
+<p>Several key extensions transform the GNOME experience into a
+familiar, panel-based desktop:</p>
+<ul>
+<li><strong>Dash to Panel:</strong> This is the most comprehensive
+solution for traditionalists. It merges the top GNOME status bar with
+the application dash into a single, unified taskbar at the bottom (or
+top) of the screen. It provides running window indicators, grouped
+application icons, live window previews on hover, and customizable
+start-menu-style application launchers.</li>
+<li><strong>Dash to Dock:</strong> For users who want persistent access
+to their favorite and running apps without entirely giving up the GNOME
+layout, this extension pulls the dash out of the Activities overview and
+keeps it permanently visible on the screen.</li>
+<li><strong>AppIndicator/KStatusNotifierItem Support:</strong>
+Traditional taskbars rely heavily on a system tray for background
+applications like communication tools, cloud sync utilities, and media
+players. This extension restores standard tray icons to the panel,
+ensuring background apps remain accessible.</li>
+<li><strong>ArcMenu:</strong> Often paired with Dash to Panel, ArcMenu
+replaces the basic "Activities" button with a feature-rich application
+menu styled after Windows 7, Windows 11, or classic Linux menus,
+complete with search bars and pinned favorites.</li>
+</ul>
+<h2 id="customization-and-user-control">Customization and User
+Control</h2>
+<p>Beyond simply replicating a classic panel, these extensions provide
+deep customization options that often surpass the operating systems they
+emulate. Users can adjust panel opacity, icon sizes, multi-monitor
+behavior, and auto-hide settings.</p>
+<p>By leveraging extensions, users eliminate the learning curve of
+GNOME’s gesture-heavy workflow. They gain a high-performance desktop
+that respects decades of established muscle memory while maintaining
+access to GNOME's robust software ecosystem.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

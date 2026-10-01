@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Managing LUKS Encrypted Drives in GNOME - gnome</title>
+    <meta name="description" content="This guide explains how the GNOME desktop environment natively manages Linux Unified Key Setup (LUKS) encrypted drives through GNOME Files and GNOME Disks. By leveraging underlying system daemons like UDisks2, GNOME provides an intuitive graphical interf">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/managing-luks-encrypted-drives-in-gnome">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Managing LUKS Encrypted Drives in GNOME - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/managing-luks-encrypted-drives-in-gnome" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This guide explains how the GNOME desktop environment natively manages Linux Unified Key Setup (LUKS) encrypted drives through GNOME Files and GNOME Disks. By leveraging underlying system daemons like UDisks2, GNOME provides an intuitive graphical interf" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="managing-luks-encrypted-drives-in-gnome">Managing LUKS Encrypted
+Drives in GNOME</h1>
+<p>This guide explains how the GNOME desktop environment natively
+manages Linux Unified Key Setup (LUKS) encrypted drives through GNOME
+Files and GNOME Disks. By leveraging underlying system daemons like
+UDisks2, GNOME provides an intuitive graphical interface for mounting,
+unlocking, formatting, and configuring LUKS volumes without requiring
+manual terminal commands.</p>
+<h3 id="the-underlying-technology-udisks2-and-cryptsetup">The Underlying
+Technology: UDisks2 and cryptsetup</h3>
+<p>GNOME does not interact with the Linux kernel's device-mapper
+(dm-crypt) subsystem directly. Instead, GNOME graphical applications
+communicate over the D-Bus system bus with <strong>UDisks2</strong>.
+UDisks2 is a background daemon that handles storage operations and
+interfaces directly with <code>cryptsetup</code>—the standard utility
+for managing LUKS volumes. When you perform an action in GNOME Files or
+GNOME Disks, the application requests UDisks2 to execute the
+corresponding <code>cryptsetup</code> operations safely with root
+privileges.</p>
+<h3 id="unlocking-and-mounting-in-gnome-files">Unlocking and Mounting in
+GNOME Files</h3>
+<p>GNOME Files (Nautilus) is designed for routine, everyday access to
+encrypted removable media, such as USB flash drives or external hard
+drives:</p>
+<ul>
+<li><strong>Detection:</strong> When an encrypted LUKS drive is
+connected, GNOME detects the filesystem header and displays the device
+in the Files sidebar, marked with a small padlock icon indicating its
+locked state.</li>
+<li><strong>Passphrase Prompt:</strong> Clicking the locked volume
+triggers a native GNOME Shell modal dialog prompting for the decryption
+passphrase.</li>
+<li><strong>Keyring Integration:</strong> The dialog offers options to
+remember the passphrase—either until you log out or permanently.
+Choosing permanent storage saves the secret in <strong>GNOME
+Keyring</strong> (the system Secret Service), allowing the system to
+automatically unlock the partition on future connections without user
+intervention.</li>
+<li><strong>Automatic Mapping and Mounting:</strong> Once unlocked,
+UDisks2 creates a decrypted virtual device node under
+<code>/dev/mapper/</code> and mounts the enclosed filesystem into a
+user-accessible path (typically <code>/media/username/Label</code> or
+<code>/run/media/username/Label</code>).</li>
+<li><strong>Safe Removal:</strong> Clicking the "Eject" or "Unmount"
+button next to the volume in the sidebar causes GNOME to cleanly unmount
+the filesystem and immediately tear down the decrypted device mapper
+mapping (<code>luksClose</code>), returning the drive to a secure,
+locked state.</li>
+</ul>
+<h3 id="advanced-management-in-gnome-disks">Advanced Management in GNOME
+Disks</h3>
+<p>GNOME Disks provides low-level control over drive configuration,
+encryption setup, and key management:</p>
+<ul>
+<li><strong>Formatting as LUKS:</strong> GNOME Disks allows users to
+format whole disks or individual partitions with encryption. Selecting
+the format option lets you choose between LUKS1 and modern LUKS2
+containers, set a root passphrase, and specify the underlying filesystem
+(such as Ext4, Btrfs, or FAT/NTFS).</li>
+<li><strong>Managing Multiple Keys:</strong> LUKS supports up to eight
+key slots (or up to 32 in LUKS2). In GNOME Disks, selecting an encrypted
+partition and clicking the gear icon exposes options to "Change
+Passphrase" or manage additional keys, allowing multiple passphrases or
+recovery keys to unlock the same volume.</li>
+<li><strong>Boot Configuration (<code>/etc/crypttab</code>):</strong>
+GNOME Disks can manage persistent unlocking for internal drives. By
+opening the "Edit Encryption Options" menu, users can toggle "User
+Session Defaults" off to manually configure the mapping name, assign a
+keyfile, or toggle automatic unlocking at system boot, which Disks
+writes directly to <code>/etc/crypttab</code>.</li>
+<li><strong>Header Backup and Recovery:</strong> Because damage to the
+LUKS header renders the entire volume permanently inaccessible, GNOME
+Disks includes functionality to create a raw backup image of the
+partition header and restore it if corruption occurs.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Handles Minimize Animations Without Docks - gnome</title>
+    <meta name="description" content="When taskbars or persistent docks are absent, GNOME Shell adjusts its window minimization behavior through Mutter, its underlying compositor and window manager. Instead of directing the window into an on-screen launcher icon, the shell calculates fallbac">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-handles-minimize-animations-without-docks">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Handles Minimize Animations Without Docks - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-handles-minimize-animations-without-docks" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="When taskbars or persistent docks are absent, GNOME Shell adjusts its window minimization behavior through Mutter, its underlying compositor and window manager. Instead of directing the window into an on-screen launcher icon, the shell calculates fallbac" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-handles-minimize-animations-without-docks">How
+GNOME Shell Handles Minimize Animations Without Docks</h1>
+<p>When taskbars or persistent docks are absent, GNOME Shell adjusts its
+window minimization behavior through Mutter, its underlying compositor
+and window manager. Instead of directing the window into an on-screen
+launcher icon, the shell calculates fallback coordinates to create a
+smooth transition. This article examines how GNOME Shell detects target
+geometries, the fallback anchors it uses when no taskbar is present, and
+how the compositor executes the minimize animation under both Wayland
+and X11.</p>
+<h2 id="the-mechanics-of-minimize-targets">The Mechanics of Minimize
+Targets</h2>
+<p>In desktop environments with persistent panels or docks, window
+minimize animations rely on a target destination called an icon
+geometry. Under X11, this is traditionally declared via the
+<code>_NET_WM_ICON_GEOMETRY</code> property, while Wayland
+implementations handle it internally through compositor-specific
+protocols. This geometry tells the window manager the exact screen
+coordinates where the application’s launcher icon resides.</p>
+<p>When a minimize event occurs, the compositor scales and translates
+the window's visual texture toward those coordinates, creating the
+illusion of the window being sucked into the taskbar.</p>
+<h2 id="fallback-behavior-without-docks-or-taskbars">Fallback Behavior
+Without Docks or Taskbars</h2>
+<p>In standard GNOME Shell, the Dash is tucked away inside the
+Activities Overview rather than displayed permanently on the desktop.
+When third-party docks (such as Dash to Dock) or taskbars are disabled
+or uninstalled, GNOME Shell manages minimize requests without a visible
+dock target in the following ways:</p>
+<h3 id="1-the-top-left-activities-anchor">1. The Top-Left "Activities"
+Anchor</h3>
+<p>When no persistent dock exists on the desktop, GNOME Shell often
+redirects the minimization target to the top panel. By default, the
+animation directs the window toward the top-left corner of the primary
+display—the location of the "Activities" button. This reinforces the
+spatial logic of the shell, signaling to the user that running tasks are
+accessible within the Overview.</p>
+<h3 id="2-coordinate-fallbacks-to-0-0">2. Coordinate Fallbacks to
+<code>(0, 0)</code></h3>
+<p>If an application does not supply geometry data and the shell fails
+to map the window to an active top-bar indicator, Mutter defaults to the
+screen origin coordinates <code>(0, 0)</code>. The window will scale
+down rapidly toward the upper-left boundary while fading out, preventing
+the animation engine from crashing or hanging when a target rectangle is
+missing.</p>
+<h3 id="3-center-shrink-and-fade">3. Center Shrink and Fade</h3>
+<p>In configurations where geometry tracking is completely suppressed,
+Mutter uses a basic scale-and-fade animation. The window shrinks toward
+its own center while decreasing in opacity until it becomes completely
+invisible, bypassing the need for directional movement toward a specific
+UI element.</p>
+<h2 id="mutters-internal-state-management">Mutter's Internal State
+Management</h2>
+<p>Mutter decouples window state from UI rendering. Even if an animation
+has no defined end target, Mutter executes the internal state change
+immediately:</p>
+<ul>
+<li>The window's actor in the Clutter scene graph is hidden or detached
+from the active rendering tree once the transition completes.</li>
+<li>Input focus is shifted to the next window in the stacking
+order.</li>
+<li>The window remains represented in GNOME's internal window tracker
+(<code>ShellWindowTracker</code>), ensuring it still appears correctly
+in the Alt+Tab switcher and the Activities Overview grid.</li>
+</ul>
+<h2 id="the-role-of-animations-settings">The Role of Animations
+Settings</h2>
+<p>Users can also bypass minimize animations entirely through
+accessibility or performance settings. If animations are disabled via
+the command line:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsettings</span> set org.gnome.desktop.interface enable-animations false</span></code></pre></div>
+<p>Mutter skips the scaling transition entirely. In this scenario,
+whether a dock exists or not, the window immediately disappears from the
+desktop upon triggering the minimize action, freeing up compositor
+resources and eliminating spatial movement.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

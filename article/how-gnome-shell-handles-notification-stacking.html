@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Handles Notification Stacking - gnome</title>
+    <meta name="description" content="GNOME Shell manages simultaneous alerts through a combination of sequential banner displays and consolidated application grouping in the system tray. Rather than cluttering the desktop with multiple overlapping banners when several alerts arrive at once,">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-handles-notification-stacking">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Handles Notification Stacking - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-handles-notification-stacking" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell manages simultaneous alerts through a combination of sequential banner displays and consolidated application grouping in the system tray. Rather than cluttering the desktop with multiple overlapping banners when several alerts arrive at once," />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-handles-notification-stacking">How GNOME Shell
+Handles Notification Stacking</h1>
+<p>GNOME Shell manages simultaneous alerts through a combination of
+sequential banner displays and consolidated application grouping in the
+system tray. Rather than cluttering the desktop with multiple
+overlapping banners when several alerts arrive at once, the desktop
+environment prioritizes clean visual presentation by queuing transient
+pop-ups and stacking historical notifications by application within the
+central calendar menu.</p>
+<h3 id="transient-banner-queuing">Transient Banner Queuing</h3>
+<p>When multiple notifications arrive at the exact same moment, GNOME
+Shell does not display them simultaneously across the screen. Instead,
+it utilizes an internal queue mechanism:</p>
+<ul>
+<li><strong>Single-Banner Display:</strong> Only one notification banner
+appears at the top of the screen at any given moment. This prevents
+visual clutter and keeps user focus intact.</li>
+<li><strong>FIFO Processing:</strong> Standard alerts are generally
+processed in a First-In, First-Out order. As one banner times out or is
+dismissed, the next pending alert slides into view.</li>
+<li><strong>Urgency Overrides:</strong> Notifications flagged as
+critical (such as critical battery warnings or system-level errors)
+bypass standard queue priorities. Critical banners remain persistent
+on-screen until explicitly acknowledged or dismissed by the user, while
+low-priority banners are deferred.</li>
+</ul>
+<h3 id="grouping-in-the-notification-list">Grouping in the Notification
+List</h3>
+<p>Once banners fade or if alerts arrive while the user is actively
+working, the notifications are stored in the Message Tray, accessible by
+clicking the clock or pressing <code>Super + V</code>.</p>
+<ul>
+<li><strong>Application-Based Stacks:</strong> Notifications are grouped
+strictly by the application that generated them. If an application (such
+as an email client or messaging app) generates five notifications in
+quick succession, they are collapsed under a single application
+header.</li>
+<li><strong>Collapsible Views:</strong> In modern GNOME releases,
+multiple alerts from a single source appear as a layered or expandable
+card. Users can expand the stack to inspect individual messages or
+collapse it to save space.</li>
+<li><strong>Batch Actions:</strong> Stacking allows for collective
+actions. Users can clear an entire stack from a specific application
+with a single click on that application's close button, or clear all
+stacked notifications across all apps using the global "Clear"
+button.</li>
+</ul>
+<h3 id="user-interaction-and-do-not-disturb">User Interaction and Do Not
+Disturb</h3>
+<p>If the "Do Not Disturb" mode is toggled on, the sequential banner
+queue is bypassed entirely. Incoming simultaneous alerts produce no
+visual banners or audio cues; instead, they route immediately and
+silently into their respective application stacks inside the
+notification menu, awaiting manual review.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

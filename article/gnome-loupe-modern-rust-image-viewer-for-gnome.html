@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Loupe: Modern Rust Image Viewer for GNOME - gnome</title>
+    <meta name="description" content="GNOME Loupe stands as the default, next-generation image viewer for the GNOME desktop environment, replacing the long-standing Eye of GNOME (eog). Engineered from the ground up using the Rust programming language alongside GTK4 and Libadwaita, Loupe brin">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-loupe-modern-rust-image-viewer-for-gnome">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Loupe: Modern Rust Image Viewer for GNOME - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-loupe-modern-rust-image-viewer-for-gnome" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Loupe stands as the default, next-generation image viewer for the GNOME desktop environment, replacing the long-standing Eye of GNOME (eog). Engineered from the ground up using the Rust programming language alongside GTK4 and Libadwaita, Loupe brin" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-loupe-modern-rust-image-viewer-for-gnome">GNOME Loupe:
+Modern Rust Image Viewer for GNOME</h1>
+<p>GNOME Loupe stands as the default, next-generation image viewer for
+the GNOME desktop environment, replacing the long-standing Eye of GNOME
+(eog). Engineered from the ground up using the Rust programming language
+alongside GTK4 and Libadwaita, Loupe brings memory safety,
+hardware-accelerated performance, and responsive UI design to Linux
+image viewing. This article examines how Loupe leverages modern
+technologies to deliver a fast, secure, and touch-friendly media viewing
+experience tailored for contemporary Linux desktops.</p>
+<h3 id="the-shift-from-eye-of-gnome-to-loupe">The Shift from Eye of
+GNOME to Loupe</h3>
+<p>For over two decades, Eye of GNOME served as the default image
+viewing utility. While dependable, its aging codebase relied on legacy
+GTK3 components and older C-based image handling logic that made
+maintenance, modern gesture implementation, and sandboxing increasingly
+complex.</p>
+<p>Loupe was conceived to bring GNOME’s image consumption in line with
+modern standards. By redesigning the application with modern
+architectural patterns, the GNOME development community prioritized
+speed, smooth touchpad navigation, fractional scaling, and deep
+integration with the GNOME Human Interface Guidelines (HIG).</p>
+<h3 id="memory-safety-and-reliability-with-rust">Memory Safety and
+Reliability with Rust</h3>
+<p>A critical advantage of Loupe is its implementation in Rust. Image
+decoders are historically among the most vulnerable entry points for
+software exploits, as malformed image files can trigger memory
+corruption, buffer overflows, or arbitrary code execution in traditional
+C/C++ libraries.</p>
+<p>By utilizing Rust, Loupe guarantees compile-time memory safety
+without the overhead of a garbage collector. It mitigates entire classes
+of common security vulnerabilities, ensuring that parsing untrusted
+image files is inherently safer. Furthermore, Rust's concurrency model
+enables responsive UI interactions by handling computationally expensive
+tasks—such as file indexing and decoding—in background threads without
+risking data races.</p>
+<h3 id="native-gtk4-and-libadwaita-architecture">Native GTK4 and
+Libadwaita Architecture</h3>
+<p>Loupe is built natively with GTK4 and Libadwaita, enabling several
+modern graphical capabilities:</p>
+<ul>
+<li><strong>Hardware-Accelerated Rendering:</strong> Rendering runs
+directly through modern graphics APIs, allowing for fluid panning,
+rotation, and high-DPI scaling.</li>
+<li><strong>Fluid Gestures:</strong> Loupe supports 1:1 touch and
+trackpad gestures. Pinch-to-zoom, two-finger panning, and
+swipe-to-browse behave with the fluidity expected on modern operating
+systems and touchscreens.</li>
+<li><strong>Responsive Layouts:</strong> Powered by Libadwaita, the
+interface dynamically adjusts whether viewed on a high-resolution
+desktop monitor, a laptop display, or a mobile Linux device running
+Phosh or mobile GNOME shells.</li>
+</ul>
+<h3 id="extensible-format-support-and-sandboxing">Extensible Format
+Support and Sandboxing</h3>
+<p>Under the hood, Loupe utilizes Glycin, an image-loading library that
+abstracts decoding into sandboxed subprocesses. This architecture means
+that even if a specific decoder encounters an unexpected fault or
+exploit, it is isolated from the main application and user data. Glycin
+allows Loupe to seamlessly support a wide variety of formats—including
+standard JPEG, PNG, and SVG files, as well as modern formats like WebP,
+AVIF, and HEIC—without compromising the application's overall
+stability.</p>
+<p>Additionally, Loupe is built with modern distribution formats like
+Flatpak in mind. Its native integration with FreeDesktop portals ensures
+that file access remains strictly constrained to permissions granted by
+the user.</p>
+<h3 id="a-cohesive-component-of-the-modern-linux-desktop">A Cohesive
+Component of the Modern Linux Desktop</h3>
+<p>GNOME Loupe embodies the core philosophies of the contemporary GNOME
+ecosystem: minimalism, security, and fluid usability. By pairing the
+memory safety and efficiency of Rust with the visual capabilities of
+GTK4, Loupe provides a robust, fast, and maintainable image viewer
+equipped to handle modern visual media across diverse form factors.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

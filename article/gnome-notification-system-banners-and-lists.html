@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Notification System: Banners and Lists - gnome</title>
+    <meta name="description" content="This article explores how the GNOME desktop environment manages system and application alerts through non-intrusive banners and an integrated notification list. It covers the mechanics of top-bar banner pop-ups, the behavior of the central message tray w">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-notification-system-banners-and-lists">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Notification System: Banners and Lists - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-notification-system-banners-and-lists" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how the GNOME desktop environment manages system and application alerts through non-intrusive banners and an integrated notification list. It covers the mechanics of top-bar banner pop-ups, the behavior of the central message tray w" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-notification-system-banners-and-lists">GNOME Notification
+System: Banners and Lists</h1>
+<p>This article explores how the GNOME desktop environment manages
+system and application alerts through non-intrusive banners and an
+integrated notification list. It covers the mechanics of top-bar banner
+pop-ups, the behavior of the central message tray within the calendar
+menu, and the ways GNOME prioritizes user focus by preventing desktop
+workflow disruptions.</p>
+<h3 id="non-intrusive-notification-banners">Non-Intrusive Notification
+Banners</h3>
+<p>GNOME delivers incoming alerts through banners that drop down briefly
+from the top-center of the screen, just beneath the primary panel. These
+banners are designed to inform the user without breaking their current
+workflow. Unlike traditional pop-ups in some operating systems, GNOME
+banners do not steal keyboard or window focus, allowing continuous
+typing or navigating in the active application.</p>
+<p>Banners remain visible for a few seconds before sliding back out of
+view automatically. If an alert requires immediate attention, banners
+can include interactive elements such as action buttons, snooze options,
+or inline text fields for direct message replies. Users can also dismiss
+a banner manually with an upward swipe gesture or a mouse click.</p>
+<p>To prevent disruption during focus-heavy tasks, GNOME automatically
+suppresses banners when an application runs in full-screen mode, such as
+during video playback or gaming. Instead of flashing over the media, the
+notifications are silently routed directly to the system log for later
+review.</p>
+<h3 id="the-central-notification-list">The Central Notification
+List</h3>
+<p>When a banner disappears—whether dismissed or left to time out—the
+alert is not lost. GNOME collects all pending alerts into a unified
+notification list integrated directly into the Date &amp; Time menu at
+the top center of the screen. Clicking the clock or pressing the
+<code>Super + M</code> keyboard shortcut opens a dual-pane menu
+containing the calendar on the right and the notification list on the
+left.</p>
+<p>The notification list organizes alerts sequentially and groups them
+by application. This aggregation provides several key management
+features:</p>
+<ul>
+<li><strong>Persistent History:</strong> Notifications stay in the list
+until explicitly acted upon or dismissed, ensuring messages, updates,
+and system alerts are available when the user is ready.</li>
+<li><strong>Granular Control:</strong> Users can dismiss individual
+notifications by clicking the close button on a specific card, or they
+can clear an entire application’s queue at once. A global "Clear All"
+button clears the entire tray.</li>
+<li><strong>Application Focus:</strong> Clicking a notification card
+inside the list automatically raises the relevant window to the
+foreground and navigates to the context of the alert.</li>
+</ul>
+<h3 id="do-not-disturb-and-system-settings">Do Not Disturb and System
+Settings</h3>
+<p>GNOME gives users complete authority over notification behavior via
+system-level controls. Within the notification drawer, a "Do Not
+Disturb" (DND) toggle instantly mutes all incoming banners. When DND is
+active, new notifications bypass the screen entirely and are placed
+directly into the notification list without visual interruptions or
+sounds.</p>
+<p>Users can also fine-tune alert behaviors on a per-application basis
+in the main GNOME Settings panel. Options include:</p>
+<ul>
+<li>Disabling banners while keeping notifications in the central
+list.</li>
+<li>Hiding notification content on the lock screen for privacy.</li>
+<li>Disabling sound alerts.</li>
+<li>Completely revoking notification permissions for specific
+software.</li>
+</ul>
+<h3 id="standardized-protocol-integration">Standardized Protocol
+Integration</h3>
+<p>GNOME adheres to the standard FreeDesktop.org Desktop Notifications
+specification (<code>org.freedesktop.Notifications</code>). By
+leveraging this D-Bus interface, both native GNOME Core applications and
+third-party software—including Flatpaks, web browsers, and command-line
+utilities—can send notifications that respect the desktop's layout,
+theme, and urgency rules automatically. Alerts marked with "critical"
+urgency override standard dismissal timers, remaining visible until
+acknowledged, ensuring vital system events are never missed.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

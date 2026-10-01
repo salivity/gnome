@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Shell Window Focus Rules Explained - gnome</title>
+    <meta name="description" content="This article explores how GNOME Shell handles window focus when new application windows open, detailing the mechanisms behind focus stealing prevention, the role of user-interaction timestamps, and how Wayland and X11 protocols impact this behavior. It a">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-shell-window-focus-rules-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Shell Window Focus Rules Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-shell-window-focus-rules-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how GNOME Shell handles window focus when new application windows open, detailing the mechanisms behind focus stealing prevention, the role of user-interaction timestamps, and how Wayland and X11 protocols impact this behavior. It a" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-shell-window-focus-rules-explained">GNOME Shell Window
+Focus Rules Explained</h1>
+<p>This article explores how GNOME Shell handles window focus when new
+application windows open, detailing the mechanisms behind focus stealing
+prevention, the role of user-interaction timestamps, and how Wayland and
+X11 protocols impact this behavior. It also explains why the desktop
+environment often displays a "Window is ready" notification instead of
+immediately bringing a new window to the foreground, and how this design
+protects user workflow.</p>
+<h2 id="focus-stealing-prevention">Focus Stealing Prevention</h2>
+<p>GNOME Shell prioritizes user context through a mechanism known as
+Focus Stealing Prevention (FSP). The primary goal of FSP is to ensure
+that background tasks or newly launched applications do not abruptly
+interrupt an active session. Without FSP, a newly spawned window could
+seize keyboard focus precisely as a user is typing, potentially leading
+to lost input, accidental keystrokes, or security risks—such as typing
+sensitive credentials into an unintended text field.</p>
+<h2 id="interaction-timestamps-and-startup-notifications">Interaction
+Timestamps and Startup Notifications</h2>
+<p>To determine whether an incoming window should receive immediate
+focus, GNOME Shell evaluates the timing of user interactions using
+startup notification protocols:</p>
+<ul>
+<li><strong>Wayland (<code>xdg-activation</code>):</strong> Under
+Wayland, an application launching a new window requests an activation
+token from the compositor (Mutter). If the token corresponds to a recent
+user interaction (such as clicking an icon or pressing an application
+shortcut), Mutter grants focus to the new window. Without a valid,
+timely token, the window cannot focus itself.</li>
+<li><strong>X11 (<code>_NET_WM_USER_TIME</code>):</strong> Under the
+traditional X11 protocol, windows carry a timestamp property indicating
+the last time the user interacted with the initiating application. GNOME
+Shell compares this timestamp with the timestamp of the currently active
+window. If the current window has a newer interaction timestamp, GNOME
+considers the new window an interruption and denies direct focus.</li>
+</ul>
+<h2 id="the-window-is-ready-notification">The "Window is Ready"
+Notification</h2>
+<p>When GNOME Shell determines that a new window was launched without
+recent, direct user input—or if the launch latency exceeds a strict
+threshold—it refuses to bring the window to the front. Instead:</p>
+<ol type="1">
+<li>The window is mapped in the background beneath the current active
+window.</li>
+<li>GNOME Shell triggers a system notification stating that the
+application "is ready."</li>
+<li>The application's icon in the Dash or top bar often pulses or
+displays an indicator dot, alerting the user that content is waiting
+without shifting the active keyboard or mouse context.</li>
+</ol>
+<p>Clicking this notification or the dock icon immediately switches
+focus to the requested window.</p>
+<h2 id="customizing-focus-behavior">Customizing Focus Behavior</h2>
+<p>By default, GNOME Shell does not expose granular settings in the
+standard control panel to disable focus stealing prevention, as its
+design intentionally limits unexpected window popups. However, users
+requiring an immediate raise-on-launch behavior can modify this via
+third-party GNOME Shell extensions (such as <em>NoAnnoyance</em> or
+<em>Steal My Focus</em>). These extensions intercept the window-state
+changes and force Mutter to immediately focus and raise newly created
+windows regardless of timestamp differences.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

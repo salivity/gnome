@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Fingerprint Authentication with fprintd - gnome</title>
+    <meta name="description" content="GNOME delivers seamless biometric authentication by integrating the fprintd daemon and its underlying library, libfprint, directly into core desktop components. This integration allows users to enroll their fingerprints through the native GNOME Settings">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-fingerprint-authentication-with-fprintd">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Fingerprint Authentication with fprintd - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-fingerprint-authentication-with-fprintd" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME delivers seamless biometric authentication by integrating the fprintd daemon and its underlying library, libfprint, directly into core desktop components. This integration allows users to enroll their fingerprints through the native GNOME Settings" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-fingerprint-authentication-with-fprintd">GNOME Fingerprint
+Authentication with fprintd</h1>
+<p>GNOME delivers seamless biometric authentication by integrating the
+<code>fprintd</code> daemon and its underlying library,
+<code>libfprint</code>, directly into core desktop components. This
+integration allows users to enroll their fingerprints through the native
+GNOME Settings application and subsequently use biometric verification
+for login screens, lock screens, and administrative privilege escalation
+via Polkit.</p>
+<h2 id="the-architecture-libfprint-fprintd-and-pam">The Architecture:
+libfprint, fprintd, and PAM</h2>
+<p>GNOME does not interface with fingerprint hardware directly. Instead,
+it relies on a layered stack that abstracts the hardware and
+standardizes the authentication process:</p>
+<ul>
+<li><strong>libfprint:</strong> An open-source library that contains the
+low-level drivers required to communicate with supported fingerprint
+reader chipsets. It handles image processing, minutiae extraction, and
+template matching.</li>
+<li><strong>fprintd:</strong> A background daemon that wraps
+<code>libfprint</code> and exposes its functionality over the system
+D-Bus (<code>net.reactivated.Fprint</code>). This abstraction ensures
+that unprivileged desktop processes do not need direct access to raw
+hardware devices.</li>
+<li><strong>pam_fprintd:</strong> A Pluggable Authentication Module
+(PAM) that plugs into Linux's standard authentication subsystem,
+allowing fingerprint checks to satisfy login and authorization requests
+alongside or in place of passwords.</li>
+</ul>
+<h2 id="fingerprint-enrollment-in-gnome-settings">Fingerprint Enrollment
+in GNOME Settings</h2>
+<p>User enrollment is handled natively within the GNOME Control Center
+under the <strong>Users</strong> panel. When a compatible reader is
+detected via D-Bus, GNOME presents a "Fingerprint Login" option.</p>
+<p>During enrollment:</p>
+<ol type="1">
+<li>GNOME Settings makes a D-Bus request to <code>fprintd</code> to
+claim the device and start the enrollment session for a specific
+finger.</li>
+<li>The user is prompted to touch or swipe the sensor repeatedly.</li>
+<li>With each touch, <code>libfprint</code> builds a fingerprint
+template until it reaches sufficient sample quality.</li>
+<li>Once completed, <code>fprintd</code> stores the enrolled template
+locally (typically under <code>/var/lib/fprint/</code> with restricted
+permissions) or writes it directly to the sensor's onboard storage if
+the hardware supports on-chip matching.</li>
+</ol>
+<h2 id="the-authentication-workflow">The Authentication Workflow</h2>
+<p>Once fingerprints are registered, GNOME integrates authentication
+across multiple desktop layers:</p>
+<h3 id="1-gdm-and-the-lock-screen">1. GDM and the Lock Screen</h3>
+<p>When GNOME Display Manager (GDM) or the GNOME Shell lock screen
+initializes, PAM triggers <code>pam_fprintd</code>. The lock screen
+displays a fingerprint icon indicating that the sensor is active.
+Touching the sensor sends an interrupt to the driver;
+<code>libfprint</code> verifies the scan against the stored template,
+and <code>fprintd</code> returns a success signal to PAM, immediately
+unlocking the session. If the scan fails, the interface falls back to
+standard password entry.</p>
+<h3 id="2-privilege-escalation-polkit">2. Privilege Escalation
+(Polkit)</h3>
+<p>When an application requests root privileges (such as installing
+software or modifying system settings), GNOME Shell invokes its Polkit
+authentication agent. Configured through PAM, the dialog prompts the
+user to either place their finger on the reader or enter their password.
+This standardizes security prompts across GUI utilities and terminal
+commands.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

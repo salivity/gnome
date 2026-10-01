@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Web Isolates Web Apps into Launchers - gnome</title>
+    <meta name="description" content="GNOME Web (Epiphany) isolates web applications by treating each site as an independent entity with its own storage, process context, and desktop integration files. Rather than running websites inside shared browser tabs, GNOME Web creates a dedicated pro">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-web-isolates-web-apps-into-launchers">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Web Isolates Web Apps into Launchers - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-web-isolates-web-apps-into-launchers" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Web (Epiphany) isolates web applications by treating each site as an independent entity with its own storage, process context, and desktop integration files. Rather than running websites inside shared browser tabs, GNOME Web creates a dedicated pro" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-web-isolates-web-apps-into-launchers">How GNOME Web
+Isolates Web Apps into Launchers</h1>
+<p>GNOME Web (Epiphany) isolates web applications by treating each site
+as an independent entity with its own storage, process context, and
+desktop integration files. Rather than running websites inside shared
+browser tabs, GNOME Web creates a dedicated profile directory,
+provisions a custom <code>.desktop</code> launcher, and invokes a
+streamlined WebKitGTK instance in application mode, ensuring that each
+web app operates in an isolated environment detached from standard
+browsing data.</p>
+<h3 id="dedicated-application-profiles-and-data-separation">Dedicated
+Application Profiles and Data Separation</h3>
+<p>When you use the "Install Site as Web Application" feature in GNOME
+Web, the browser generates an isolated profile directory specifically
+for that domain. On traditional installations, these are stored in
+<code>~/.local/share/epiphany/web-apps/</code>, while Flatpak
+installations store them in the user's Epiphany sandbox directory under
+<code>~/.var/app/org.gnome.Epiphany/data/epiphany/web-apps/</code>.</p>
+<p>Each directory is assigned a unique identifier (often a hash or
+domain-based name) and contains its own:</p>
+<ul>
+<li><strong>Cookies and Session Storage:</strong> Web apps cannot read
+or modify cookies used in your primary browser or in other web
+applications.</li>
+<li><strong>Cache and Local Storage:</strong> IndexedDB, Web SQL, and
+cache files reside strictly within that app's profile directory.</li>
+<li><strong>Credentials:</strong> Saved passwords and authentication
+tokens are kept isolated, preventing cross-site leakage between
+applications.</li>
+</ul>
+<h3 id="independent-desktop-entry-creation">Independent
+<code>.desktop</code> Entry Creation</h3>
+<p>To integrate seamlessly into the GNOME Shell, the browser writes a
+standard FreeDesktop <code>.desktop</code> entry to
+<code>~/.local/share/applications/</code>.</p>
+<p>This file defines metadata such as the app’s name, icon (fetched
+automatically from the website's favicon or web app manifest), and its
+execution command. The execution line specifies the application mode
+flag and passes the explicit path to the unique profile:</p>
+<pre class="text"><code>Exec=epiphany --application-mode --profile=&quot;/path/to/profile&quot; &quot;https://example.com&quot;</code></pre>
+<p>Because it possesses its own <code>.desktop</code> file, the web
+application registers a unique application ID (<code>app-id</code>).
+This enables GNOME Shell's window manager (Mutter) to manage, dock,
+search, and switch between web apps in the dash and the Alt+Tab switcher
+as if they were native GTK applications.</p>
+<h3 id="ui-and-window-shell-containment">UI and Window Shell
+Containment</h3>
+<p>Launching via <code>--application-mode</code> strips away standard
+web browser UI elements. The navigation bar, back/forward buttons, tab
+strip, extensions, and universal settings menus are hidden.</p>
+<p>The window is rendered as a clean, single-purpose application frame
+that relies purely on web-internal navigation or custom header bars
+generated by the web app's manifest, further preventing accidental
+cross-domain browsing.</p>
+<h3 id="process-and-webkitgtk-runtime-isolation">Process and WebKitGTK
+Runtime Isolation</h3>
+<p>At runtime, GNOME Web spawns a new WebKitGTK process hierarchy bound
+specifically to the application's profile directory. Modern WebKitGTK
+architecture enforces process separation between the UI process and the
+underlying WebProcess executing JavaScript and network requests.</p>
+<p>Because the process is bound only to the specific profile directory,
+any security event, crash, or memory overflow inside that web
+application remains constrained to that instance. It will not disrupt
+the main browser session or any other running web apps.</p>
+<h3 id="flatpak-sandboxing-and-portal-usage">Flatpak Sandboxing and
+Portal Usage</h3>
+<p>When GNOME Web runs as a Flatpak, it uses XDG Desktop Portals to
+create web launchers on the host system without compromising its own
+sandbox.</p>
+<p>The browser uses the Dynamic Launcher portal
+(<code>org.freedesktop.portal.DynamicLauncher</code>) to request the
+host system to install the <code>.desktop</code> file and corresponding
+icon. When launched from the host application grid, the launcher invokes
+the Flatpak runtime with parameters telling the sandboxed Epiphany
+instance to launch the specific profile, keeping host-level and
+application-level permissions strictly controlled.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

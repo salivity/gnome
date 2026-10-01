@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Workspace Switcher: Vertical vs Horizontal Layout - gnome</title>
+    <meta name="description" content="GNOME Shell renders its workspace switchers by managing a scene graph of visual actors powered by Mutter and Clutter, adapting transformation matrices, scrolling coordinates, and layout allocations to fit either a vertical or horizontal axis. While GNOME">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-workspace-switcher-vertical-vs-horizontal-layout">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Workspace Switcher: Vertical vs Horizontal Layout - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-workspace-switcher-vertical-vs-horizontal-layout" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell renders its workspace switchers by managing a scene graph of visual actors powered by Mutter and Clutter, adapting transformation matrices, scrolling coordinates, and layout allocations to fit either a vertical or horizontal axis. While GNOME" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-workspace-switcher-vertical-vs-horizontal-layout">GNOME
+Workspace Switcher: Vertical vs Horizontal Layout</h1>
+<p>GNOME Shell renders its workspace switchers by managing a scene graph
+of visual actors powered by Mutter and Clutter, adapting transformation
+matrices, scrolling coordinates, and layout allocations to fit either a
+vertical or horizontal axis. While GNOME 40 shifted the default paradigm
+to a horizontal spatial model to align with trackpad gesture physics,
+vertical layouts—used in earlier versions and maintained via community
+extensions—rely on distinct layout containers, thumbnail placements, and
+viewport transitions. Understanding these differences involves examining
+the Shell Toolkit (St) layout managers, coordinate translations, and
+viewport clipping routines that govern each orientation.</p>
+<h3 id="underlying-rendering-engine-clutter-and-st">Underlying Rendering
+Engine: Clutter and St</h3>
+<p>GNOME Shell builds its user interface using the Clutter toolkit and
+the Shell Toolkit (St). The workspace switcher, whether viewed inside
+the full-screen Activities Overview or as a floating on-screen display
+(OSD) popup, is composed of a hierarchy of <code>Clutter.Actor</code>
+instances.</p>
+<p>In both orientations, workspaces are rendered as scaled-down clones
+or direct representations of the desktop stage. The primary difference
+lies in the <code>St.BoxLayout</code> or custom layout manager
+(<code>Clutter.LayoutManager</code>) used to sequence these workspace
+actors, which alters the distribution of translation vectors, sizing
+allocations, and clipping rectangles.</p>
+<h3 id="horizontal-layout-rendering-default-in-gnome-40">Horizontal
+Layout Rendering (Default in GNOME 40+)</h3>
+<p>The modern horizontal layout organizes workspaces sequentially along
+the X-axis.</p>
+<ol type="1">
+<li><strong>Coordinate Translations:</strong> In the horizontal model,
+navigation changes the horizontal translation property
+(<code>translation_x</code>) of the container actor
+(<code>WorkspacesView</code>). When a user swipes or switches desks, the
+active workspace slides along the X-axis, with neighboring workspaces
+rendered to the immediate left and right.</li>
+<li><strong>Overview Geometry:</strong> Inside the Activities Overview,
+workspace previews are centered horizontally. The overview maintains a
+primary workspace in the center of the display while adjacent workspaces
+peak into the viewport from the screen edges. This requires GNOME Shell
+to compute preview scales dynamically based on monitor width, minus the
+margins consumed by the top bar and the Dash.</li>
+<li><strong>Workspace Thumbnail Strip:</strong> Thumbnails are arranged
+in a horizontal row, positioned between the search entry and the main
+workspace view. The thumbnail container allocates fixed-aspect-ratio
+miniatures based on horizontal spacing rules, scrolling horizontally if
+the number of dynamic workspaces exceeds the monitor width.</li>
+<li><strong>Input Mapping:</strong> 1:1 touchpad gestures calculate
+delta values directly along the X-axis, binding pointer or touch
+coordinates to the interpolation of the Clutter actor's X-position.</li>
+</ol>
+<h3
+id="vertical-layout-rendering-legacy-gnome-338-and-extensions">Vertical
+Layout Rendering (Legacy GNOME 3.38 and Extensions)</h3>
+<p>In the classic vertical layout, workspaces exist sequentially along
+the Y-axis.</p>
+<ol type="1">
+<li><strong>Coordinate Translations:</strong> Vertical workspace
+switchers manipulate the vertical translation property
+(<code>translation_y</code>) of the workspace container. Transitions
+occur strictly up and down.</li>
+<li><strong>Overview Geometry:</strong> The active workspace occupies
+the majority of the screen without showing glimpses of the workspaces
+above or below it on the main stage. Instead, spatial awareness is
+maintained through a dedicated thumbnail rail pinned along the right
+edge of the screen.</li>
+<li><strong>Workspace Thumbnail Rail:</strong> The thumbnail strip uses
+an <code>St.BoxLayout</code> with a vertical orientation
+(<code>vertical: true</code>). Thumbnails stack downward, scaling down
+in size when the number of workspaces increases to prevent the rail from
+exceeding the monitor’s vertical height bounds.</li>
+<li><strong>Input Mapping:</strong> Mouse wheel scrolling and vertical
+gestures drive the Y-axis interpolation. The switcher popup
+(<code>WorkspaceSwitcherPopup</code>) appears as a vertically aligned
+indicator on the right or center of the display, rendering workspace
+boxes stacked on top of one another.</li>
+</ol>
+<h3 id="viewport-management-and-performance">Viewport Management and
+Performance</h3>
+<p>The choice between vertical and horizontal rendering affects how
+Mutter clips off-screen contents:</p>
+<ul>
+<li><strong>Horizontal Rendering:</strong> Requires broader viewport
+allocation to render the visible segments of adjacent workspaces on
+either side of the active desktop. Clutter maintains these neighboring
+actors in a drawn state to ensure smooth real-time gesture scrubbing,
+increasing the overall texture memory footprint during transition
+animations.</li>
+<li><strong>Vertical Rendering:</strong> Typically isolates the
+rendering to the active workspace on the main canvas, offloading
+adjacent previews solely to small thumbnail clones in the side rail.
+This minimizes stage redraw overhead because off-screen workspaces
+remain culled until an explicit switch signal transitions the
+Y-coordinate.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

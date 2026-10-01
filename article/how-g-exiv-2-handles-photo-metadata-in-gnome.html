@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GExiv2 Handles Photo Metadata in GNOME - gnome</title>
+    <meta name="description" content="GExiv2 is a critical middleware component in the GNOME desktop environment, serving as a GObject-based wrapper around the powerful Exiv2 C++ library. It enables GNOME core applications and background services to effortlessly read, write, and manipulate E">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-g-exiv-2-handles-photo-metadata-in-gnome">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GExiv2 Handles Photo Metadata in GNOME - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-g-exiv-2-handles-photo-metadata-in-gnome" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GExiv2 is a critical middleware component in the GNOME desktop environment, serving as a GObject-based wrapper around the powerful Exiv2 C++ library. It enables GNOME core applications and background services to effortlessly read, write, and manipulate E" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gexiv2-handles-photo-metadata-in-gnome">How GExiv2 Handles
+Photo Metadata in GNOME</h1>
+<p>GExiv2 is a critical middleware component in the GNOME desktop
+environment, serving as a GObject-based wrapper around the powerful
+Exiv2 C++ library. It enables GNOME core applications and background
+services to effortlessly read, write, and manipulate EXIF, IPTC, and XMP
+photo metadata without dealing with low-level C++ interfaces. By
+exposing a modern, GObject-compliant API, GExiv2 bridges the gap between
+deep image metadata manipulation and GNOME’s native development stack,
+powering features like image sorting, geolocation tagging, and desktop
+indexing.</p>
+<h3 id="the-bridge-between-c-and-gobject">The Bridge Between C++ and
+GObject</h3>
+<p>The primary purpose of GExiv2 is abstraction. The underlying Exiv2
+library is written in C++, which is not natively compatible with the
+C-based GObject system that underpins the GNOME desktop. GExiv2 wraps
+Exiv2's capabilities into GObject classes, providing automatic memory
+management, reference counting, and standard error handling.</p>
+<p>Crucially, this architecture unlocks support for GObject
+Introspection. Through introspection, GExiv2 generates runtime bindings
+for multiple languages used across GNOME development, including Python,
+JavaScript (GJS), and Vala. This allows developers to interact with
+photo metadata seamlessly, regardless of the language an application is
+written in.</p>
+<h3 id="comprehensive-metadata-support">Comprehensive Metadata
+Support</h3>
+<p>GExiv2 handles the three primary metadata standards used in digital
+photography:</p>
+<ul>
+<li><strong>EXIF (Exchangeable Image File Format):</strong> It parses
+technical camera data, such as shutter speed, aperture, ISO, lens
+profiles, exposure time, camera make and model, and embedded thumbnail
+previews.</li>
+<li><strong>IPTC (International Press Telecommunications
+Council):</strong> It manages editorial data, including headlines,
+copyright notices, author information, and manual categorization
+keywords.</li>
+<li><strong>XMP (Extensible Metadata Platform):</strong> It handles
+modern, XML-based extensible metadata, including face tags, rating
+systems, non-destructive editing history, and custom software tags.</li>
+</ul>
+<p>Beyond standard tags, GExiv2 natively handles specific metadata tasks
+such as reading and updating GPS coordinates (latitude, longitude,
+altitude) and detecting image orientation tags to allow photo viewers to
+automatically rotate images correctly.</p>
+<h3 id="integration-in-the-gnome-desktop-ecosystem">Integration in the
+GNOME Desktop Ecosystem</h3>
+<p>GExiv2 is deeply integrated into GNOME's native application suite and
+background daemons:</p>
+<ul>
+<li><strong>Shotwell and GNOME Photos:</strong> These photo management
+applications rely heavily on GExiv2 to import media, extract capture
+timestamps to build chronological timelines, read geographical data for
+map views, and write updated user tags or ratings directly to image
+files.</li>
+<li><strong>Tracker Miners:</strong> GNOME's desktop search and indexing
+framework (Tracker) uses GExiv2 to extract metadata from newly saved
+photos. This indexing enables users to search for images in Nautilus
+(Files) or the GNOME Activities overview using camera details, tags, or
+locations.</li>
+<li><strong>Nautilus (GNOME Files):</strong> When a user opens the
+"Properties" dialog of an image in the file manager, GExiv2 works in the
+background to present clean, categorized hardware and exposure
+information.</li>
+</ul>
+<h3 id="performance-and-safety-in-file-operations">Performance and
+Safety in File Operations</h3>
+<p>GExiv2 is designed to modify metadata cleanly without altering the
+underlying pixel data or re-encoding the image, preserving the original
+visual quality. It supports a vast array of file types, including
+standard formats like JPEG, PNG, TIFF, and WebP, as well as complex RAW
+formats from major camera manufacturers.</p>
+<p>By abstracting file I/O operations and buffering metadata changes in
+memory until an explicit save operation is executed, GExiv2 helps
+prevent file corruption during write processes, ensuring that metadata
+edits in GNOME remain fast, reliable, and safe.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

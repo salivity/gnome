@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding GNOME HIG Destructive Action Patterns - gnome</title>
+    <meta name="description" content="The GNOME Human Interface Guidelines (HIG) outline specific design patterns for destructive actions to balance user safety with an uninterrupted workflow. Rather than relying on constant, disruptive confirmation dialogs, the GNOME HIG emphasizes reversib">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/understanding-gnome-hig-destructive-action-patterns">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding GNOME HIG Destructive Action Patterns - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/understanding-gnome-hig-destructive-action-patterns" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Human Interface Guidelines (HIG) outline specific design patterns for destructive actions to balance user safety with an uninterrupted workflow. Rather than relying on constant, disruptive confirmation dialogs, the GNOME HIG emphasizes reversib" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1
+id="understanding-gnome-hig-destructive-action-patterns">Understanding
+GNOME HIG Destructive Action Patterns</h1>
+<p>The GNOME Human Interface Guidelines (HIG) outline specific design
+patterns for destructive actions to balance user safety with an
+uninterrupted workflow. Rather than relying on constant, disruptive
+confirmation dialogs, the GNOME HIG emphasizes reversible actions, user
+habituation prevention, and clear visual signifiers. This approach
+ensures that explicit confirmation alerts are reserved only for
+critical, irreversible operations where data loss cannot be mitigated
+through other means.</p>
+<h3 id="the-failure-of-traditional-confirmation-dialogs">The Failure of
+Traditional Confirmation Dialogs</h3>
+<p>Frequent confirmation prompts—such as asking "Are you sure?" for
+every routine deletion—lead to habituation. When users are repeatedly
+interrupted by modal dialogs, pressing the confirmation button becomes
+muscle memory. As a result, users stop reading the warnings, rendering
+the confirmation useless when a truly catastrophic mistake occurs. The
+GNOME HIG aims to eliminate this prompt fatigue by dramatically reducing
+the frequency of confirmation requests.</p>
+<h3 id="favoring-undo-over-interruption">Favoring "Undo" Over
+Interruption</h3>
+<p>The primary design pattern recommended by the GNOME HIG for
+destructive actions is making operations reversible. Instead of blocking
+the interface with a dialog:</p>
+<ul>
+<li><strong>Soft Deletions:</strong> Files and items should be moved to
+a temporary state, such as the Trash, rather than immediately removed
+from storage.</li>
+<li><strong>In-App Notifications:</strong> Applications should use
+non-modal banners or toasts with an immediate "Undo" action. This allows
+the user to correct mistakes effortlessly without requiring proactive
+permission for every standard task.</li>
+</ul>
+<h3 id="when-confirmations-are-required">When Confirmations Are
+Required</h3>
+<p>The HIG dictates that explicit confirmation dialogs should only be
+used when an action causes significant, irreversible loss of data or
+creates serious system-level consequences. Legitimate triggers
+include:</p>
+<ul>
+<li>Permanently emptying the Trash or wiping a storage drive.</li>
+<li>Overwriting an existing file that lacks version history.</li>
+<li>Operations that immediately affect external servers or other
+users.</li>
+</ul>
+<h3 id="anatomy-of-a-gnome-destructive-confirmation">Anatomy of a GNOME
+Destructive Confirmation</h3>
+<p>When a confirmation dialog is unavoidable, the GNOME HIG requires
+strict design choices to maximize clarity and prevent accidental
+confirmation:</p>
+<ul>
+<li><strong>Specific Button Labels:</strong> Generic labels like "Yes"
+and "OK" are forbidden. Buttons must use active verbs that clearly
+describe the outcome, such as "Delete" or "Format".</li>
+<li><strong>Destructive Styling:</strong> The action button must use the
+<code>.destructive-action</code> style class (typically rendered in red)
+to visually communicate the danger.</li>
+<li><strong>Safe Defaults:</strong> The default keyboard focus must be
+placed on the safe action—typically "Cancel"—so that an accidental press
+of the Enter or Space key does not trigger the destructive process.</li>
+<li><strong>Clear Consequences:</strong> The dialog heading must state
+the primary question concisely, while the body text explicitly states
+the exact consequences of proceeding, such as "This action cannot be
+undone."</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

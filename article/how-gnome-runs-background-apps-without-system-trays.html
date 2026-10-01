@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Runs Background Apps Without System Trays - gnome</title>
+    <meta name="description" content="Modern versions of the GNOME desktop environment have eliminated legacy system tray icons in favor of a standardized, secure, and user-centric application lifecycle. Instead of allowing persistent tray icons to arbitrarily manage process lifecycles and c">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-runs-background-apps-without-system-trays">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Runs Background Apps Without System Trays - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-runs-background-apps-without-system-trays" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern versions of the GNOME desktop environment have eliminated legacy system tray icons in favor of a standardized, secure, and user-centric application lifecycle. Instead of allowing persistent tray icons to arbitrarily manage process lifecycles and c" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-runs-background-apps-without-system-trays">How GNOME
+Runs Background Apps Without System Trays</h1>
+<p>Modern versions of the GNOME desktop environment have eliminated
+legacy system tray icons in favor of a standardized, secure, and
+user-centric application lifecycle. Instead of allowing persistent tray
+icons to arbitrarily manage process lifecycles and clutter the
+interface, GNOME handles background tasks through a combination of
+systemd user sessions, XDG Desktop Portals, D-Bus application
+activation, and a native Quick Settings background apps monitor. This
+ensures processes can continue running or performing tasks seamlessly
+without requiring persistent icons pinned to the top bar.</p>
+<h3 id="the-problem-with-legacy-system-tray-icons">The Problem with
+Legacy System Tray Icons</h3>
+<p>Legacy tray icons combined multiple distinct responsibilities into a
+single tiny icon: task status, notification dispatch, window
+minimization targets, and process lifecycle management. This design
+broke user experience consistency, bypassed accessibility tools, and
+lacked security sandboxing. GNOME separated these responsibilities into
+distinct, native system services rather than a persistent panel of
+icons.</p>
+<h3 id="systemd-user-session-integration">Systemd User Session
+Integration</h3>
+<p>GNOME deeply integrates with systemd at the user level
+(<code>systemd --user</code>). When you log in, systemd manages the
+lifecycle of your graphical session and its associated background
+services. Background tasks—such as file indexing
+(<code>tracker-miner-fs</code>), backup utilities, or sync daemons—run
+as isolated systemd units or slice services. This architectural
+separation allows the backend process to survive window closures,
+restarts, or crashes independently of the graphical user interface.</p>
+<h3 id="xdg-desktop-portals-and-permissions">XDG Desktop Portals and
+Permissions</h3>
+<p>For containerized applications such as Flatpaks, GNOME utilizes the
+XDG Desktop Portal system, specifically the
+<code>org.freedesktop.portal.Background</code> portal. When an
+application attempts to run after its last window has closed, the
+background portal intercepts the request:</p>
+<ul>
+<li>The portal checks if the application has explicit permission to run
+headlessly.</li>
+<li>If it does not, the user is prompted to grant or deny background
+execution rights.</li>
+<li>Permissions are remembered and can be revoked at any time through
+GNOME Settings under the Applications tab.</li>
+</ul>
+<h3 id="the-quick-settings-background-apps-menu">The Quick Settings
+Background Apps Menu</h3>
+<p>To preserve user visibility into what is running on their machine,
+GNOME introduced the "Background Apps" section inside the system status
+(Quick Settings) menu. When an application continues running with no
+active windows, it automatically registers in this native list.</p>
+<p>Users can click on an entry to bring its interface forward, or click
+the dedicated close button next to the application name to terminate the
+process cleanly via standard signals. This gives users full operational
+visibility without requiring a tray icon for every background task.</p>
+<h3 id="d-bus-and-app-separation">D-Bus and App Separation</h3>
+<p>Applications developed for the modern Linux desktop typically split
+their architecture into a headless backend daemon and a graphical
+frontend (GTK client). The communication between both components happens
+over the D-Bus system or session bus.</p>
+<p>When the user closes the window, the GUI frontend exits, freeing
+graphic resources. The backend daemon remains connected to D-Bus to
+listen for system events, network triggers, or scheduled jobs. When user
+interaction is required again, the daemon triggers a desktop
+notification or asks the desktop to launch the GUI frontend on
+demand.</p>
+<h3 id="purpose-built-replacements-for-status-interfaces">Purpose-Built
+Replacements for Status Interfaces</h3>
+<p>Features historically crammed into status icons are now routed
+through standardized desktop APIs:</p>
+<ul>
+<li><strong>Media Controls:</strong> Audio and video applications
+implement the MPRIS (Media Player Remote Interfacing Specification)
+D-Bus interface, which displays controls directly inside the
+notification shade and lock screen.</li>
+<li><strong>Alerts and Status Updates:</strong> Applications emit native
+desktop notifications with actionable buttons rather than blinking or
+changing an icon in the corner of the screen.</li>
+<li><strong>Online Accounts:</strong> Synchronization tasks (Google
+Drive, Nextcloud, Microsoft 365) are handled globally by GNOME Online
+Accounts and evolution-data-server rather than individual standalone
+tray daemons.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

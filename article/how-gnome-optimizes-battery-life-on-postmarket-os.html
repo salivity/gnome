@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Optimizes Battery Life on postmarketOS - gnome</title>
+    <meta name="description" content="Running a complete desktop environment on mobile hardware demands aggressive power management. GNOME optimizes battery life on postmarketOS by combining lightweight Wayland rendering, automated display management, Linux kernel suspend states, background">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-optimizes-battery-life-on-postmarket-os">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Optimizes Battery Life on postmarketOS - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-optimizes-battery-life-on-postmarket-os" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Running a complete desktop environment on mobile hardware demands aggressive power management. GNOME optimizes battery life on postmarketOS by combining lightweight Wayland rendering, automated display management, Linux kernel suspend states, background" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-optimizes-battery-life-on-postmarketos">How GNOME
+Optimizes Battery Life on postmarketOS</h1>
+<p>Running a complete desktop environment on mobile hardware demands
+aggressive power management. GNOME optimizes battery life on
+postmarketOS by combining lightweight Wayland rendering, automated
+display management, Linux kernel suspend states, background application
+suspension, and direct integration with power profile daemons. Together,
+these mechanisms reduce unnecessary CPU wakeups, lower thermal output,
+and ensure mobile devices draw minimal power when idle.</p>
+<h3 id="wayland-and-hardware-accelerated-rendering">Wayland and
+Hardware-Accelerated Rendering</h3>
+<p>GNOME relies on Mutter, its default Wayland compositor, which
+eliminates the legacy overhead associated with the X11 display server.
+By communicating directly with the Linux kernel through Direct Rendering
+Manager (DRM) and Kernel Mode Setting (KMS), GNOME avoids redundant
+frame copies and renders interface elements directly through hardware
+acceleration. This significantly reduces GPU and CPU utilization during
+UI interactions, resulting in lower power draw during everyday
+navigation.</p>
+<h3 id="idle-detection-and-kernel-sleep-states">Idle Detection and
+Kernel Sleep States</h3>
+<p>Battery efficiency on mobile relies heavily on reaching deep sleep
+states whenever the screen is off. GNOME monitors user inactivity and
+triggers the device's suspend states (such as <code>s2idle</code> or
+<code>suspend-to-RAM</code>) through the postmarketOS kernel stack. When
+a user locks their device or allows it to time out, GNOME turns off
+peripheral radios where applicable and suspends non-essential hardware
+subsystems, allowing the system on a chip (SoC) to drop to its lowest
+possible power state.</p>
+<h3 id="automated-backlight-and-display-management">Automated Backlight
+and Display Management</h3>
+<p>The display panel is typically the most power-hungry component of a
+smartphone. GNOME Mobile integrates sensor management via
+<code>iio-sensor-proxy</code> to read ambient light sensors and
+dynamically adjust backlight intensity. It also utilizes proximity
+sensors during phone calls to immediately disable the display panel.
+Strict screen timeout rules ensure the screen is turned off rapidly when
+no user input is detected.</p>
+<h3 id="process-freezing-via-linux-control-groups-cgroups">Process
+Freezing via Linux Control Groups (cgroups)</h3>
+<p>To prevent background tasks from draining the battery, GNOME
+leverages modern Linux cgroups (cgroups v2). Inactive applications
+running in the background, particularly those distributed via Flatpak or
+managed via systemd/OpenRC, can be throttled or frozen entirely. By
+halting execution threads of apps that are not actively in view or
+playing media, GNOME stops rogue processes from triggering CPU
+wakeups.</p>
+<h3 id="power-profiles-daemon-integration">Power-Profiles-Daemon
+Integration</h3>
+<p>GNOME natively interfaces with <code>power-profiles-daemon</code>, a
+system service that controls CPU performance governors, platform power
+profiles, and driver-level energy tunables. When set to "Power Saver"
+mode—either manually by the user or automatically when the battery
+reaches a low threshold—the system scales down CPU frequencies, limits
+peak clock speeds, and instructs drivers to prioritize energy
+conservation over raw performance.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

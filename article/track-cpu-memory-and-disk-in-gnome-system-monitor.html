@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track CPU Memory and Disk in GNOME System Monitor - gnome</title>
+    <meta name="description" content="GNOME System Monitor is a core utility for Linux desktop environments that provides real-time visualization and management of hardware resources. This article details the specific features available within the application to track and analyze processor (">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/track-cpu-memory-and-disk-in-gnome-system-monitor">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Track CPU Memory and Disk in GNOME System Monitor - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/track-cpu-memory-and-disk-in-gnome-system-monitor" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME System Monitor is a core utility for Linux desktop environments that provides real-time visualization and management of hardware resources. This article details the specific features available within the application to track and analyze processor (" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="track-cpu-memory-and-disk-in-gnome-system-monitor">Track CPU
+Memory and Disk in GNOME System Monitor</h1>
+<p>GNOME System Monitor is a core utility for Linux desktop environments
+that provides real-time visualization and management of hardware
+resources. This article details the specific features available within
+the application to track and analyze processor (CPU) performance, system
+memory (RAM) and swap allocation, and disk storage capacity and
+activity.</p>
+<h2 id="cpu-tracking-features">CPU Tracking Features</h2>
+<p>GNOME System Monitor tracks central processing unit activity across
+two primary interfaces: the <strong>Resources</strong> tab and the
+<strong>Processes</strong> tab.</p>
+<ul>
+<li><strong>Multi-Core History Graphs:</strong> Located in the Resources
+tab, the CPU history section renders real-time, color-coded line graphs
+tracking overall processor activity. If the system uses a multi-core or
+multi-threaded CPU, each logical core is plotted independently alongside
+an aggregate utilization percentage.</li>
+<li><strong>Per-Process CPU Metrics:</strong> In the Processes tab,
+users can view real-time CPU percentage consumption for individual
+tasks. The list can be sorted dynamically by clicking the "% CPU" column
+header, allowing users to immediately identify resource-heavy
+applications.</li>
+<li><strong>Process Priority and Control:</strong> Users can right-click
+any process consuming excessive CPU cycles to alter its priority (nice
+value) or terminate, kill, stop, or resume it directly from the
+interface.</li>
+</ul>
+<h2 id="memory-and-swap-tracking-features">Memory and Swap Tracking
+Features</h2>
+<p>System memory monitoring is split between dynamic historical usage
+graphs and granular per-process allocations.</p>
+<ul>
+<li><strong>Memory and Swap History:</strong> The Resources tab features
+a rolling graph that tracks physical RAM and Swap usage simultaneously.
+The display provides live quantitative figures, showing exact amounts of
+consumed memory versus total available capacity (e.g., "4.2 GiB of 15.5
+GiB") alongside the percentage used.</li>
+<li><strong>Per-Process Memory Inspection:</strong> Within the Processes
+tab, the "Memory" column displays the physical RAM occupied by each
+running application.</li>
+<li><strong>Detailed Memory Maps:</strong> Advanced users can
+right-click an individual process and select "Memory Maps" to view a
+breakdown of virtual memory allocations, shared libraries, heap, and
+stack usage for that specific task.</li>
+</ul>
+<h2 id="disk-utilization-features">Disk Utilization Features</h2>
+<p>GNOME System Monitor separates disk tracking into total partition
+space utilization and individual read/write operations.</p>
+<ul>
+<li><strong>File Systems Tab:</strong> This dedicated tab displays a
+comprehensive table of all mounted storage devices, partitions, and
+external drives. For each entry, the application details:
+<ul>
+<li><strong>Device:</strong> The storage node (e.g.,
+<code>/dev/nvme0n1p2</code>).</li>
+<li><strong>Directory:</strong> The designated mount point (e.g.,
+<code>/</code> or <code>/home</code>).</li>
+<li><strong>Type:</strong> The file system format (e.g., ext4, btrfs, or
+xfs).</li>
+<li><strong>Total, Available, and Used Space:</strong> Quantitative byte
+values for storage capacity.</li>
+<li><strong>Visual Bar Graphs:</strong> Color-coded percentage bars
+indicating how full each partition is.</li>
+</ul></li>
+<li><strong>Disk Read and Write Rates:</strong> Depending on the GNOME
+version and column configuration in the Processes tab, users can enable
+"Disk Read Total", "Disk Write Total", or current read/write rate
+columns to monitor which applications are generating the most
+input/output (I/O) traffic.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

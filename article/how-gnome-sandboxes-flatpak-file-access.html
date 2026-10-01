@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Sandboxes Flatpak File Access - gnome</title>
+    <meta name="description" content="GNOME isolates Flatpak applications from direct filesystem access by combining Linux kernel-level containerization with an external portal-based permission system. Flatpak applications run in restricted environments created via Bubblewrap, which strip th">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-sandboxes-flatpak-file-access">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Sandboxes Flatpak File Access - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-sandboxes-flatpak-file-access" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME isolates Flatpak applications from direct filesystem access by combining Linux kernel-level containerization with an external portal-based permission system. Flatpak applications run in restricted environments created via Bubblewrap, which strip th" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-sandboxes-flatpak-file-access">How GNOME Sandboxes
+Flatpak File Access</h1>
+<p>GNOME isolates Flatpak applications from direct filesystem access by
+combining Linux kernel-level containerization with an external
+portal-based permission system. Flatpak applications run in restricted
+environments created via Bubblewrap, which strip them of the ability to
+see or modify host directories by default. When an application needs to
+read or write a file, GNOME handles the interaction outside the sandbox
+using the XDG Desktop Portal system, ensuring that applications only
+receive access to specific files explicitly chosen by the user.</p>
+<h3 id="bubblewrap-and-kernel-namespaces">Bubblewrap and Kernel
+Namespaces</h3>
+<p>At the base of the isolation layer is Bubblewrap, an unprivileged
+sandboxing tool that utilizes core Linux kernel features, primarily
+namespaces and cgroups. When GNOME launches a Flatpak, Bubblewrap
+creates a distinct mount namespace for the application.</p>
+<p>In this isolated mount namespace:</p>
+<ul>
+<li>The host’s root filesystem is invisible.</li>
+<li>A dummy, minimal root filesystem containing only the necessary
+Flatpak runtime libraries (such as GNOME's runtime) is mounted as
+read-only.</li>
+<li>The application is assigned an isolated storage directory
+(<code>~/.var/app/&lt;app-ID&gt;/</code>) for configuration and cache
+files.</li>
+<li>Direct access to the user's home directory
+(<code>/home/&lt;user&gt;</code>) or root directories
+(<code>/etc</code>, <code>/usr</code>, <code>/var</code>) is blocked
+unless explicitly declared in the application's permission
+manifest.</li>
+</ul>
+<h3 id="xdg-desktop-portals">XDG Desktop Portals</h3>
+<p>To allow applications to open and save files without granting broad
+access to the filesystem, GNOME relies on the XDG Desktop Portal
+framework, specifically the <code>xdg-desktop-portal-gnome</code>
+backend. Portals act as secure D-Bus bridges between the sandboxed
+application and the host desktop.</p>
+<p>When an application calls a standard "Open File" or "Save File"
+dialog, it does not render the dialog itself. Instead, the application
+makes a D-Bus request to the portal. The GNOME desktop intercepts this
+request and renders an out-of-process GTK file chooser directly on the
+host. Because the dialog runs outside the sandbox, the user can browse
+their entire filesystem safely; the sandboxed application cannot observe
+where the user navigates or what files exist in the chosen
+directories.</p>
+<h3 id="the-document-portal-and-file-descriptors">The Document Portal
+and File Descriptors</h3>
+<p>Once the user selects a file and clicks "Open" in the GNOME file
+dialog, access is granted through one of two mechanisms:</p>
+<ol type="1">
+<li><strong>File Descriptors:</strong> For straightforward read or write
+tasks, the portal can open the file on the host side and pass an open
+file descriptor over D-Bus back into the sandboxed application. This
+gives the app access to the stream of that single file without exposing
+its path or parent directory.</li>
+<li><strong>The Document Portal (FUSE):</strong> For applications that
+require path-based access, GNOME utilizes a user-space virtual
+filesystem (FUSE) located at <code>/run/user/&lt;uid&gt;/doc/</code>.
+The portal creates an isolated, virtual mount path for the specific file
+inside the sandbox. The application can read or modify the file through
+this mount, while the underlying host location remains concealed.</li>
+</ol>
+<p>Through the integration of Bubblewrap isolation, out-of-process GNOME
+portals, and fine-grained file-descriptor delegation, GNOME prevents
+Flatpak applications from reading arbitrary files while maintaining
+standard desktop functionality.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

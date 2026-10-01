@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Disks: Partitioning, Benchmarking, and SMART Data - gnome</title>
+    <meta name="description" content="GNOME Disks (also known as gnome-disk-utility) is a versatile, graphical storage management tool for Linux that simplifies low-level disk operations. This article explores how the utility enables users to easily configure drive partitions, evaluate drive">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-disks-partitioning-benchmarking-and-smart-data">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Disks: Partitioning, Benchmarking, and SMART Data - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-disks-partitioning-benchmarking-and-smart-data" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Disks (also known as gnome-disk-utility) is a versatile, graphical storage management tool for Linux that simplifies low-level disk operations. This article explores how the utility enables users to easily configure drive partitions, evaluate drive" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-disks-partitioning-benchmarking-and-smart-data">GNOME
+Disks: Partitioning, Benchmarking, and SMART Data</h1>
+<p>GNOME Disks (also known as <code>gnome-disk-utility</code>) is a
+versatile, graphical storage management tool for Linux that simplifies
+low-level disk operations. This article explores how the utility enables
+users to easily configure drive partitions, evaluate drive read and
+write speeds through integrated benchmarking, and inspect hardware
+health metrics using SMART data to prevent catastrophic drive
+failure.</p>
+<h3 id="disk-partitioning-and-drive-configuration">Disk Partitioning and
+Drive Configuration</h3>
+<p>GNOME Disks provides an intuitive visual interface that displays all
+internal and external storage drives connected to the system. Managing
+partitions is accomplished without needing complex command-line
+utilities:</p>
+<ul>
+<li><strong>Creating and Deleting Partitions:</strong> Users can select
+unallocated space or existing volumes to create, format, or delete
+partitions. The utility supports numerous file systems, including ext4,
+Btrfs, XFS, FAT, and NTFS.</li>
+<li><strong>Resizing and Modifying Filesystems:</strong> Supported file
+systems can be expanded or shrunk directly from the application
+interface, provided the underlying file system supports online or
+offline resizing.</li>
+<li><strong>Automating Mount Options:</strong> GNOME Disks allows users
+to configure mount points and auto-mount behavior on system startup.
+This interface generates and edits entries in the
+<code>/etc/fstab</code> file safely without requiring manual text
+editing.</li>
+<li><strong>Disk Imaging:</strong> Users can create complete,
+byte-for-byte <code>.img</code> backup files of entire drives or
+individual partitions, as well as restore images back to a selected
+target device.</li>
+</ul>
+<h3 id="storage-benchmarking">Storage Benchmarking</h3>
+<p>The built-in benchmark tool gives users an accurate measurement of
+drive performance under controlled conditions:</p>
+<ul>
+<li><strong>Read and Write Tests:</strong> Users can measure sustained
+transfer rates across the entire storage medium. Read tests can be run
+safely at any time, while write tests require unmounted, raw drives to
+prevent accidental data corruption.</li>
+<li><strong>Customizable Parameters:</strong> The benchmark suite allows
+customization of transfer sizes (e.g., 10 MiB samples) and sample counts
+to simulate different workload patterns, from sequential media transfers
+to random access.</li>
+<li><strong>Access Time Measurement:</strong> Alongside throughput, the
+tool measures access latency in milliseconds, helping users assess the
+responsiveness of traditional spinning hard drives (HDDs) versus
+solid-state drives (SSDs).</li>
+<li><strong>Visual Graphing:</strong> The utility charts the results
+over the capacity of the drive, clearly visualizing how rotational
+speeds affect HDD performance from the outer to the inner tracks.</li>
+</ul>
+<h3 id="smart-data-and-drive-health-monitoring">SMART Data and Drive
+Health Monitoring</h3>
+<p>GNOME Disks reads Self-Monitoring, Analysis, and Reporting Technology
+(SMART) data directly from compatible ATA, NVMe, and SCSI storage
+controllers:</p>
+<ul>
+<li><strong>Health Assessment:</strong> The software displays an
+immediate, high-level status indicator (such as "Disk is OK") to alert
+users if any critical thresholds have been exceeded.</li>
+<li><strong>Detailed Attribute Inspection:</strong> Users can review
+granular metrics, including reallocated sector counts, spin retry
+counts, power-on hours, and current operating temperatures. Tracking
+these values over time helps detect early hardware degradation before
+total failure occurs.</li>
+<li><strong>Self-Tests:</strong> GNOME Disks allows users to trigger
+built-in drive diagnostic routines directly from the interface:
+<ul>
+<li><strong>Short Self-Test:</strong> Checks electrical and mechanical
+performance alongside a small portion of the disk surface, usually
+completing within a few minutes.</li>
+<li><strong>Extended Self-Test:</strong> Reads the entire disk surface
+to identify damaged sectors and assess drive reliability under sustained
+load.</li>
+</ul></li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

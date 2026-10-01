@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Graphic Tablet and Stylus Mapping Guide - gnome</title>
+    <meta name="description" content="GNOME provides built-in support for external graphic tablets and styluses directly through the GNOME Control Center. Powered by underlying Linux libraries like libwacom and libinput, the desktop environment automatically detects compatible hardware and e">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-graphic-tablet-and-stylus-mapping-guide">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Graphic Tablet and Stylus Mapping Guide - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-graphic-tablet-and-stylus-mapping-guide" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME provides built-in support for external graphic tablets and styluses directly through the GNOME Control Center. Powered by underlying Linux libraries like libwacom and libinput, the desktop environment automatically detects compatible hardware and e" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-graphic-tablet-and-stylus-mapping-guide">GNOME Graphic
+Tablet and Stylus Mapping Guide</h1>
+<p>GNOME provides built-in support for external graphic tablets and
+styluses directly through the GNOME Control Center. Powered by
+underlying Linux libraries like <code>libwacom</code> and
+<code>libinput</code>, the desktop environment automatically detects
+compatible hardware and exposes a dedicated graphical interface. This
+article explains how GNOME Control Center recognizes drawing tablets,
+maps stylus inputs to specific monitors, adjusts pressure curves, and
+configures physical tablet buttons without requiring third-party tools
+or terminal configuration.</p>
+<h2 id="hardware-detection-and-backend-architecture">Hardware Detection
+and Backend Architecture</h2>
+<p>When a graphics tablet is connected to a GNOME system, the Linux
+kernel detects the device and loads the appropriate driver (typically
+<code>wacom</code> or generic <code>hid</code>). The
+<code>libwacom</code> library then identifies the specific model, its
+physical dimensions, button layouts, and stylus capabilities.</p>
+<p>Under both Wayland and X11, GNOME's window manager (Mutter) queries
+<code>libwacom</code> via <code>libinput</code>. If a recognized tablet
+is attached, GNOME Control Center dynamically enables a dedicated
+"Drawing Tablet" or "Wacom Tablet" panel in the Settings sidebar. If no
+supported tablet is detected, this section remains hidden.</p>
+<h2 id="display-and-stylus-mapping">Display and Stylus Mapping</h2>
+<p>One of the primary functions inside the Drawing Tablet panel is
+controlling how tablet coordinates translate to the graphical
+display:</p>
+<ul>
+<li><strong>Display Output Assignment:</strong> In multi-monitor
+configurations, the tablet area can be mapped to a single dedicated
+monitor or mapped across the entire desktop canvas. Mapping to a single
+display is standard for drawing accuracy, preventing the tablet active
+area from stretching across multi-monitor aspect ratios.</li>
+<li><strong>Tracking Modes:</strong> GNOME allows users to toggle
+between <strong>Absolute</strong> and <strong>Relative</strong>
+tracking:
+<ul>
+<li><strong>Absolute (Pen Mode):</strong> Each point on the physical
+tablet corresponds directly to a specific point on the assigned monitor.
+Lifting and placing the stylus elsewhere moves the cursor instantly to
+that corresponding position.</li>
+<li><strong>Relative (Mouse Mode):</strong> The tablet operates like a
+standard touchpad, moving the cursor relative to its current screen
+position regardless of where the pen touches down.</li>
+</ul></li>
+<li><strong>Orientation and Handedness:</strong> The interface provides
+orientation settings to rotate the tablet mapping by 90, 180, or 270
+degrees, enabling native left-handed usage by flipping the physical
+orientation of the pad buttons.</li>
+</ul>
+<h2 id="stylus-calibration-and-customization">Stylus Calibration and
+Customization</h2>
+<p>Selecting the stylus inside GNOME Settings opens a dedicated
+sub-panel to adjust pen behavior:</p>
+<ul>
+<li><strong>Pressure Sensitivity:</strong> A slider or interactive curve
+editor lets users set the tip pressure threshold. Users can define how
+much physical pressure is required to register a click or produce
+minimum to maximum stroke values in digital art applications.</li>
+<li><strong>Stylus Buttons:</strong> Multi-button styluses can have
+individual barrels mapped to specific mouse actions (such as Middle
+Click, Right Click, or Double Click) or assigned to keyboard modifier
+keys.</li>
+<li><strong>Eraser Tip:</strong> If the stylus features an active top
+eraser, its pressure curve and fallback behavior can be configured
+independently from the primary drawing tip.</li>
+</ul>
+<h2 id="expresskeys-and-pad-button-configuration">ExpressKeys and Pad
+Button Configuration</h2>
+<p>For graphic tablets equipped with hardware buttons (ExpressKeys),
+touch rings, or touch strips, GNOME Control Center displays a graphical
+representation of the tablet's physical layout:</p>
+<ul>
+<li><strong>Shortcut Assignment:</strong> Each button can be bound to
+key combinations (such as <code>Ctrl+Z</code> for undo,
+<code>Ctrl+Shift+N</code> for new layers, or brush-size adjustment
+keys).</li>
+<li><strong>Mode Switching:</strong> On tablets equipped with a touch
+ring or wheel, GNOME allows users to cycle through modes (such as zoom,
+scroll, or layer navigation) directly using the assigned toggle
+button.</li>
+</ul>
+<p>These settings are stored within GNOME's <code>dconf</code>
+configuration system
+(<code>org.gnome.desktop.peripherals.tablet</code>), allowing
+preferences to persist across reboots and apply automatically whenever
+the peripheral is reconnected.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Wayland Screen Casting Security and Tokens - gnome</title>
+    <meta name="description" content="Under the Wayland display protocol, direct screen capturing is blocked by design to prevent unauthorized applications from snooping on the desktop. GNOME solves this by routing screen capture requests through an isolated pipeline consisting of D-Bus port">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-wayland-screen-casting-security-and-tokens">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Wayland Screen Casting Security and Tokens - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-wayland-screen-casting-security-and-tokens" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Under the Wayland display protocol, direct screen capturing is blocked by design to prevent unauthorized applications from snooping on the desktop. GNOME solves this by routing screen capture requests through an isolated pipeline consisting of D-Bus port" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-wayland-screen-casting-security-and-tokens">GNOME Wayland
+Screen Casting Security and Tokens</h1>
+<p>Under the Wayland display protocol, direct screen capturing is
+blocked by design to prevent unauthorized applications from snooping on
+the desktop. GNOME solves this by routing screen capture requests
+through an isolated pipeline consisting of D-Bus portals, PipeWire
+multimedia routing, and Mutter compositor interfaces. A central
+component of this mechanism is the screen casting "restore token," a
+credential that enables applications to resume authorized capture
+sessions without repeatedly prompting the user, while preserving the
+sandboxing and security guarantees of the Wayland architecture.</p>
+<h3 id="the-wayland-security-model-and-the-need-for-portals">The Wayland
+Security Model and the Need for Portals</h3>
+<p>In traditional X11 environments, any client application can read the
+entire screen buffer and monitor global keystrokes. Wayland eliminates
+this design flaw by isolating clients from one another; a Wayland client
+only has access to its own surfaces and cannot inspect the compositor's
+global output or other running applications.</p>
+<p>Because applications cannot capture pixels directly, GNOME relies on
+the <code>xdg-desktop-portal</code> system. When an application needs to
+record the screen or share a window, it communicates via D-Bus with
+<code>xdg-desktop-portal</code>, which in turn invokes the GNOME backend
+implementation, <code>xdg-desktop-portal-gnome</code>. This backend
+triggers Mutter (GNOME's Wayland compositor) to prompt the user for
+permission.</p>
+<h3 id="how-screen-casting-tokens-work">How Screen Casting Tokens
+Work</h3>
+<p>Repeatedly asking users to select a display or window every time an
+application starts degrades usability. To solve this, GNOME implements
+persistent permission handles known as restore tokens within the
+ScreenCast portal interface.</p>
+<ol type="1">
+<li><strong>Initial Request and Consent</strong>: When an application
+requests screen casting via
+<code>org.freedesktop.portal.ScreenCast</code>, GNOME displays an
+explicit system dialogue. The user selects the exact source—such as a
+specific monitor or individual application window—and confirms
+permission.</li>
+<li><strong>Token Generation</strong>: Upon user approval, Mutter
+assigns a session identifier and generates an opaque, cryptographically
+random string known as a restore token.</li>
+<li><strong>Session Linking</strong>: The token maps the approved source
+(e.g., Output 1 or Window X) to the unique application identity making
+the request.</li>
+<li><strong>Token Storage and Handoff</strong>: The portal passes this
+restore token back to the requesting client application. Trusted clients
+can store this token locally for future sessions.</li>
+<li><strong>Subsequent Sessions</strong>: During future launches, the
+application provides the restore token in its initial D-Bus method call.
+If the token is valid, GNOME restores the previously granted capture
+session without triggering a new user prompt.</li>
+</ol>
+<h3 id="preventing-security-exploits-and-token-hijacking">Preventing
+Security Exploits and Token Hijacking</h3>
+<p>GNOME and the portal infrastructure enforce several boundaries to
+ensure these tokens cannot be abused by malicious software:</p>
+<ul>
+<li><strong>Application Identity Verification</strong>: Tokens are
+strictly tied to the calling application's identity. For sandboxed
+applications (such as Flatpak), the portal validates the unique
+application ID through the sandbox proxy. A rogue application cannot
+reuse a token generated for an authorized application because the
+backend detects the mismatched identity.</li>
+<li><strong>Compositor Authority</strong>: The client application never
+receives raw access to the display server or window handles. The token
+merely instructs Mutter to open a restricted PipeWire stream. Mutter
+negotiates file descriptors directly with the PipeWire daemon, ensuring
+the application receives only the authorized video feed.</li>
+<li><strong>Token Invalidation</strong>: Restore tokens are not
+perpetual absolute rights. If a user modifies display configurations
+(such as unplugging a monitor) or closes the target window, the token
+becomes invalid. GNOME also invalidates tokens if an application
+requests access parameters that exceed the original authorization.</li>
+<li><strong>Persistent Visual Indicators</strong>: Even when a restore
+token bypasses the user confirmation dialogue, GNOME displays a global
+recording indicator in the top panel as long as the capture pipeline is
+active. This ensures no background process can capture the screen
+invisibly, regardless of its permission state.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

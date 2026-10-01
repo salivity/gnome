@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Terminal vs GNOME Console: Key Differences - gnome</title>
+    <meta name="description" content="This article provides a direct comparison between GNOME Terminal, the long-standing terminal emulator for the GNOME desktop environment, and GNOME Console (formerly code-named King's Cross), its modern, streamlined replacement. While both tools provide a">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-terminal-vs-gnome-console-key-differences">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Terminal vs GNOME Console: Key Differences - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-terminal-vs-gnome-console-key-differences" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides a direct comparison between GNOME Terminal, the long-standing terminal emulator for the GNOME desktop environment, and GNOME Console (formerly code-named King's Cross), its modern, streamlined replacement. While both tools provide a" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-terminal-vs-gnome-console-key-differences">GNOME Terminal
+vs GNOME Console: Key Differences</h1>
+<p>This article provides a direct comparison between GNOME Terminal, the
+long-standing terminal emulator for the GNOME desktop environment, and
+GNOME Console (formerly code-named King's Cross), its modern,
+streamlined replacement. While both tools provide access to the Linux
+command line, they differ significantly in design philosophy,
+customization capabilities, safety features, and target audiences.</p>
+<h3 id="design-philosophy-and-user-interface">Design Philosophy and User
+Interface</h3>
+<p>GNOME Terminal is built on older GTK technologies and follows the
+traditional desktop application layout, featuring a standard menu bar,
+extensive preference dialogues, and a high degree of visual
+configurability.</p>
+<p>GNOME Console (<code>kgx</code>) is built using GTK4 and
+<code>libadwaita</code>. It adheres strictly to the modern GNOME Human
+Interface Guidelines (HIG). The interface is stripped down to the
+essentials: a clean header bar, tab management, and the terminal canvas.
+It is intended to look and feel native alongside modern GNOME
+applications, seamlessly adapting to system-wide light and dark
+appearance settings.</p>
+<h3 id="configuration-and-customization">Configuration and
+Customization</h3>
+<ul>
+<li><strong>GNOME Terminal:</strong> Offers extensive configuration
+options. Users can create and manage multiple profiles, define custom
+color palettes, adjust terminal transparency, set custom fonts, and
+configure specific shell commands to execute upon opening.</li>
+<li><strong>GNOME Console:</strong> Eliminates most preferences by
+design. There are no profiles, no custom color pickers, and no direct
+font settings (it defaults to the system monospace font). The only
+visual settings available are zoom controls and a toggle between light,
+dark, or system-default themes.</li>
+</ul>
+<h3 id="safety-features-and-visual-feedback">Safety Features and Visual
+Feedback</h3>
+<p>GNOME Console introduces contextual visual cues designed to prevent
+user errors:</p>
+<ul>
+<li><strong>Privilege Awareness:</strong> When a command escalates to
+root privileges (such as via <code>sudo</code> or <code>su</code>),
+GNOME Console changes its header bar color to a prominent red/burgundy.
+When connected over SSH, it provides a purple tint. This visual
+indicator helps prevent accidental destructive commands in privileged
+states.</li>
+<li><strong>Process Termination Warnings:</strong> Console provides
+clear, non-intrusive warnings if a user attempts to close a window or
+tab while a long-running process is still executing.</li>
+</ul>
+<p>GNOME Terminal offers standard close-confirmation prompts for active
+processes, but it lacks the contextual color-shifting indicators for
+root access and remote sessions.</p>
+<h3 id="performance-and-architecture">Performance and Architecture</h3>
+<p>GNOME Console is designed to be lightweight, fast to launch, and
+modest in resource consumption. Its GTK4 and libadwaita integration
+allows smoother window resizing and native integration with modern
+Wayland compositors.</p>
+<p>GNOME Terminal is mature, highly stable, and built on the long-tested
+VTE library with GTK3. While reliable and deeply integrated with
+advanced developer workflows, it carries legacy dependencies that do not
+fit the lightweight profile of GNOME's core application suite.</p>
+<h3 id="target-audience">Target Audience</h3>
+<p>The primary difference lies in their intended users:</p>
+<ul>
+<li><strong>GNOME Console</strong> targets casual desktop users and
+system maintainers who occasionally need to run a quick command, update
+packages, or paste a troubleshooting script without configuring complex
+settings.</li>
+<li><strong>GNOME Terminal</strong> remains the preferred tool for
+developers, system administrators, and power users who require custom
+profiles, heavy script automation, complex color schemes, and extensive
+customization for all-day command-line usage.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

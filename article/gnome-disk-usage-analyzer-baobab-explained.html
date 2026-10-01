@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Disk Usage Analyzer Baobab Explained - gnome</title>
+    <meta name="description" content="The GNOME Disk Usage Analyzer, officially known as Baobab, is a graphical utility designed to inspect, visualize, and monitor storage capacity on Linux systems. This article explains the core purpose of Baobab, detailing how it scans drives, visualizes d">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-disk-usage-analyzer-baobab-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Disk Usage Analyzer Baobab Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-disk-usage-analyzer-baobab-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Disk Usage Analyzer, officially known as Baobab, is a graphical utility designed to inspect, visualize, and monitor storage capacity on Linux systems. This article explains the core purpose of Baobab, detailing how it scans drives, visualizes d" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-disk-usage-analyzer-baobab-explained">GNOME Disk Usage
+Analyzer Baobab Explained</h1>
+<p>The GNOME Disk Usage Analyzer, officially known as Baobab, is a
+graphical utility designed to inspect, visualize, and monitor storage
+capacity on Linux systems. This article explains the core purpose of
+Baobab, detailing how it scans drives, visualizes data allocation, and
+helps users identify and remove large, unwanted files to maintain
+optimal storage health.</p>
+<h2 id="core-purpose-of-baobab">Core Purpose of Baobab</h2>
+<p>The primary function of Baobab is to provide an easy-to-read
+graphical breakdown of how storage capacity is consumed across
+filesystems. While command-line utilities like <code>df</code> and
+<code>du</code> provide raw statistics, Baobab translates this data into
+interactive visual maps. This allows users of all technical levels to
+pinpoint space-consuming directories and hidden cache files without
+running complex terminal commands.</p>
+<h2 id="key-features-in-storage-tracking">Key Features in Storage
+Tracking</h2>
+<h3 id="1-graphical-visualization-modes">1. Graphical Visualization
+Modes</h3>
+<p>Baobab represents data using two primary chart types:</p>
+<ul>
+<li><strong>Rings Chart (Sunburst):</strong> Displays directories as
+concentric rings. The center represents the root or base directory
+scanned, while outward rings represent deeper subdirectories. Larger
+slices correspond directly to greater disk space usage.</li>
+<li><strong>Treemap Chart:</strong> Represents folder sizes as nested
+rectangular blocks. The larger the rectangle, the more space the folder
+occupies.</li>
+</ul>
+<p>Both visualization formats are interactive; clicking on a section
+zooms in on that specific directory to reveal its nested contents.</p>
+<h3 id="2-flexible-scanning-targets">2. Flexible Scanning Targets</h3>
+<p>Baobab can scan multiple types of storage locations:</p>
+<ul>
+<li><strong>Entire Filesystem:</strong> Scans the root (<code>/</code>)
+directory to give an overview of system-wide usage.</li>
+<li><strong>Home Folder:</strong> Targets user-specific data, including
+downloads, application data, and configuration caches.</li>
+<li><strong>Specific Folders:</strong> Allows targeted scans on
+particular directories to save scanning time.</li>
+<li><strong>External and Remote Devices:</strong> Scans connected USB
+drives, external hard drives, and network shares via protocols such as
+SSH, FTP, and Samba.</li>
+</ul>
+<h3 id="3-file-system-cleanup-and-actionable-insights">3. File System
+Cleanup and Actionable Insights</h3>
+<p>Beyond passive monitoring, Baobab helps users reclaim lost storage
+capacity. The integrated file browser displays directory sizes, file
+counts, and the percentage of the parent folder occupied. Users can
+right-click any item directly in the interface to open it in their file
+manager, copy its path, or move it directly to the Trash.</p>
+<h2 id="why-use-baobab-for-storage-capacity-management">Why Use Baobab
+for Storage Capacity Management</h2>
+<p>Running out of disk space can degrade system performance, prevent
+application updates, and cause system crashes. Baobab serves as an
+essential maintenance tool by rapidly answering two critical questions:
+which files are consuming the most space, and where are they located. By
+turning abstract file structures into actionable visual insights, Baobab
+simplifies storage tracking and routine disk cleanup.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

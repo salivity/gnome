@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Renders CSD Shadows and Blur - gnome</title>
+    <meta name="description" content="This article explores the technical pipeline GNOME Shell and its underlying compositor, Mutter, use to draw drop shadows and blur effects around client-side decorated (CSD) windows. It breaks down how the compositor negotiates window geometry, delegates">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-renders-csd-shadows-and-blur">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Renders CSD Shadows and Blur - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-renders-csd-shadows-and-blur" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores the technical pipeline GNOME Shell and its underlying compositor, Mutter, use to draw drop shadows and blur effects around client-side decorated (CSD) windows. It breaks down how the compositor negotiates window geometry, delegates" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-renders-csd-shadows-and-blur">How GNOME Shell
+Renders CSD Shadows and Blur</h1>
+<p>This article explores the technical pipeline GNOME Shell and its
+underlying compositor, Mutter, use to draw drop shadows and blur effects
+around client-side decorated (CSD) windows. It breaks down how the
+compositor negotiates window geometry, delegates shadow rendering
+between the client and the compositor, and applies GPU-accelerated
+post-processing shaders to achieve background blur effects.</p>
+<h3 id="window-geometry-and-extent-negotiation">Window Geometry and
+Extent Negotiation</h3>
+<p>With Client-Side Decorations (CSD), the application—typically using
+GTK—is responsible for drawing its own header bars, window controls, and
+borders. Because the client often manages the visual boundary, it must
+communicate where the actual interactable window ends and where
+decorative padding begins.</p>
+<p>On Wayland, GTK achieves this using the <code>xdg_shell</code>
+protocol through <code>xdg_surface.set_window_geometry</code>. On X11,
+it uses the <code>_GTK_FRAME_EXTENTS</code> property. This negotiation
+defines an invisible offset margin around the window frame. By passing
+these dimensions to Mutter (GNOME's window manager and compositor), the
+system knows exactly which portions of the surface are interactive,
+where window snapping edges reside, and where drop shadows or
+transparent effects belong.</p>
+<h3 id="how-drop-shadows-are-rendered">How Drop Shadows Are
+Rendered</h3>
+<p>Drop shadows for CSD windows can be handled in two distinct ways
+depending on the window type and display protocol:</p>
+<ol type="1">
+<li><p><strong>Client-Rendered Shadows (Standard CSD):</strong><br />
+In standard GTK3 and GTK4 applications, the drop shadow is actually
+drawn by the client itself, not Mutter. The application allocates an
+oversized surface buffer that extends beyond the visible window frame.
+GTK’s rendering engines (such as GSK in GTK4 or Cairo in GTK3) compute
+the drop shadow using CSS properties like <code>box-shadow</code>. The
+shadow is rendered directly into the transparent margins of the
+application's surface. When Mutter composites the screen, it treats the
+shadow as standard pixel data within the window's bounding box, relying
+on the negotiated frame extents to prevent input events on the shadow
+itself.</p></li>
+<li><p><strong>Compositor-Rendered Shadows
+(<code>MetaShadowFactory</code>):</strong><br />
+For windows that do not draw their own shadows (such as server-side
+decorated windows or specific legacy surfaces), Mutter takes control
+using <code>MetaShadowFactory</code>. The compositor calculates a
+Gaussian-blurred rectangle based on the window's shape, caches it as a
+9-slice texture (corners and edges), and composites it behind the window
+actor using Cogl, Clutter’s hardware-abstraction library.</p></li>
+</ol>
+<h3 id="how-blur-effects-are-applied">How Blur Effects Are Applied</h3>
+<p>Blur effects behind transparent CSD elements (such as header bars or
+sidebars) are not handled by the client application alone. Because an
+application cannot see the contents of windows behind it for security
+and architectural reasons, the compositor must render the background
+blur.</p>
+<p>GNOME Shell implements background blur using Clutter’s actor pipeline
+and GLSL (OpenGL Shading Language) shaders via the following
+process:</p>
+<ol type="1">
+<li><strong>Background Capture:</strong> When an actor requests
+background blur (handled in the compositor via
+<code>ShellBlurEffect</code>), Mutter binds an offscreen Framebuffer
+Object (FBO). It captures the region of the scene graph directly
+underneath the target window before drawing the window itself.</li>
+<li><strong>Downsampling:</strong> To maintain a smooth 60 or 140+ FPS
+frame rate, the captured background texture is often downscaled to a
+lower resolution. Blurring fewer pixels significantly reduces GPU memory
+bandwidth.</li>
+<li><strong>Multi-Pass Filtering:</strong> The downsampled texture is
+passed through a multi-stage fragment shader. GNOME Shell typically
+utilizes a dual-Kawase blur or a multi-pass separable Gaussian blur.
+This approach applies horizontal and vertical blur passes sequentially,
+expanding the blur radius efficiently without overwhelming the GPU.</li>
+<li><strong>Upsampling and Composition:</strong> The blurred texture is
+upsampled back to target scale and rendered into the scene.</li>
+</ol>
+<h3 id="final-scene-assembly">Final Scene Assembly</h3>
+<p>Once the drop shadow buffer (from the client surface) and the blurred
+background texture (from the compositor's FBO pass) are prepared,
+Mutter's rendering pipeline combines them. The blurred texture is drawn
+first, followed by the client surface containing the window contents and
+the drop shadow. Cogl uses standard alpha-blending equations
+(<code>GL_SRC_ALPHA</code>, <code>GL_ONE_MINUS_SRC_ALPHA</code>) to
+composite all layers onto the screen seamlessly, creating cohesive depth
+without visual artifacts.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

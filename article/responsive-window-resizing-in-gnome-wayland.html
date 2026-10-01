@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Window Resizing in GNOME Wayland - gnome</title>
+    <meta name="description" content="Responsive window resizing in modern Wayland environments relies on a tightly coordinated architecture between the compositor and client applications. In the GNOME desktop environment, responsive resizing is primarily driven by Mutter, GNOME’s Wayland">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/responsive-window-resizing-in-gnome-wayland">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Responsive Window Resizing in GNOME Wayland - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/responsive-window-resizing-in-gnome-wayland" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Responsive window resizing in modern Wayland environments relies on a tightly coordinated architecture between the compositor and client applications. In the GNOME desktop environment, responsive resizing is primarily driven by Mutter, GNOME’s Wayland" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="responsive-window-resizing-in-gnome-wayland">Responsive Window
+Resizing in GNOME Wayland</h1>
+<p>Responsive window resizing in modern Wayland environments relies on a
+tightly coordinated architecture between the compositor and client
+applications. In the GNOME desktop environment, responsive resizing is
+primarily driven by Mutter, GNOME’s Wayland compositor, through
+protocol-driven buffer management, frame callbacks, and temporary
+texture scaling. By replacing legacy X11 mechanisms with direct display
+synchronization, GNOME avoids visual tearing, latency, and window
+flickering during dynamic resizing operations.</p>
+<h3 id="the-role-of-mutter-and-the-wayland-architecture">The Role of
+Mutter and the Wayland Architecture</h3>
+<p>In traditional X11 sessions, resizing often produced lag and visual
+artifacts because window managers and client applications negotiated
+geometry asynchronously without tight display pacing. Wayland replaces
+this with the core design principle that every presented frame should be
+complete and artifact-free.</p>
+<p>In GNOME, Mutter acts as both the display server and the compositing
+window manager. When a user drags a window border to resize it, Mutter
+directly handles the input events and controls the timing of when
+geometry updates are presented to the screen.</p>
+<h3 id="the-xdg_shell-resize-protocol">The <code>xdg_shell</code> Resize
+Protocol</h3>
+<p>Resizing under Wayland relies heavily on the <code>xdg_shell</code>
+protocol. The interaction between GNOME and the client follows a
+strictly coordinated lifecycle:</p>
+<ol type="1">
+<li><strong>Configure Request:</strong> When a resize interaction
+begins, Mutter sends an <code>xdg_toplevel.configure</code> event
+containing the suggested new window dimensions, accompanied by a serial
+ID.</li>
+<li><strong>Client Preparation:</strong> The application receives the
+event, calculates its new internal layout, redraws its user interface at
+the requested size, and allocates a new buffer.</li>
+<li><strong>Acknowledgment and Commit:</strong> The client replies with
+an <code>xdg_surface.ack_configure</code> event using the provided
+serial and commits the new buffer via
+<code>wl_surface.commit</code>.</li>
+<li><strong>Presentation:</strong> Mutter synchronizes the new buffer
+with the monitor’s vertical refresh rate (vblank).</li>
+</ol>
+<h3 id="frame-callbacks-and-throttling">Frame Callbacks and
+Throttling</h3>
+<p>To prevent clients from overwhelming system resources during
+continuous resize gestures, Wayland utilizes frame callbacks
+(<code>wl_surface.frame</code>). GNOME only requests new frames when the
+display hardware is ready to present them.</p>
+<p>This mechanism prevents input queues from becoming congested with
+redundant resize requests. If a client application cannot render at full
+monitor refresh rate (such as 60Hz or 144Hz), Mutter throttles the
+configure events sent to that client, preserving system responsiveness
+and preventing input lag.</p>
+<h3 id="viewport-scaling-and-visual-continuity">Viewport Scaling and
+Visual Continuity</h3>
+<p>Complex applications often take several milliseconds to lay out their
+UI and render a new frame during a resize. If GNOME waited for the
+client to complete rendering before updating the screen, window borders
+would feel detached from the mouse pointer.</p>
+<p>To maintain immediate tactile responsiveness, Mutter uses texture
+transformation techniques:</p>
+<ul>
+<li><strong>Buffer Scaling:</strong> If the client has not yet supplied
+a buffer matching the new dimensions, Mutter temporarily stretches or
+crops the existing buffer using GPU hardware acceleration.</li>
+<li><strong>Synchronized Delivery:</strong> As soon as the client
+attaches the updated, fully rendered buffer matching the acknowledged
+configure serial, Mutter seamlessly swaps out the scaled texture for the
+full-resolution frame without flickering.</li>
+</ul>
+<h3 id="subsurface-synchronization">Subsurface Synchronization</h3>
+<p>Modern applications frequently use multiple subsurfaces for user
+interface elements such as toolbars, context menus, and client-side
+decorations. GNOME uses Wayland’s synchronized subsurfaces mode during
+resizes. This guarantees that parent surfaces and child subsurfaces
+update in lockstep, preventing UI components from jittering or detaching
+while the window bounds change.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

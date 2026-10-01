@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME HIG Confirmation Patterns for File Deletions - gnome</title>
+    <meta name="description" content="The GNOME Human Interface Guidelines (HIG) define confirmation patterns for file deletions to protect users from accidental data loss while minimizing workflow interruptions. By distinguishing between reversible operations and permanent, irreversible act">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-hig-confirmation-patterns-for-file-deletions">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME HIG Confirmation Patterns for File Deletions - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-hig-confirmation-patterns-for-file-deletions" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Human Interface Guidelines (HIG) define confirmation patterns for file deletions to protect users from accidental data loss while minimizing workflow interruptions. By distinguishing between reversible operations and permanent, irreversible act" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-hig-confirmation-patterns-for-file-deletions">GNOME HIG
+Confirmation Patterns for File Deletions</h1>
+<p>The GNOME Human Interface Guidelines (HIG) define confirmation
+patterns for file deletions to protect users from accidental data loss
+while minimizing workflow interruptions. By distinguishing between
+reversible operations and permanent, irreversible actions, the
+guidelines provide a framework where users are only interrupted when
+real risk exists. This approach balances system safety with interface
+efficiency through precise language, intentional visual cues, and the
+strategic use of undo mechanisms.</p>
+<h3 id="preventing-confirmation-fatigue">Preventing Confirmation
+Fatigue</h3>
+<p>A core objective of the GNOME HIG is to eliminate confirmation
+fatigue. When an application asks for permission for routine,
+non-destructive actions, users quickly develop the habit of clicking
+through prompts without reading them. To prevent this, the HIG
+discourages modal confirmation dialogs for standard deletions where the
+system can simply move the file to the Trash.</p>
+<p>Instead of blocking the interface with an alert, the system performs
+the reversible action immediately and displays an in-app notification (a
+banner or toast) with an "Undo" option. This restores workflow speed
+while still providing a safety net if an error occurs.</p>
+<h3
+id="distinguishing-reversible-from-permanent-deletions">Distinguishing
+Reversible from Permanent Deletions</h3>
+<p>The guidelines establish a strict separation between temporary
+removal and permanent destruction:</p>
+<ul>
+<li><strong>Moving to Trash:</strong> Because items in the Trash can be
+restored, this action does not require an explicit confirmation
+prompt.</li>
+<li><strong>Bypassing Trash (Permanent Deletion):</strong> When a user
+explicitly chooses to delete a file permanently, or when deleting files
+on external media where no Trash exists, the action cannot be undone. In
+these scenarios, a clear confirmation pattern becomes mandatory.</li>
+<li><strong>Emptying the Trash:</strong> Because emptying the Trash
+purges all stored items simultaneously, this irreversible operation
+always requires explicit user confirmation.</li>
+</ul>
+<h3 id="elements-of-a-clear-confirmation-pattern">Elements of a Clear
+Confirmation Pattern</h3>
+<p>When an irreversible deletion requires user consent, the GNOME HIG
+mandates specific design patterns to ensure total clarity:</p>
+<ol type="1">
+<li><strong>Specific, Unambiguous Titles:</strong> The prompt header
+must directly state the action and the subject, such as "Permanently
+Delete 'Project_Notes.txt'?" rather than a generic "Are you sure?"</li>
+<li><strong>Explicit Explanation of Consequences:</strong> The body text
+must clearly explain that the operation cannot be reversed and that the
+data will be lost permanently.</li>
+<li><strong>Action-Specific Button Labels:</strong> Confirmation buttons
+must never use vague labels like "Yes" or "OK." Instead, the affirmative
+action must use specific verbs, such as "Delete" or "Empty Trash."</li>
+<li><strong>Destructive Visual Styling:</strong> The primary
+confirmation button must be styled with the system's destructive color
+(typically red). This provides a distinct visual warning that sets it
+apart from standard interface interactions.</li>
+<li><strong>Safe Defaults:</strong> The cancel action must be clearly
+accessible, often set as the default escape route if the user presses
+the Escape key or clicks away, ensuring that no accidental keypress
+triggers the deletion.</li>
+</ol>
+<h3 id="enhancing-user-confidence">Enhancing User Confidence</h3>
+<p>Ultimately, the purpose of the GNOME HIG regarding file deletion
+confirmations is to build user trust. By reserving modal dialogs
+exclusively for high-stakes, irreversible decisions and providing clear,
+descriptive labels, the interface ensures that when a prompt does
+appear, the user immediately recognizes its importance and makes an
+informed choice.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

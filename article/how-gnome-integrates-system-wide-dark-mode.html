@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Integrates System-Wide Dark Mode - gnome</title>
+    <meta name="description" content="GNOME integrates system-wide dark mode using a standardized cross-desktop specification that communicates appearance preferences across modern toolkits and sandboxed applications. Through the Freedesktop.org XDG Desktop Portal and modern GTK libraries, G">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-integrates-system-wide-dark-mode">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Integrates System-Wide Dark Mode - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-integrates-system-wide-dark-mode" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME integrates system-wide dark mode using a standardized cross-desktop specification that communicates appearance preferences across modern toolkits and sandboxed applications. Through the Freedesktop.org XDG Desktop Portal and modern GTK libraries, G" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-integrates-system-wide-dark-mode">How GNOME Integrates
+System-Wide Dark Mode</h1>
+<p>GNOME integrates system-wide dark mode using a standardized
+cross-desktop specification that communicates appearance preferences
+across modern toolkits and sandboxed applications. Through the
+Freedesktop.org XDG Desktop Portal and modern GTK libraries, GNOME
+exposes a single configuration switch that automatically adjusts native
+GNOME software, web browsers, Qt applications, and Electron clients
+without requiring application restarts or custom theme hacking.</p>
+<h3 id="the-freedesktoporg-settings-portal">The Freedesktop.org Settings
+Portal</h3>
+<p>At the core of GNOME’s dark mode implementation is the
+<code>org.freedesktop.impl.portal.Settings</code> D-Bus interface,
+managed by <code>xdg-desktop-portal-gnome</code>. When a user toggles
+the dark style switch in GNOME Settings or the Quick Settings menu,
+GNOME updates the <code>color-scheme</code> key within the
+<code>org.gnome.desktop.interface</code> GSettings schema.</p>
+<p>The GNOME portal backend detects this change and broadcasts it across
+the session bus via the standard Freedesktop Appearance portal. This
+design creates an abstraction layer that allows sandboxed applications
+(such as Flatpaks) and non-GNOME software to safely query and listen for
+the system's preferred color scheme (<code>0</code> for default/light,
+<code>1</code> for dark, and <code>2</code> for light-preferring).</p>
+<h3 id="native-gtk4-and-libadwaita">Native GTK4 and Libadwaita</h3>
+<p>Native GNOME applications built with GTK4 and Libadwaita offer the
+tightest integration with the dark style preference:</p>
+<ul>
+<li><strong>Automatic Style Switching:</strong> Libadwaita monitors the
+color-scheme preference directly. When the preference shifts, Libadwaita
+hot-reloads its dynamic CSS stylesheets, updating the UI instantly
+without interrupting the user's workflow.</li>
+<li><strong>Granular Developer Control:</strong> Application developers
+can override the system default when necessary (e.g., image editors or
+video players that default to dark interfaces) while still honoring user
+preferences via the <code>AdwStyleManager</code> API.</li>
+</ul>
+<h3 id="web-browsers-and-electron-applications">Web Browsers and
+Electron Applications</h3>
+<p>Web browsers and Electron-based tools integrate with GNOME's dark
+mode through standard web APIs:</p>
+<ul>
+<li><strong>CSS Media Queries:</strong> Browsers like Mozilla Firefox
+and Chromium-based browsers (Google Chrome, Brave, Microsoft Edge)
+listen to the XDG portal's color-scheme property.</li>
+<li><strong>Prefers-Color-Scheme:</strong> When the portal reports a
+dark state, the browser sets the CSS
+<code>@media (prefers-color-scheme: dark)</code> media feature to true,
+prompting websites and web-based applications to display their dark
+themes automatically.</li>
+</ul>
+<h3 id="qt-and-legacy-gtk3-integration">Qt and Legacy GTK3
+Integration</h3>
+<p>Because GNOME phased out the older approach of forcibly switching GTK
+themes (such as swapping between <code>Adwaita</code> and
+<code>Adwaita-dark</code>), handling cross-toolkit software requires
+targeted compatibility layers:</p>
+<ul>
+<li><strong>Qt 6.5 and Newer:</strong> Modern Qt versions feature native
+support for the Freedesktop appearance portal, allowing Qt applications
+to automatically match GNOME’s dark setting if a compatible Qt style
+plugin is installed.</li>
+<li><strong>GTK3 Applications:</strong> Traditional GTK3 applications do
+not natively support the Freedesktop color-scheme portal. To address
+this, GNOME includes a compatibility bridge in
+<code>xdg-desktop-portal-gnome</code> that can toggle the legacy
+<code>gtk-application-prefer-dark-theme</code> setting, ensuring older
+software applies a dark variant if the active GTK3 theme supports
+it.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

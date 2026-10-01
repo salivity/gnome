@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Network Displays for Miracast Desktop Streaming - gnome</title>
+    <meta name="description" content="GNOME Network Displays is an open-source tool designed to wirelessly stream a Linux desktop session to external monitors, smart TVs, and streaming dongles. By acting as a Miracast source, the application discovers compatible wireless receivers, negotiate">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-network-displays-for-miracast-desktop-streaming">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Network Displays for Miracast Desktop Streaming - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-network-displays-for-miracast-desktop-streaming" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Network Displays is an open-source tool designed to wirelessly stream a Linux desktop session to external monitors, smart TVs, and streaming dongles. By acting as a Miracast source, the application discovers compatible wireless receivers, negotiate" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-network-displays-for-miracast-desktop-streaming">GNOME
+Network Displays for Miracast Desktop Streaming</h1>
+<p>GNOME Network Displays is an open-source tool designed to wirelessly
+stream a Linux desktop session to external monitors, smart TVs, and
+streaming dongles. By acting as a Miracast source, the application
+discovers compatible wireless receivers, negotiates a peer-to-peer
+connection, and continuously encodes and transmits the display and audio
+output in real time. This article explains the technical role and core
+functionality of GNOME Network Displays in facilitating Miracast
+screencasting on modern Linux systems.</p>
+<h3 id="discovery-and-wi-fi-direct-establishment">Discovery and Wi-Fi
+Direct Establishment</h3>
+<p>The primary role of GNOME Network Displays begins at the network
+layer. Unlike protocols that rely entirely on an existing local area
+network, standard Miracast requires a peer-to-peer connection via Wi-Fi
+Direct (P2P). GNOME Network Displays interfaces with the system's
+network stack—primarily through NetworkManager and
+<code>wpa_supplicant</code>—to scan for Wi-Fi P2P-capable sink devices.
+Once a user selects a target display, the software initiates the
+handshake, configures the temporary direct wireless link, and
+establishes the transport layer without requiring an intermediate
+router.</p>
+<h3 id="desktop-session-capture">Desktop Session Capture</h3>
+<p>Once a network link is established, GNOME Network Displays must
+capture the visual output of the operating system. On modern Linux
+installations running the Wayland display server, applications cannot
+capture screen contents directly due to security sandboxing. GNOME
+Network Displays solves this by leveraging the desktop portal system
+(<code>xdg-desktop-portal</code>) and PipeWire. PipeWire captures the
+screen buffer directly from the compositor (such as Mutter in GNOME)
+with minimal latency and routes the raw multimedia stream to the
+streaming pipeline. Depending on compositor support, the application can
+either mirror an active display or create a virtual monitor to serve as
+an extended desktop workspace.</p>
+<h3 id="real-time-multimedia-encoding">Real-Time Multimedia
+Encoding</h3>
+<p>Miracast standards dictate specific audio and video formats,
+typically requiring H.264 video compression alongside AAC or LPCM audio
+multiplexed into an MPEG-TS container. GNOME Network Displays utilizes
+the GStreamer multimedia framework to assemble an encoding pipeline on
+the fly. It converts the raw video and audio frames provided by PipeWire
+into the compliant Miracast format. Where available, the application
+utilizes hardware acceleration (such as VA-API on Intel and AMD or NVENC
+on NVIDIA) to minimize CPU usage, reduce battery drain, and keep
+streaming latency low enough for interactive use.</p>
+<h3 id="session-management-via-rtsp">Session Management via RTSP</h3>
+<p>After encoding, the application manages the streaming lifecycle using
+the Real-Time Streaming Protocol (RTSP). GNOME Network Displays acts as
+an RTSP control client, communicating with the sink device to negotiate
+stream parameters such as resolution, frame rate, and audio codecs. Once
+negotiated, it encapsulates the MPEG-TS stream into the Real-time
+Transport Protocol (RTP) over UDP and begins transmission. Throughout
+the session, the application monitors connection stability and handles
+session termination cleanly, restoring local display configurations when
+the wireless connection is closed.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

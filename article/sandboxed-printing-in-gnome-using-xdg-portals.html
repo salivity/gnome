@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandboxed Printing in GNOME Using XDG Portals - gnome</title>
+    <meta name="description" content="Modern Linux desktop security relies heavily on sandboxing to isolate applications, presenting challenges for hardware access such as printing. GNOME resolves this using the XDG Desktop Portal architecture, which decouples the print dialog and CUPS print">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/sandboxed-printing-in-gnome-using-xdg-portals">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Sandboxed Printing in GNOME Using XDG Portals - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/sandboxed-printing-in-gnome-using-xdg-portals" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern Linux desktop security relies heavily on sandboxing to isolate applications, presenting challenges for hardware access such as printing. GNOME resolves this using the XDG Desktop Portal architecture, which decouples the print dialog and CUPS print" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="sandboxed-printing-in-gnome-using-xdg-portals">Sandboxed
+Printing in GNOME Using XDG Portals</h1>
+<p>Modern Linux desktop security relies heavily on sandboxing to isolate
+applications, presenting challenges for hardware access such as
+printing. GNOME resolves this using the XDG Desktop Portal architecture,
+which decouples the print dialog and CUPS printing subsystem from the
+sandboxed application. By mediating requests through D-Bus and rendering
+the interface on the host, GNOME allows sandboxed applications (such as
+Flatpaks) to securely submit print jobs without exposing local hardware,
+CUPS daemons, or network sockets directly to the untrusted
+environment.</p>
+<h3 id="the-sandboxing-challenge">The Sandboxing Challenge</h3>
+<p>Sandboxed applications operate in isolated environments with
+restricted access to the host filesystem, network interfaces, and system
+D-Bus. Direct communication with the Common Unix Printing System (CUPS)
+daemon—traditionally reached via a local Unix socket
+(<code>/run/cups/cups.sock</code>) or network protocols (IPP)—is
+completely blocked. Allowing direct access to CUPS would break
+sandboxing guarantees, potentially exposing sensitive print history,
+local network topology, and arbitrary file-read vulnerabilities.</p>
+<h3 id="the-role-of-xdg-desktop-portal">The Role of XDG Desktop
+Portal</h3>
+<p>GNOME bypasses these restrictions using the
+<code>xdg-desktop-portal</code> framework. The architecture splits the
+process across three primary layers:</p>
+<ol type="1">
+<li><strong>The Client (Sandboxed App):</strong> Runs in an isolated
+container and uses a desktop toolkit like GTK.</li>
+<li><strong>The Portal Frontend
+(<code>xdg-desktop-portal</code>):</strong> Runs on the user's host
+session D-Bus, exposing standard cross-desktop interfaces such as
+<code>org.freedesktop.portal.Print</code>.</li>
+<li><strong>The Backend Implementation
+(<code>xdg-desktop-portal-gnome</code>):</strong> The GNOME-specific
+backend that interacts with the desktop shell and the host print
+subsystems.</li>
+</ol>
+<p>When an application invokes a print action, GTK's native print
+backend detects that it is operating inside a sandbox. Instead of
+invoking local CUPS routines, it makes an asynchronous D-Bus call to the
+<code>org.freedesktop.portal.Print</code> interface.</p>
+<h3 id="the-printing-workflow">The Printing Workflow</h3>
+<p>The sandboxed printing transaction occurs through a strict sequence
+of stages designed to avoid data leakage:</p>
+<ul>
+<li><strong>Initiation:</strong> The application requests a print dialog
+via the portal interface. It can supply configuration parameters, such
+as default paper size, page ranges, and orientation.</li>
+<li><strong>Host UI Execution:</strong> <code>xdg-desktop-portal</code>
+routes the call to <code>xdg-desktop-portal-gnome</code>. The GNOME
+backend creates and displays the standard GTK Print Dialog on the host
+display server (Wayland or X11). Because this dialog runs outside the
+sandbox, it can query CUPS directly to discover local and network
+printers, check toner levels, and read PPD files.</li>
+<li><strong>User Confirmation:</strong> The user interacts with the
+native GNOME print interface to choose a printer and configure options.
+The sandboxed application has no control over or visibility into this
+interaction.</li>
+<li><strong>Document Generation:</strong> Once the user clicks "Print,"
+the portal allocates a file descriptor (such as a pipe or a temporary
+file using <code>memfd_create</code>) and transmits it to the sandboxed
+application. The application converts the target content into a
+standardized format—most commonly a PDF—and writes the raw data into
+that file descriptor.</li>
+<li><strong>Submission to CUPS:</strong> After writing is complete, the
+application notifies the portal. The host GNOME portal backend retrieves
+the file descriptor and forwards the generated document stream to CUPS
+on the host system to complete the print job.</li>
+</ul>
+<h3 id="security-and-architectural-benefits">Security and Architectural
+Benefits</h3>
+<p>This portal-based implementation achieves several key security
+goals:</p>
+<ul>
+<li><strong>Least Privilege:</strong> The sandboxed application never
+gains privileges to read system print configurations, inspect active
+print queues, or manipulate other users' print jobs.</li>
+<li><strong>Consistent User Experience:</strong> The print dialog
+matches the host GNOME theme, language, and system configuration,
+regardless of the runtime libraries packaged inside the sandboxed
+container.</li>
+<li><strong>Standardized Formats:</strong> By standardizing data
+transfer on portable document streams (PDF) over file descriptors,
+applications do not need specific device drivers or knowledge of
+printer-specific page description languages.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

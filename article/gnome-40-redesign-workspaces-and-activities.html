@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME 40 Redesign: Workspaces and Activities - gnome</title>
+    <meta name="description" content="The release of GNOME 40 marked a major milestone in Linux desktop design by replacing the traditional vertical workflow with an intuitive, unified horizontal paradigm. This article explores how GNOME 40 overhauled the Activities Overview, transformed wor">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-40-redesign-workspaces-and-activities">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME 40 Redesign: Workspaces and Activities - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-40-redesign-workspaces-and-activities" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The release of GNOME 40 marked a major milestone in Linux desktop design by replacing the traditional vertical workflow with an intuitive, unified horizontal paradigm. This article explores how GNOME 40 overhauled the Activities Overview, transformed wor" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-40-redesign-workspaces-and-activities">GNOME 40 Redesign:
+Workspaces and Activities</h1>
+<p>The release of GNOME 40 marked a major milestone in Linux desktop
+design by replacing the traditional vertical workflow with an intuitive,
+unified horizontal paradigm. This article explores how GNOME 40
+overhauled the Activities Overview, transformed workspace navigation
+with continuous spatial continuity, integrated 1:1 multi-touch touchpad
+gestures, and unified the application grid to deliver a faster, more
+cohesive desktop experience.</p>
+<h3 id="the-shift-from-vertical-to-horizontal-spatial-flow">The Shift
+from Vertical to Horizontal Spatial Flow</h3>
+<p>Prior to GNOME 40, the desktop operated on a vertical axis.
+Workspaces were stacked vertically along the right side of the screen,
+the Dash sat on the left, and navigating between multiple tasks required
+moving in conflicting directions.</p>
+<p>GNOME 40 aligned the entire desktop along a single horizontal axis.
+Workspaces are arranged left-to-right as a continuous ribbon, mirroring
+the natural reading direction of most users and aligning with the
+physical layout of modern widescreen monitors. This directional
+consistency eliminated the mental friction of switching between
+horizontal window tiling and vertical desktop management.</p>
+<h3 id="the-reimagined-activities-overview">The Reimagined Activities
+Overview</h3>
+<p>Entering the Activities Overview in GNOME 40 reveals a layered,
+two-state design that serves as a spatial map of your open tasks:</p>
+<ol type="1">
+<li><strong>Workspace Thumbnails:</strong> The active workspace is
+centered prominently on the screen, flanked by previews of neighboring
+workspaces to the left and right. This provides immediate context about
+adjacent tasks without requiring users to switch away from their current
+view.</li>
+<li><strong>Relocated Dash:</strong> The Dash moved from the left edge
+to the bottom of the display. This change balances the screen visually
+and allows the Dash to function identically to standard application
+docks, making favorites and running apps universally accessible.</li>
+<li><strong>App Window Clutter Reduction:</strong> Within the overview,
+running application windows scale smoothly within their designated
+workspace card, maintaining their relative positions and aspect ratios
+to ensure recognizable window management.</li>
+</ol>
+<h3 id="11-multi-touch-gestures-and-navigation">1:1 Multi-Touch Gestures
+and Navigation</h3>
+<p>A defining feature of the redesigned workspace flow is the
+implementation of 1:1 touchpad gestures driven by the Wayland display
+server:</p>
+<ul>
+<li><strong>Horizontal Swiping:</strong> A three-finger swipe left or
+right slides smoothly between active workspaces, with the on-screen
+animation locked directly to the physical movement of the fingers.</li>
+<li><strong>Vertical Swiping:</strong> A three-finger swipe upward pulls
+the user into the Activities Overview. Continuing the upward swipe
+transitions seamlessly into the full App Grid. Swiping downward reverses
+the action, returning to the open window.</li>
+</ul>
+<p>These gestures provide physical feedback and predictable navigation,
+bridging the gap between hardware input and desktop responsiveness.</p>
+<h3 id="integrated-application-grid">Integrated Application Grid</h3>
+<p>Under the previous design, opening the application grid often felt
+disconnected from the main workflow. GNOME 40 integrated the app
+launcher directly into the horizontal paradigm.</p>
+<p>When accessing the app grid, the running workspaces shrink upward
+toward the top of the display, and the app icons slide into view from
+below. The grid itself is paginated horizontally, allowing users to
+scroll through installed applications with the same left-to-right motion
+used for workspace switching. Users can also drag and drop application
+icons directly onto specific workspace cards visible at the top of the
+screen to launch programs directly where needed.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

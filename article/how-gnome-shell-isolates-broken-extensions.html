@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Isolates Broken Extensions - gnome</title>
+    <meta name="description" content="GNOME Shell extensions run directly within the compositor process, making true process-level sandboxing impossible without architectural redesigns. To prevent faulty or malicious code from bringing down the entire desktop session, GNOME Shell relies on J">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-isolates-broken-extensions">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Isolates Broken Extensions - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-isolates-broken-extensions" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell extensions run directly within the compositor process, making true process-level sandboxing impossible without architectural redesigns. To prevent faulty or malicious code from bringing down the entire desktop session, GNOME Shell relies on J" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-isolates-broken-extensions">How GNOME Shell
+Isolates Broken Extensions</h1>
+<p>GNOME Shell extensions run directly within the compositor process,
+making true process-level sandboxing impossible without architectural
+redesigns. To prevent faulty or malicious code from bringing down the
+entire desktop session, GNOME Shell relies on JavaScript-level exception
+boundaries, strict lifecycle state tracking, automated deactivation, and
+safe-mode recovery routines. This article explains how the GNOME Shell
+architecture traps errors, contains faulty extensions, and prevents full
+desktop crashes.</p>
+<h3 id="the-in-process-execution-model">The In-Process Execution
+Model</h3>
+<p>Unlike browser extensions or modern application sandboxes, GNOME
+Shell extensions run in-process using GJS (GNOME JavaScript), which
+binds the SpiderMonkey JavaScript engine directly to Mutter and the
+GNOME desktop libraries via GObject Introspection. Because extensions
+share the same memory space and thread as the Wayland compositor and
+window manager, a segmentation fault at the C library level will crash
+the entire session. Consequently, GNOME Shell’s isolation mechanisms
+focus primarily on intercepting runtime errors and API misuse within the
+JavaScript runtime before they propagate to the native host process.</p>
+<h3 id="exception-trapping-and-error-boundaries">Exception Trapping and
+Error Boundaries</h3>
+<p>GNOME Shell isolates extension code by wrapping critical lifecycle
+methods—such as <code>enable()</code>, <code>disable()</code>, and
+initialization hooks—in protective <code>try...catch</code> blocks. When
+an extension executes code that throws an unhandled JavaScript
+exception, the shell captures the error rather than letting it bubble up
+to terminate the GJS runtime.</p>
+<p>The shell records the stack trace to the system journal (accessible
+via <code>journalctl</code>) and sets the extension's internal state to
+<code>ExtensionState.ERROR</code>. Once in this state:</p>
+<ul>
+<li>The extension's execution flow is halted immediately.</li>
+<li>Further event handlers, UI injections, and signal listeners
+associated with the extension are skipped.</li>
+<li>The desktop environment continues rendering without executing any
+more code from the failing component.</li>
+</ul>
+<h3 id="signal-and-resource-cleanup-tracking">Signal and Resource
+Cleanup Tracking</h3>
+<p>Extensions frequently connect to Mutter signals, add UI elements to
+the top panel, or modify desktop actors in the Clutter scene graph. A
+common cause of session instability is an extension modifying the UI and
+then failing to clean up after an error.</p>
+<p>GNOME Shell tracks objects and provides helper utilities (such as
+<code>ExtensionUtils</code> and base extension classes) to manage
+resource lifecycles. If an extension fails or is disabled:</p>
+<ul>
+<li>Signal connections managed via standard extension wrappers are
+automatically disconnected.</li>
+<li>Injected UI actors are removed from the stage hierarchy.</li>
+<li>Global keybindings registered by the extension are unbound.</li>
+</ul>
+<p>By automatically stripping dangling references when an extension
+enters an error state, GNOME Shell prevents memory leaks and stale event
+callbacks from corrupting subsequent compositor frames.</p>
+<h3 id="version-locking-and-strict-compatibility-checks">Version Locking
+and Strict Compatibility Checks</h3>
+<p>To avoid crashes caused by deprecated or changed internal APIs, GNOME
+Shell enforces strict version matching. Every extension must declare
+compatible GNOME Shell versions in its <code>metadata.json</code>
+file.</p>
+<p>During startup, the extension manager validates the current shell
+version against this list. If a mismatch is detected, the shell refuses
+to load the extension entirely, marking it as incompatible. This
+proactive check ensures that legacy code relying on altered Clutter,
+Mutter, or St APIs cannot execute and destabilize the session.</p>
+<h3 id="automatic-disabling-and-safe-mode-fallbacks">Automatic Disabling
+and Safe Mode Fallbacks</h3>
+<p>When an unrecoverable failure or repetitive crash occurs during
+session startup, GNOME Shell provides fail-safe recovery pathways:</p>
+<ol type="1">
+<li><strong>Session Failure Detection:</strong> If GNOME Shell crashes
+multiple times within a brief threshold, the display manager (such as
+GDM) or the systemd user session will trigger safe mode.</li>
+<li><strong>Safe Mode Execution:</strong> Running with extensions
+disabled (<code>gnome-shell --safe-mode</code>) boots the shell with a
+clean default configuration, bypassing all third-party code.</li>
+<li><strong>User-Level Recovery:</strong> Users can manage and disable
+faulty extensions through the dedicated <code>gnome-extensions</code>
+command-line tool or the Extensions app, allowing them to isolate and
+remove the offending extension without needing to reset their entire
+user profile or desktop configuration.</li>
+</ol></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

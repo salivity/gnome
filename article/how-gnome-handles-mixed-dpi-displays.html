@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Handles Mixed DPI Displays - gnome</title>
+    <meta name="description" content="Managing multiple monitors with varying pixel densities—such as a 4K laptop screen paired with a standard 1080p external monitor—presents unique challenges for desktop environments. GNOME addresses mixed DPI (Dots Per Inch) display arrangements prima">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-handles-mixed-dpi-displays">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Handles Mixed DPI Displays - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-handles-mixed-dpi-displays" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Managing multiple monitors with varying pixel densities—such as a 4K laptop screen paired with a standard 1080p external monitor—presents unique challenges for desktop environments. GNOME addresses mixed DPI (Dots Per Inch) display arrangements prima" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-handles-mixed-dpi-displays">How GNOME Handles Mixed
+DPI Displays</h1>
+<p>Managing multiple monitors with varying pixel densities—such as a 4K
+laptop screen paired with a standard 1080p external monitor—presents
+unique challenges for desktop environments. GNOME addresses mixed DPI
+(Dots Per Inch) display arrangements primarily through its Mutter
+compositor, utilizing a logical coordinate system to arrange displays
+and leveraging the Wayland display protocol to apply independent,
+per-monitor scale factors. This article explains how GNOME handles
+mixed-density display positioning, the differences between Wayland and
+X11 implementations, and how fractional scaling functions across
+different screens.</p>
+<h3 id="wayland-vs-x11-architecture">Wayland vs. X11 Architecture</h3>
+<p>The underlying display server determines how GNOME processes multiple
+displays with differing densities:</p>
+<ul>
+<li><strong>Wayland (Default):</strong> Wayland was architected with
+multi-DPI configurations in mind. The protocol allows GNOME's
+compositor, Mutter, to assign distinct scale factors to each connected
+monitor natively. A high-DPI laptop panel can run at 200% scale while an
+attached 1080p external monitor runs at 100% scale, allowing windows to
+dynamically resize and redraw their UI when dragged between screens
+without sacrificing sharpness.</li>
+<li><strong>X11 (Legacy):</strong> The X11 windowing system relies on a
+single global DPI value for the entire graphical session. Under X11,
+GNOME cannot natively assign different scaling factors to separate
+displays. To compensate, GNOME scales the entire desktop to match the
+highest DPI screen and uses <code>xrandr</code> to downscale the output
+on lower-resolution monitors. This workaround often results in
+noticeable blurriness, cursor misalignments, and increased GPU overhead
+on the lower-DPI display.</li>
+</ul>
+<h3 id="logical-coordinate-space-and-display-arrangement">Logical
+Coordinate Space and Display Arrangement</h3>
+<p>When arranging displays in GNOME's Settings, monitors are positioned
+on a unified virtual grid using <strong>logical pixels</strong> rather
+than physical pixels.</p>
+<p>A display's logical size is calculated by dividing its physical
+resolution by its scaling factor. For instance:</p>
+<ul>
+<li>A 3840×2160 (4K) monitor scaled at 200% yields a logical workspace
+of 1920×1080.</li>
+<li>A 1920×1080 (FHD) monitor scaled at 100% also yields a logical
+workspace of 1920×1080.</li>
+</ul>
+<p>Because both monitors share identical logical heights, GNOME treats
+them as equal in vertical size within the display arrangement interface.
+This alignment ensures that mouse cursor transitions across monitor
+borders are smooth and predictable, preventing the cursor from getting
+"stuck" on edges where physical pixel counts differ.</p>
+<h3 id="fractional-scaling-mechanics">Fractional Scaling Mechanics</h3>
+<p>In addition to integer scaling (100%, 200%, 300%), GNOME provides
+experimental and native fractional scaling options (125%, 150%, 175%).
+Under Wayland, Mutter accomplishes fractional scaling using an
+oversampling technique:</p>
+<ol type="1">
+<li>Mutter scales the client application surface up to the next highest
+integer (for example, rendering at 200% or 300%).</li>
+<li>The compositor uses the GPU to downscale the rendered frame buffer
+to the target fractional resolution before outputting the frame to the
+specific monitor.</li>
+</ol>
+<p>This method preserves crisp vector assets and text rendering across
+diverse screen densities, though it requires additional GPU processing
+power compared to integer scaling.</p>
+<h3 id="legacy-application-compatibility-xwayland">Legacy Application
+Compatibility (XWayland)</h3>
+<p>While native Wayland applications adapt automatically when moved
+across displays with different densities, older applications running via
+XWayland can appear blurry. Because XWayland initially lacked native
+support for per-monitor scaling, GNOME scales these legacy surfaces at
+the compositor level. Recent versions of GNOME and XWayland introduce
+improvements that allow the compositor to pass scaling hints directly to
+legacy applications, significantly reducing text degradation on mixed
+DPI setups.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

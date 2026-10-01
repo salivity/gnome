@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Renders Calendar and Notifications - gnome</title>
+    <meta name="description" content="This article examines the internal architecture GNOME Shell uses to display interactive calendar notifications and event summaries. It covers the end-to-end rendering pipeline, detailing how the desktop environment leverages the Evolution Data Server (ED">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-renders-calendar-and-notifications">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Renders Calendar and Notifications - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-renders-calendar-and-notifications" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article examines the internal architecture GNOME Shell uses to display interactive calendar notifications and event summaries. It covers the end-to-end rendering pipeline, detailing how the desktop environment leverages the Evolution Data Server (ED" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-renders-calendar-and-notifications">How GNOME
+Shell Renders Calendar and Notifications</h1>
+<p>This article examines the internal architecture GNOME Shell uses to
+display interactive calendar notifications and event summaries. It
+covers the end-to-end rendering pipeline, detailing how the desktop
+environment leverages the Evolution Data Server (EDS) via D-Bus,
+translates dynamic data into UI components using the Shell Toolkit (St)
+and Clutter, and processes user interactions through JavaScript (GJS)
+callbacks and Mutter's compositor.</p>
+<h3 id="the-architectural-foundation-clutter-st-and-gjs">The
+Architectural Foundation: Clutter, St, and GJS</h3>
+<p>GNOME Shell’s user interface is built on Clutter, an OpenGL- and
+Vulkan-based scene graph library integrated directly into Mutter, the
+window manager and Wayland compositor. To construct user-facing desktop
+widgets like the top bar, notification popups, and the combined calendar
+drop-down menu (the DateMenu), GNOME Shell uses the Shell Toolkit
+(St).</p>
+<p>St is a specialized widget library built on top of Clutter. It
+provides standard UI abstractions such as <code>St.Widget</code>,
+<code>St.BoxLayout</code>, <code>St.Button</code>, and
+<code>St.Label</code>, while supporting CSS-based styling. The majority
+of the logic governing these components is written in JavaScript and
+executed via GJS, GNOME’s Spidermonkey-based JavaScript runtime
+binding.</p>
+<h3 id="sourcing-calendar-data-via-evolution-data-server">Sourcing
+Calendar Data via Evolution Data Server</h3>
+<p>GNOME Shell does not store calendar events locally within the Shell
+process. Instead, it relies on the Evolution Data Server (EDS), a
+background system service that handles calendaring, address books, and
+tasks.</p>
+<ol type="1">
+<li><strong>D-Bus Communication:</strong> The Shell establishes
+asynchronous D-Bus connections with
+<code>org.gnome.evolution.dataserver.Sources</code> and the calendar
+factory services.</li>
+<li><strong>Client-Side Proxying:</strong> GNOME Shell's internal
+calendar module (<code>ui/calendar.js</code>) creates a client proxy
+using <code>ECal.Client</code>.</li>
+<li><strong>Querying Date Ranges:</strong> When the user opens the
+calendar view or when a background day-change event triggers, the Shell
+queries EDS for a specific date window (usually the selected month and
+current day).</li>
+<li><strong>Data Normalization:</strong> Raw iCalendar
+(<code>.ics</code>) objects are retrieved, parsed into JavaScript
+representations, and sorted chronologically for presentation.</li>
+</ol>
+<h3 id="assembling-the-ui-tree">Assembling the UI Tree</h3>
+<p>Once the event data is retrieved and notifications are queued, the
+Shell builds or updates its visual scene graph:</p>
+<ul>
+<li><strong>Event Summaries:</strong> Within
+<code>ui/dateMenu.js</code>, the drop-down menu divides into a
+date-picker grid and an event list column. For each event returned by
+EDS, GNOME Shell instantiates an <code>St.Button</code> containing an
+<code>St.BoxLayout</code>. This layout packs colored category
+indicators, time labels, and event titles.</li>
+<li><strong>Notification Banners:</strong> Notifications, managed by
+<code>ui/messageList.js</code> and <code>ui/messageTray.js</code>,
+adhere to the FreeDesktop.org Desktop Notifications Specification.
+Incoming notifications are wrapped in <code>NotificationMessage</code>
+objects. These include interactive elements such as inline text entry
+boxes, action buttons (e.g., "Snooze" or "Reply"), and dismiss
+targets.</li>
+</ul>
+<p>Styles—including margins, typography, border-radius, and blur
+effects—are resolved by the St styling engine using the desktop's system
+theme (<code>gnome-shell.css</code>).</p>
+<h3 id="the-rendering-pipeline">The Rendering Pipeline</h3>
+<p>Once the UI actors are arranged in the scene graph, the rendering
+process transitions through several layers:</p>
+<ol type="1">
+<li><strong>Layout Calculation:</strong> Clutter determines the dynamic
+dimensions and coordinates of each widget. Dynamic text wrapping and
+sizing are calculated using Pango and PangoCairo.</li>
+<li><strong>Actor Caching:</strong> St widgets generate Clutter
+primitives. Static elements, such as background shapes, icons, and text
+glyphs, are cached as textures in video memory (VRAM) using Cogl, the
+low-level hardware abstraction layer.</li>
+<li><strong>Compositing:</strong> Mutter traverses the scene graph. The
+calendar drop-down and notification banners exist in the "top window
+group" layer of GNOME Shell, ensuring they render above standard
+application windows.</li>
+<li><strong>Frame Submission:</strong> Cogl coordinates with the
+graphics driver (Mesa, NVIDIA, etc.) to draw the primitives using
+shaders, which are then flipped to the screen via Wayland/DRM surfaces
+or the X11 server.</li>
+</ol>
+<h3 id="interactivity-and-event-handling">Interactivity and Event
+Handling</h3>
+<p>Interactivity is handled through Clutter’s input event dispatching
+pipeline:</p>
+<ul>
+<li><strong>Signal Capture:</strong> When a user hovers over, clicks, or
+taps an event summary or notification button, Mutter captures the input
+event from <code>libinput</code> and routes it to the specific Clutter
+actor under the cursor.</li>
+<li><strong>JavaScript Callbacks:</strong> The St layer translates these
+input events into high-level GJS signals, such as <code>'clicked'</code>
+or <code>'activate'</code>.</li>
+<li><strong>State Updates:</strong>
+<ul>
+<li>Clicking an event summary triggers a D-Bus call to open the full
+event entry inside the standalone GNOME Calendar application.</li>
+<li>Clicking an action button inside a notification banner runs the
+defined action handler, either sending a response back to the
+originating application over D-Bus or updating the notification’s
+internal state.</li>
+</ul></li>
+<li><strong>Animations:</strong> Interactive state changes—such as
+sliding open the calendar, expanding a notification, or dismissing a
+message—are orchestrated via <code>Clutter.PropertyTransition</code>
+animations. These modify properties like <code>opacity</code> and
+<code>translation-y</code> dynamically without blocking the main event
+loop.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

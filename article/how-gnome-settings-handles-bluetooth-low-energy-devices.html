@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Settings Handles Bluetooth Low Energy Devices - gnome</title>
+    <meta name="description" content="GNOME Settings manages Bluetooth Low Energy (BLE) peripherals by integrating the graphical desktop interface with the underlying Linux Bluetooth subsystem, BlueZ. Through a combination of dedicated background services, modern Generic Attribute Profile (G">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-settings-handles-bluetooth-low-energy-devices">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Settings Handles Bluetooth Low Energy Devices - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-settings-handles-bluetooth-low-energy-devices" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Settings manages Bluetooth Low Energy (BLE) peripherals by integrating the graphical desktop interface with the underlying Linux Bluetooth subsystem, BlueZ. Through a combination of dedicated background services, modern Generic Attribute Profile (G" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-settings-handles-bluetooth-low-energy-devices">How
+GNOME Settings Handles Bluetooth Low Energy Devices</h1>
+<p>GNOME Settings manages Bluetooth Low Energy (BLE) peripherals by
+integrating the graphical desktop interface with the underlying Linux
+Bluetooth subsystem, BlueZ. Through a combination of dedicated
+background services, modern Generic Attribute Profile (GATT) querying,
+and system power daemons, the desktop provides a unified interface for
+scanning, pairing, and monitoring BLE devices—such as mice, keyboards,
+and fitness trackers—while maintaining energy efficiency.</p>
+<h3 id="the-underlying-software-architecture">The Underlying Software
+Architecture</h3>
+<p>GNOME Settings (implemented via <code>gnome-control-center</code>)
+does not interact with the Bluetooth hardware directly. Instead, it
+relies on a layered stack:</p>
+<ol type="1">
+<li><strong>BlueZ:</strong> The official Linux Bluetooth protocol stack
+operating as a system daemon (<code>bluetoothd</code>). It controls the
+adapter driver, implements core protocols, and exposes a D-Bus
+interface.</li>
+<li><strong>gnome-bluetooth:</strong> A specialized helper library and
+daemon that bridges BlueZ and the GNOME desktop. It handles high-level
+desktop operations like discovery states, device classification, and
+user pairing requests.</li>
+<li><strong>GNOME Settings UI:</strong> The user-facing panel that
+queries <code>gnome-bluetooth</code> over D-Bus to present a simplified
+list of discoverable and paired devices.</li>
+</ol>
+<h3 id="device-discovery-and-active-scanning">Device Discovery and
+Active Scanning</h3>
+<p>When a user navigates to the Bluetooth panel in GNOME Settings, the
+interface commands BlueZ to initiate active device discovery. Unlike
+legacy Bluetooth (BR/EDR), BLE peripherals continuously broadcast small
+advertising packets. BlueZ captures these advertisements and extracts
+device identifiers, signal strength (RSSI), and available service
+UUIDs.</p>
+<p>To prevent battery drain on both the host and the peripherals, GNOME
+restricts active scanning:</p>
+<ul>
+<li>Scanning begins immediately when the Bluetooth panel opens.</li>
+<li>Discovery is stopped or restricted when the panel is closed or
+navigated away from.</li>
+<li>Advertised BLE devices are automatically sorted and filtered to
+eliminate raw beacon data or non-connectable peripheral noise.</li>
+</ul>
+<h3 id="pairing-and-connection-modes">Pairing and Connection Modes</h3>
+<p>BLE devices operate primarily using the Generic Attribute Profile
+(GATT). When a user selects a BLE device to pair, GNOME Settings and
+BlueZ execute the appropriate security procedure based on the
+peripheral's capabilities:</p>
+<ul>
+<li><strong>Just Works:</strong> Used for devices without display or
+input capabilities (such as basic BLE mice). The connection establishes
+encryption automatically without user verification.</li>
+<li><strong>Passkey Entry or Numeric Comparison:</strong> Used for
+secure peripherals, such as BLE keyboards. GNOME Settings displays a
+pop-up modal prompting the user to type or confirm a numeric code.</li>
+</ul>
+<p>BlueZ creates a long-term cryptographic key ("bonding") stored
+locally. Subsequent connections do not require user intervention in
+GNOME Settings; the peripheral automatically reconnects when it moves
+within range or wakes from sleep.</p>
+<h3 id="battery-reporting-and-status-integration">Battery Reporting and
+Status Integration</h3>
+<p>Modern BLE peripherals advertise their status via standardized GATT
+services. GNOME Settings extracts this information to provide native
+desktop feedback:</p>
+<ul>
+<li><strong>Battery Service (UUID <code>0x180F</code>):</strong> BlueZ
+reads the battery level attribute from the peripheral and exports it
+over D-Bus.</li>
+<li><strong>UPower Integration:</strong> GNOME uses UPower to collect
+battery data from BlueZ. Once recognized, the peripheral's current
+battery percentage is displayed directly inside GNOME Settings and in
+the system status area in the top panel.</li>
+<li><strong>Input Integration:</strong> Input peripherals (using the
+Human Interface Device over GATT profile, or HOGP) are routed directly
+into the kernel's <code>evdev</code> subsystem via <code>uhid</code>,
+allowing mouse and keyboard inputs to work instantaneously across
+Wayland or X11 sessions.</li>
+</ul>
+<h3 id="power-management-and-inactivity">Power Management and
+Inactivity</h3>
+<p>BLE peripherals are designed to drop into low-power sleep states
+during idle periods. GNOME Settings delegates low-level power handling
+to the Linux kernel and BlueZ. When an idle BLE device sleeps, the
+connection parameters transition to longer latency intervals rather than
+disconnecting entirely. As soon as the device transmits data, the
+connection restores full bandwidth without triggering reconnection
+dialogs or user prompts in GNOME Settings.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Rename Multiple Files in GNOME Files - gnome</title>
+    <meta name="description" content="GNOME Files, also known as Nautilus, includes a built-in batch renaming tool that allows users to quickly organize and rename multiple files simultaneously. By selecting multiple items and accessing the rename dialog, users can leverage pattern matching">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/batch-rename-multiple-files-in-gnome-files">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Batch Rename Multiple Files in GNOME Files - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/batch-rename-multiple-files-in-gnome-files" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Files, also known as Nautilus, includes a built-in batch renaming tool that allows users to quickly organize and rename multiple files simultaneously. By selecting multiple items and accessing the rename dialog, users can leverage pattern matching" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="batch-rename-multiple-files-in-gnome-files">Batch Rename
+Multiple Files in GNOME Files</h1>
+<p>GNOME Files, also known as Nautilus, includes a built-in batch
+renaming tool that allows users to quickly organize and rename multiple
+files simultaneously. By selecting multiple items and accessing the
+rename dialog, users can leverage pattern matching to perform
+find-and-replace operations, insert sequential numbering, or apply
+automated metadata templates. This article explains how to access and
+utilize these pattern-matching features to rename multiple files
+efficiently without third-party utilities or command-line scripts.</p>
+<h2 id="accessing-the-batch-rename-tool">Accessing the Batch Rename
+Tool</h2>
+<p>To initiate batch renaming in GNOME Files:</p>
+<ol type="1">
+<li>Open the folder containing the files you wish to modify.</li>
+<li>Select the target files by dragging a selection box, holding
+<code>Ctrl</code> while clicking specific files, or pressing
+<code>Ctrl + A</code> to select all files.</li>
+<li>Right-click any of the selected files and select
+<strong>Rename...</strong>, or simply press the <code>F2</code>
+key.</li>
+</ol>
+<p>A dialog window will appear displaying a list of your selected files
+along with two primary pattern-matching modes at the top: <strong>Rename
+using a template</strong> and <strong>Find and replace
+text</strong>.</p>
+<h2 id="renaming-using-templates">Renaming Using Templates</h2>
+<p>The template feature allows you to build custom naming structures by
+combining static text with dynamic pattern variables.</p>
+<ul>
+<li><strong>Pattern Tags:</strong> Click the <strong>Add</strong> button
+in the template field to insert dynamic variables. Available tags
+include <code>[Original file name]</code> and various sequential
+numbering formats (e.g., <code>1, 2, 3</code>, <code>01, 02, 03</code>,
+or <code>001, 002, 003</code>).</li>
+<li><strong>Metadata Support:</strong> Depending on the file type,
+additional metadata tags may be available, such as creation date or
+track details for audio files.</li>
+<li><strong>Custom Formatting:</strong> You can type custom text around
+these tags. For example, entering
+<code>Vacation_[Original file name]_[+1]</code> will retain the existing
+filename while prepending a prefix and appending an ascending
+number.</li>
+</ul>
+<h2 id="find-and-replace-pattern-matching">Find and Replace Pattern
+Matching</h2>
+<p>If you need to edit common patterns across existing file names,
+switch to the <strong>Find and replace text</strong> option:</p>
+<ul>
+<li><strong>Existing Text:</strong> Enter the exact characters, words,
+or symbols you want to locate across the selected files.</li>
+<li><strong>Replace With:</strong> Enter the replacement string. Leaving
+this field blank effectively strips the matched text from the
+filenames.</li>
+<li>This mode is particularly useful for removing unwanted characters,
+changing separators (such as swapping underscores for hyphens), or
+replacing default camera prefixes.</li>
+</ul>
+<h2 id="live-preview-and-execution">Live Preview and Execution</h2>
+<p>Below the pattern configuration options, GNOME Files displays a
+real-time side-by-side preview. The left column shows the original file
+names, and the right column shows the proposed changes based on your
+current pattern. This allows you to verify that formatting, numbering
+orders, and file extensions remain intact before committing changes.</p>
+<p>Once the preview matches your desired structure, click the
+<strong>Rename</strong> button in the upper-right corner to apply the
+changes to all selected files immediately.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

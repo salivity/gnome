@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Manages Time Sync Using systemd-timesyncd - gnome</title>
+    <meta name="description" content="GNOME manages system time synchronization through a layered architecture that connects user settings to low-level system services using D-Bus. Rather than directly controlling the background synchronization service, GNOME interfaces with systemd-timedate">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-manages-time-sync-using-systemd-timesyncd">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Manages Time Sync Using systemd-timesyncd - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-manages-time-sync-using-systemd-timesyncd" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME manages system time synchronization through a layered architecture that connects user settings to low-level system services using D-Bus. Rather than directly controlling the background synchronization service, GNOME interfaces with systemd-timedate" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-manages-time-sync-using-systemd-timesyncd">How GNOME
+Manages Time Sync Using systemd-timesyncd</h1>
+<p>GNOME manages system time synchronization through a layered
+architecture that connects user settings to low-level system services
+using D-Bus. Rather than directly controlling the background
+synchronization service, GNOME interfaces with
+<code>systemd-timedated</code>, an intermediary system bus mechanism
+that safely coordinates configuration changes with the lightweight NTP
+client <code>systemd-timesyncd</code>. This setup ensures accurate
+timekeeping while maintaining strict privilege separation and
+desktop-agnostic system standards.</p>
+<h3 id="the-component-stack">The Component Stack</h3>
+<p>The integration relies on three primary software layers:</p>
+<ol type="1">
+<li><strong>GNOME Control Center (GNOME Settings):</strong> The
+graphical user interface where users view and toggle the "Automatic Date
+&amp; Time" setting.</li>
+<li><strong><code>systemd-timedated</code>:</strong> A privileged system
+daemon exposing the <code>org.freedesktop.timedate1</code> D-Bus
+interface, responsible for handling date, time, and NTP configuration
+requests.</li>
+<li><strong><code>systemd-timesyncd</code>:</strong> The background
+daemon that acts as an SNTP (Simple Network Time Protocol) client,
+querying remote NTP servers and adjusting the local system clock.</li>
+</ol>
+<h3 id="d-bus-communication-via-systemd-timedated">D-Bus Communication
+via <code>systemd-timedated</code></h3>
+<p>GNOME does not execute shell commands or directly manipulate systemd
+units to configure time synchronization. When a user toggles "Automatic
+Date &amp; Time" in the GNOME Settings panel:</p>
+<ol type="1">
+<li>GNOME Settings communicates with <code>timedated</code> over the
+system D-Bus.</li>
+<li>It invokes the
+<code>SetNTP(boolean use_ntp, boolean interactive)</code> method on the
+<code>org.freedesktop.timedate1</code> interface.</li>
+<li>PolicyKit (polkit) evaluates whether the calling user has
+administrative privileges to alter system-wide time configurations. In
+standard desktop installations, active local users are granted
+permission automatically.</li>
+</ol>
+<h3 id="controlling-systemd-timesyncd">Controlling
+<code>systemd-timesyncd</code></h3>
+<p>Once <code>systemd-timedated</code> accepts the request to enable
+NTP:</p>
+<ul>
+<li>It enables and starts the <code>systemd-timesyncd.service</code>
+systemd unit.</li>
+<li>Conversely, if the user disables automatic time synchronization,
+<code>systemd-timedated</code> stops and disables the unit, allowing
+manual setting of the time via the <code>SetTime</code> D-Bus
+method.</li>
+<li><code>timedated</code> dynamically detects the available NTP
+implementation. If a full-featured NTP daemon such as Chrony or NTPd is
+installed and active, <code>timedated</code> defers control to that
+service instead of <code>systemd-timesyncd</code>.</li>
+</ul>
+<h3 id="clock-synchronization-and-network-handling">Clock
+Synchronization and Network Handling</h3>
+<p>When active, <code>systemd-timesyncd</code> synchronizes the system
+clock by querying NTP servers defined in
+<code>/etc/systemd/timesyncd.conf</code> or dynamically provided via
+DHCP by network managers like NetworkManager.</p>
+<p>As NetworkManager establishes or alters network interfaces, it can
+feed runtime NTP server data to <code>systemd-timesyncd</code>. The
+daemon gradually steps or slews the system clock using the Linux
+kernel's time adjustment APIs (such as <code>adjtimex</code>). It also
+periodically writes the current time to a local state file
+(<code>/var/lib/systemd/timesync/clock</code>) to prevent time from
+jumping backward across system reboots on hardware lacking a reliable
+Real-Time Clock (RTC).</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

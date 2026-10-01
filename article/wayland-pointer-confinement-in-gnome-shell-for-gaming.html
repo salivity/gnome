@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wayland Pointer Confinement in GNOME Shell for Gaming - gnome</title>
+    <meta name="description" content="This article explains how GNOME Shell handles pointer confinement and locking for gaming applications operating under the Wayland display protocol. By leveraging standard Wayland protocol extensions within its compositor, Mutter, GNOME Shell restricts or">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/wayland-pointer-confinement-in-gnome-shell-for-gaming">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Wayland Pointer Confinement in GNOME Shell for Gaming - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/wayland-pointer-confinement-in-gnome-shell-for-gaming" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how GNOME Shell handles pointer confinement and locking for gaming applications operating under the Wayland display protocol. By leveraging standard Wayland protocol extensions within its compositor, Mutter, GNOME Shell restricts or" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="wayland-pointer-confinement-in-gnome-shell-for-gaming">Wayland
+Pointer Confinement in GNOME Shell for Gaming</h1>
+<p>This article explains how GNOME Shell handles pointer confinement and
+locking for gaming applications operating under the Wayland display
+protocol. By leveraging standard Wayland protocol extensions within its
+compositor, Mutter, GNOME Shell restricts or anchors the mouse cursor to
+a game window, delivers raw relative motion data, and translates legacy
+X11 mouse grabs via XWayland to provide an uninterrupted gaming
+experience while maintaining system security.</p>
+<h3 id="core-protocols-pointer-constraints-and-relative-pointer">Core
+Protocols: Pointer Constraints and Relative Pointer</h3>
+<p>Modern games, particularly first-person shooters and real-time
+strategy titles, rely on distinct mouse behaviors that standard desktop
+environments restrict by default. Under Wayland, GNOME Shell delegates
+pointer behavior to Mutter, its underlying compositor and window
+manager. Mutter implements two critical Wayland protocols developed by
+freedesktop.org:</p>
+<ol type="1">
+<li><strong><code>zwp_pointer_constraints_v1</code></strong>: Provides
+the foundation for restricting cursor movement. It defines two
+operational modes:
+<ul>
+<li><strong>Pointer Confinement (<code>confine_pointer</code>)</strong>:
+Restricts the cursor within the defined boundaries of a specific window
+or surface region. This allows cursor movement across the game interface
+while preventing it from accidentally drifting onto adjacent monitors or
+desktop panels—essential for edge-scrolling in strategy games.</li>
+<li><strong>Pointer Locking (<code>lock_pointer</code>)</strong>:
+Freezes the cursor at a fixed point (typically making it invisible) and
+prevents absolute cursor updates. This mode is the standard for 3D
+camera controls, such as looking around in first-person titles.</li>
+</ul></li>
+<li><strong><code>zwp_relative_pointer_v1</code></strong>: Works in
+tandem with pointer locking. When a pointer is locked, the application
+no longer receives absolute coordinate updates. Instead, this protocol
+delivers unbounded, raw relative motion deltas (dx, dy) directly to the
+game engine, enabling continuous 360-degree rotation without running
+into screen borders.</li>
+</ol>
+<h3 id="security-and-activation-policies-in-mutter">Security and
+Activation Policies in Mutter</h3>
+<p>Unlike legacy X11 environments where any running application could
+unilaterally capture the cursor globally, GNOME Shell enforces strict
+security barriers under Wayland to prevent rogue processes from
+hijacking input:</p>
+<ul>
+<li><strong>Explicit User Focus</strong>: Confinement or locking
+requests only activate if the game window currently has active keyboard
+and pointer focus. Background or unfocused windows cannot trap the
+mouse.</li>
+<li><strong>Direct Interaction Triggers</strong>: Mutter generally
+requires an explicit user action—such as clicking within the window
+surface—before honoring the constraint request.</li>
+<li><strong>Escape Mechanisms</strong>: GNOME Shell retains overarching
+compositor control. If a user presses system-level hotkeys (such as the
+Super/Windows key to trigger the Activities Overview or Alt+Tab to cycle
+windows), Mutter immediately breaks the confinement, restores the
+desktop cursor, and allows navigation away from the game.</li>
+</ul>
+<h3 id="bridging-legacy-and-windows-games-via-xwayland">Bridging Legacy
+and Windows Games via XWayland</h3>
+<p>A significant portion of Linux gaming runs through compatibility
+layers (such as Wine and Proton) or uses native, legacy X11 binaries.
+These applications rely on traditional X11 APIs like
+<code>XGrabPointer</code>.</p>
+<p>To support these titles, XWayland serves as an intermediary between
+the game and GNOME Shell:</p>
+<ol type="1">
+<li>The game issues an <code>XGrabPointer</code> command to capture
+input.</li>
+<li>XWayland intercepts the call and translates it into standard Wayland
+<code>zwp_pointer_constraints_v1</code> requests.</li>
+<li>Mutter receives the constraint request from XWayland, validates that
+the window is focused, and applies the confinement or lock at the
+compositor level.</li>
+<li>Relative motion is passed back through XWayland to the game,
+allowing seamless mouse control without requiring the game engine to
+have native Wayland support.</li>
+</ol></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

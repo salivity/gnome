@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Web Tracking Protection vs Mainstream Browsers - gnome</title>
+    <meta name="description" content="GNOME Web, also known as Epiphany, provides a privacy-first web experience by combining WebKit's native security architecture with an open-source philosophy free from commercial advertising incentives. While mainstream proprietary browsers like Google Ch">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-web-tracking-protection-vs-mainstream-browsers">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Web Tracking Protection vs Mainstream Browsers - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-web-tracking-protection-vs-mainstream-browsers" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Web, also known as Epiphany, provides a privacy-first web experience by combining WebKit's native security architecture with an open-source philosophy free from commercial advertising incentives. While mainstream proprietary browsers like Google Ch" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-web-tracking-protection-vs-mainstream-browsers">GNOME Web
+Tracking Protection vs Mainstream Browsers</h1>
+<p>GNOME Web, also known as Epiphany, provides a privacy-first web
+experience by combining WebKit's native security architecture with an
+open-source philosophy free from commercial advertising incentives.
+While mainstream proprietary browsers like Google Chrome and Microsoft
+Edge frequently balance tracking restrictions against their parent
+companies' telemetry requirements and advertising models, GNOME Web
+employs strict Intelligent Tracking Prevention (ITP), native content
+filtering, and system-level sandboxing by default to eliminate
+persistent user profiling.</p>
+<h3 id="absence-of-advertising-conflicts-of-interest">Absence of
+Advertising Conflicts of Interest</h3>
+<p>Mainstream proprietary browsers, particularly Google Chrome, are
+developed by companies whose core business models rely heavily on
+digital advertising and user telemetry. Consequently, these browsers
+often dilute tracking protections, as seen with initiatives like the
+Privacy Sandbox and Manifest V3, which restrict third-party ad-blocking
+extensions. GNOME Web has zero financial reliance on ad networks,
+meaning its anti-tracking capabilities are developed exclusively to
+benefit the end-user rather than to preserve ad-targeting vectors.</p>
+<h3 id="native-intelligent-tracking-prevention-itp">Native Intelligent
+Tracking Prevention (ITP)</h3>
+<p>GNOME Web is built upon WebKitGTK, inheriting Apple's Intelligent
+Tracking Prevention (ITP) engine. ITP operates directly at the rendering
+engine level to classify and block cross-site tracking techniques
+automatically. It restricts client-side cookies, caps script-writable
+storage, and partitions cache data across different domains. While
+proprietary forks often strip or modify WebKit or Chromium components to
+allow proprietary first-party telemetry, GNOME Web retains WebKit's
+strict ITP rules without commercial carve-outs.</p>
+<h3 id="out-of-the-box-content-filtering">Out-of-the-Box Content
+Filtering</h3>
+<p>Unlike browsers that require third-party add-ons to achieve
+functional ad and tracker suppression, GNOME Web integrates content
+blocking directly into the browser core using native WebKit user-content
+filters. It applies standard blocklists, such as EasyList and
+EasyPrivacy, natively compiled into bytecode for minimal memory and CPU
+overhead. This native implementation prevents tracking scripts from
+executing before they can read canvas data, monitor mouse movements, or
+gather hardware fingerprints.</p>
+<h3 id="zero-telemetry-and-identifier-generation">Zero Telemetry and
+Identifier Generation</h3>
+<p>Proprietary browsers typically assign persistent installation IDs,
+sync tokens, and hardware identifiers to track app stability, user
+engagement, and feature adoption. These data streams often create
+secondary tracking surfaces that can be correlated with browsing habits.
+GNOME Web includes no native diagnostic tracking, behavioral telemetry,
+or mandatory account logins, ensuring browsing sessions are completely
+isolated from developer surveillance.</p>
+<h3 id="flatpak-and-system-level-sandboxing">Flatpak and System-Level
+Sandboxing</h3>
+<p>Mainstream browsers frequently interface deeply with host operating
+systems, enabling extensive access to device metrics, local network
+interfaces, and cached storage. GNOME Web is predominantly distributed
+via Flatpak, running within a secure Bubblewrap sandbox. This isolates
+the browser from the host filesystem, camera, microphone, and other
+hardware interfaces via system portals, significantly limiting the
+hardware and software fingerprinting vectors available to sophisticated
+tracker scripts.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

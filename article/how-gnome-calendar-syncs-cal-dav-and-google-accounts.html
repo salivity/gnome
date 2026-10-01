@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Calendar Syncs CalDAV and Google Accounts - gnome</title>
+    <meta name="description" content="GNOME Calendar synchronizes events with remote CalDAV servers and Google accounts through a modular architecture powered by GNOME Online Accounts and Evolution Data Server. Rather than implementing network protocols and synchronization algorithms directl">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-calendar-syncs-cal-dav-and-google-accounts">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Calendar Syncs CalDAV and Google Accounts - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-calendar-syncs-cal-dav-and-google-accounts" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Calendar synchronizes events with remote CalDAV servers and Google accounts through a modular architecture powered by GNOME Online Accounts and Evolution Data Server. Rather than implementing network protocols and synchronization algorithms directl" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-calendar-syncs-caldav-and-google-accounts">How GNOME
+Calendar Syncs CalDAV and Google Accounts</h1>
+<p>GNOME Calendar synchronizes events with remote CalDAV servers and
+Google accounts through a modular architecture powered by GNOME Online
+Accounts and Evolution Data Server. Rather than implementing network
+protocols and synchronization algorithms directly within the interface,
+GNOME Calendar functions as a graphical front end, delegating credential
+management, network transactions, local caching, and two-way
+synchronization to dedicated system-level background services.</p>
+<h3 id="the-role-of-gnome-online-accounts-goa">The Role of GNOME Online
+Accounts (GOA)</h3>
+<p>Authentication is handled by GNOME Online Accounts (GOA), a desktop
+service that stores credentials and access tokens.</p>
+<ul>
+<li><strong>Google Accounts:</strong> GOA uses OAuth 2.0 to authenticate
+with Google. It manages the token lifecycle, automatically refreshing
+expired access tokens so the calendar services maintain uninterrupted
+access.</li>
+<li><strong>CalDAV Accounts:</strong> GOA stores the user's server URL,
+username, and password securely in the GNOME Keyring.</li>
+</ul>
+<p>Once an account is configured in GOA, the service informs the desktop
+environment that calendar capabilities are available for that
+provider.</p>
+<h3 id="evolution-data-server-eds-as-the-middleware">Evolution Data
+Server (EDS) as the Middleware</h3>
+<p>Evolution Data Server (EDS) is the central engine responsible for all
+calendar data management on GNOME. GNOME Calendar interacts with EDS via
+D-Bus, an inter-process communication mechanism.</p>
+<p>EDS contains specialized backends for different calendar
+providers:</p>
+<ul>
+<li>A generic <strong>CalDAV backend</strong> for standard CalDAV
+services (such as Nextcloud, Fastmail, or self-hosted Radicale
+instances).</li>
+<li>A specialized <strong>Google backend</strong> (or the CalDAV backend
+pointed to Google's CalDAV endpoint) that attaches the OAuth 2.0 bearer
+tokens obtained from GOA.</li>
+</ul>
+<p>EDS maintains an offline SQLite database containing cached copies of
+all events, tasks, and calendar metadata. When GNOME Calendar opens, it
+reads directly from this local cache, ensuring instant loading even
+without an active internet connection.</p>
+<h3 id="the-synchronization-protocol">The Synchronization Protocol</h3>
+<p>EDS handles the two-way network synchronization using standard web
+protocols:</p>
+<ol type="1">
+<li><strong>Discovery:</strong> EDS sends an HTTP <code>PROPFIND</code>
+request to the remote CalDAV endpoint to locate user calendar
+collections and identify supported server capabilities.</li>
+<li><strong>Change Detection:</strong> To minimize bandwidth, EDS checks
+collection entity tags (ETags) or uses the WebDAV sync collection report
+(<code>RFC 6578</code>). This allows EDS to ask the server only for
+items that have changed since the last known synchronization token.</li>
+<li><strong>Fetching Updates:</strong> When changes are detected, EDS
+sends an HTTP <code>REPORT</code> request to download updated event data
+formatted as standard iCalendar (<code>.ics</code> / RFC 5545) objects.
+EDS then updates the local SQLite cache and emits a D-Bus signal,
+prompting GNOME Calendar to redraw the view.</li>
+<li><strong>Pushing Changes:</strong> When a user creates, edits, or
+deletes an event in GNOME Calendar:
+<ul>
+<li>GNOME Calendar passes the change to EDS over D-Bus.</li>
+<li>EDS immediately updates the local database so the interface reflects
+the edit without delay.</li>
+<li>EDS formats the event into an iCalendar payload and sends an HTTP
+<code>PUT</code> request (for additions and edits) or an HTTP
+<code>DELETE</code> request to the remote server.</li>
+</ul></li>
+</ol>
+<h3 id="periodic-and-real-time-refreshes">Periodic and Real-Time
+Refreshes</h3>
+<p>EDS schedules background refresh timers to periodically query the
+remote CalDAV or Google servers for remote changes. When network
+connectivity drops, EDS queues local modifications and pushes them to
+the remote server once the connection is restored, resolving conflicts
+based on the latest modification timestamps.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

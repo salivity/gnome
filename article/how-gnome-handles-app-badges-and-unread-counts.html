@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Handles App Badges and Unread Counts - gnome</title>
+    <meta name="description" content="GNOME Shell handles application badges and unread counts differently than traditional desktop operating systems, opting by default not to display numeric badges on pinned Dash icons. While upstream GNOME restricts unread indicators to its centralized not">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-handles-app-badges-and-unread-counts">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Handles App Badges and Unread Counts - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-handles-app-badges-and-unread-counts" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell handles application badges and unread counts differently than traditional desktop operating systems, opting by default not to display numeric badges on pinned Dash icons. While upstream GNOME restricts unread indicators to its centralized not" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-handles-app-badges-and-unread-counts">How GNOME
+Handles App Badges and Unread Counts</h1>
+<p>GNOME Shell handles application badges and unread counts differently
+than traditional desktop operating systems, opting by default not to
+display numeric badges on pinned Dash icons. While upstream GNOME
+restricts unread indicators to its centralized notification shade, the
+desktop environment can expose icon-level badge counts through specific
+background D-Bus protocols leveraged by shell extensions and downstream
+distribution docks.</p>
+<h3 id="upstream-gnome-philosophy-and-default-behavior">Upstream GNOME
+Philosophy and Default Behavior</h3>
+<p>Vanilla GNOME Shell intentionally lacks native support for unread
+count badges on its Dash icons. GNOME's human interface guidelines
+emphasize a minimal, distraction-free computing environment, actively
+discouraging persistent ambient counters that demand attention.</p>
+<p>In a default GNOME installation, when an application receives a
+message or alert:</p>
+<ul>
+<li>A transient notification banner appears at the top of the
+display.</li>
+<li>If ignored, the notification persists in the central Notification
+Center (accessible via the date and clock in the top bar).</li>
+<li>The Dash icon itself remains completely static, offering no numeric
+indicators or status dots.</li>
+</ul>
+<h3 id="the-underlying-protocol-unity-launcherentry-api">The Underlying
+Protocol: Unity LauncherEntry API</h3>
+<p>Even though default GNOME does not render badges, many Linux-native
+and cross-platform applications (including Thunderbird, Slack, Telegram,
+and Discord) still broadcast unread counts and progress bars. They
+accomplish this by emitting signals over the D-Bus system using the
+<code>com.canonical.Unity.LauncherEntry</code> interface.</p>
+<p>Originally created by Canonical for Ubuntu’s legacy Unity desktop,
+this API became the de facto standard on Linux for application badge
+reporting. When an app receives an unread message, it sends a D-Bus
+signal updating properties like <code>count</code> and
+<code>count-visible</code>.</p>
+<h3 id="how-downstream-implementations-show-badges">How Downstream
+Implementations Show Badges</h3>
+<p>Distributions and users who prefer numeric badges bridge the gap
+between application D-Bus signals and the desktop interface:</p>
+<ul>
+<li><strong>Ubuntu Dock:</strong> Ubuntu ships a customized GNOME Shell
+with the Ubuntu Dock extension enabled out of the box. This extension
+actively listens to the <code>com.canonical.Unity.LauncherEntry</code>
+D-Bus path. When an application reports a count, Ubuntu Dock overlays a
+numeric counter bubble directly onto the pinned or running launcher
+icon.</li>
+<li><strong>GNOME Extensions:</strong> On non-Ubuntu distributions (such
+as Fedora or Arch Linux), users can restore badge functionality by
+installing third-party extensions. Extensions such as <strong>Dash to
+Dock</strong> or <strong>Dash to Panel</strong> include native listeners
+for the Unity Launcher API, allowing users to toggle unread badges,
+customize badge colors, and manage progress bars on their Dash
+icons.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

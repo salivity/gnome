@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Manages Fractional Scaling on HiDPI Displays - gnome</title>
+    <meta name="description" content="This article examines the underlying mechanisms used by the GNOME desktop environment to support fractional scaling—such as 125% or 175%—on high-density (HiDPI) displays. It details the architecture of GNOME's compositor, Mutter, the shift from integ">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-manages-fractional-scaling-on-hi-dpi-displays">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Manages Fractional Scaling on HiDPI Displays - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-manages-fractional-scaling-on-hi-dpi-displays" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article examines the underlying mechanisms used by the GNOME desktop environment to support fractional scaling—such as 125% or 175%—on high-density (HiDPI) displays. It details the architecture of GNOME's compositor, Mutter, the shift from integ" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-manages-fractional-scaling-on-hidpi-displays">How
+GNOME Manages Fractional Scaling on HiDPI Displays</h1>
+<p>This article examines the underlying mechanisms used by the GNOME
+desktop environment to support fractional scaling—such as 125% or
+175%—on high-density (HiDPI) displays. It details the architecture of
+GNOME's compositor, Mutter, the shift from integer-only scaling and
+viewport downsampling to modern Wayland protocols like
+<code>wp_fractional_scale_v1</code>, and the strategies used to handle
+legacy X11 applications via Xwayland.</p>
+<h2 id="the-architectural-challenge-of-fractional-scaling">The
+Architectural Challenge of Fractional Scaling</h2>
+<p>Historically, Linux display architectures only supported integer
+scaling factors (such as 100%, 200%, or 300%). While integer scaling
+simplifies rendering by multiplying logical pixels by whole numbers,
+modern displays often feature resolutions where 100% renders text too
+small and 200% renders UI elements excessively large. Fractional scaling
+bridges this gap, but requires the rendering pipeline—including the
+display server, compositor, toolkit, and client applications—to
+coordinate non-integer coordinate transformations without causing visual
+artifacts or performance degradation.</p>
+<h2 id="mutters-oversampling-and-downscaling-approach">Mutter's
+Oversampling and Downscaling Approach</h2>
+<p>In GNOME under Wayland, fractional scaling was initially implemented
+as an experimental feature in Mutter using an oversampling pipeline:</p>
+<ol type="1">
+<li><strong>Logical Framebuffer Upscaling:</strong> Mutter renders the
+application surface to an offscreen buffer at the next highest integer
+scale factor. For instance, if a user selects 150% scaling, Mutter
+instructs the client application to render at 200% (2x integer
+scale).</li>
+<li><strong>GPU Downscaling:</strong> Once the frame is drawn at the
+higher integer resolution, Mutter uses GPU texture filters (typically
+bilinear or bicubic filtering) to scale the rendered output down to the
+target display resolution (1.5x).</li>
+</ol>
+<p>This technique ensured that UI elements and vector assets remained
+sharp and avoided layout bugs in toolkits that only understood integer
+coordinates. However, it introduced minor drawbacks: increased GPU
+memory bandwidth, higher power consumption, and slight blurring on
+raster graphics or subpixel-rendered text due to bilinear filtering.</p>
+<h2 id="native-fractional-scaling-via-wayland-protocols">Native
+Fractional Scaling via Wayland Protocols</h2>
+<p>To eliminate the performance and clarity penalties of downscaling,
+the Wayland ecosystem developed the <code>wp_fractional_scale_v1</code>
+protocol extension, which GNOME has integrated into Mutter and GTK.</p>
+<p>Instead of relying on integer surface scaling with subsequent
+post-processing, this protocol establishes a direct negotiation
+mechanism:</p>
+<ul>
+<li><strong>Protocol Negotiation:</strong> The compositor notifies
+client surfaces of the exact preferred fractional scale factor
+(represented as an integer fraction, such as 120/120 for 1.0, or 150/120
+for 1.25).</li>
+<li><strong>Direct Client Rendering:</strong> Modern toolkits (such as
+GTK4 and Qt 6) read this value and render vector elements, glyphs, and
+UI components directly at the target physical resolution.</li>
+<li><strong>Buffer Viewport Integration:</strong> Paired with the
+<code>wp_viewporter</code> protocol, clients can attach pixel buffers of
+any arbitrary physical size to a surface and define its logical size
+independently. This allows the compositor to present frames with
+pixel-perfect precision without running a GPU downsampling pass.</li>
+</ul>
+<h2 id="toolkits-and-font-scaling-mechanisms">Toolkits and Font Scaling
+Mechanisms</h2>
+<p>GNOME coordinates scaling across multiple layers of the desktop
+stack:</p>
+<ul>
+<li><strong>GTK Integration:</strong> GTK4 provides full support for
+fractional scaling via Cairo and GSK (GTK Scene Kit), rendering graphics
+at the exact physical pixel boundary. GTK3, which relies on integer grid
+layouts, depends more heavily on the compositor's downsampling mechanism
+or text-only scaling adjustments.</li>
+<li><strong>Text Scaling Factor:</strong> As a lightweight alternative
+or supplementary mechanism, GNOME utilizes the
+<code>text-scaling-factor</code> setting in GSettings
+(<code>org.gnome.desktop.interface</code>). This alters the DPI passed
+to the font-rendering subsystem (FreeType and HarfBuzz) without changing
+the overall coordinate dimensions of UI controls, leaving window chrome
+at 100% while enlarging typography.</li>
+</ul>
+<h2 id="handling-legacy-applications-with-xwayland">Handling Legacy
+Applications with Xwayland</h2>
+<p>Applications that run through Xwayland present a distinct challenge
+because the traditional X11 protocol lacks native concepts of
+per-monitor or fractional scaling. GNOME handles X11 applications
+through two primary methods:</p>
+<ol type="1">
+<li><strong>Compositor Scaling:</strong> Mutter can treat the X11 window
+as a 100% surface and scale it up to the target fractional size. While
+this preserves proper window sizing, it causes text and UI elements to
+appear blurry.</li>
+<li><strong>Xft.dpi Adjustments:</strong> Users or environments can set
+the <code>Xft.dpi</code> resource via <code>xrdb</code> to scale text
+inside X11 apps. However, this does not scale non-text UI elements
+evenly and fails across multi-monitor setups with mismatched display
+densities.</li>
+</ol>
+<p>Through the combination of <code>wp_fractional_scale_v1</code>,
+modern GPU-accelerated rendering in Mutter, and adaptive toolkit
+support, GNOME continues to transition away from oversampling techniques
+toward native, per-surface fractional rendering across all HiDPI
+setups.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

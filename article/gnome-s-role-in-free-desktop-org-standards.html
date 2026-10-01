@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME's Role in FreeDesktop.org Standards - gnome</title>
+    <meta name="description" content="The GNOME Development Team plays a foundational role in shaping, implementing, and maintaining cross-desktop standards under FreeDesktop.org (XDG). By collaborating directly with developers from KDE and other environments, GNOME contributors help establi">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-s-role-in-free-desktop-org-standards">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME's Role in FreeDesktop.org Standards - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-s-role-in-free-desktop-org-standards" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Development Team plays a foundational role in shaping, implementing, and maintaining cross-desktop standards under FreeDesktop.org (XDG). By collaborating directly with developers from KDE and other environments, GNOME contributors help establi" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnomes-role-in-freedesktoporg-standards">GNOME's Role in
+FreeDesktop.org Standards</h1>
+<p>The GNOME Development Team plays a foundational role in shaping,
+implementing, and maintaining cross-desktop standards under
+FreeDesktop.org (XDG). By collaborating directly with developers from
+KDE and other environments, GNOME contributors help establish shared
+specifications that ensure software interoperability across the broader
+Linux ecosystem. This article examines GNOME's direct involvement in
+founding standard-setting initiatives, authoring key specifications,
+driving modern system architectures like Wayland and Flatpak portals,
+and serving as a reference implementation platform.</p>
+<h3 id="co-founding-and-collaborative-governance">Co-Founding and
+Collaborative Governance</h3>
+<p>FreeDesktop.org was originally founded in 2000 as the X Desktop Group
+(XDG) by Havoc Pennington, a prominent Red Hat and GNOME developer,
+alongside contributors from other desktop environments. The goal was to
+prevent fragmentation between competing desktops—primarily GNOME and
+KDE—by harmonizing underlying technologies.</p>
+<p>Today, GNOME developers continue to serve as active maintainers,
+administrators, and contributors within the FreeDesktop.org
+infrastructure. Rather than designing isolated internal solutions, GNOME
+engineers routinely propose specifications through FreeDesktop.org
+working groups and GitLab repositories, ensuring changes are reviewed by
+developers from KDE, XFCE, and independent window manager
+ecosystems.</p>
+<h3 id="core-desktop-specifications">Core Desktop Specifications</h3>
+<p>GNOME has been instrumental in drafting, refining, and adopting
+universal specifications that govern standard desktop operations. Key
+standards co-developed or heavily influenced by GNOME include:</p>
+<ul>
+<li><strong>Desktop Entry Specification:</strong> Defines the
+<code>.desktop</code> file format, allowing application launchers,
+icons, and categories to function uniformly across all compliant desktop
+environments.</li>
+<li><strong>XDG Base Directory Specification:</strong> Standardizes
+where user-specific configuration (<code>$XDG_CONFIG_HOME</code>), cache
+(<code>$XDG_CACHE_HOME</code>), and data (<code>$XDG_DATA_HOME</code>)
+files should reside within the filesystem.</li>
+<li><strong>Icon and MIME Type Specifications:</strong> Outlines
+standard directory structures and naming schemes for icon themes and
+file association definitions across applications.</li>
+<li><strong>Secret Service API:</strong> Standardizes secure credential
+storage, allowing GNOME Keyring and KDE Wallet to offer interchangeable
+backend interfaces for third-party software.</li>
+<li><strong>Desktop Notifications:</strong> Establishes a shared D-Bus
+interface so that any application can trigger native system
+notifications regardless of the active desktop shell.</li>
+</ul>
+<h3 id="driving-modern-linux-architectures">Driving Modern Linux
+Architectures</h3>
+<p>GNOME’s technical leadership has played a major role in modernizing
+cross-desktop standards over the past decade, especially regarding
+application sandboxing and display server migration.</p>
+<h4 id="xdg-desktop-portals">XDG Desktop Portals</h4>
+<p>With the rise of containerized packaging formats such as Flatpak,
+sandboxed applications required secure access to host services like file
+pickers, cameras, and printing. GNOME developers, along with Flatpak
+maintainers, drove the creation of <code>xdg-desktop-portal</code>. This
+specification provides standard D-Bus interfaces implemented natively by
+both GNOME (<code>xdg-desktop-portal-gnome</code>) and other desktops,
+ensuring sandboxed apps function seamlessly everywhere.</p>
+<h4 id="wayland-protocols">Wayland Protocols</h4>
+<p>During the transition from the legacy X11 display server to Wayland,
+GNOME became an early production-grade adopter through its compositor,
+Mutter. FreeDesktop.org hosts the <code>wayland-protocols</code>
+repository, where GNOME contributors actively author and refine both
+staging and stable protocols to ensure features like fractional scaling,
+screencasting, and input method handling operate uniformly across
+compositors.</p>
+<h3 id="reference-implementation-and-ecosystem-testing">Reference
+Implementation and Ecosystem Testing</h3>
+<p>Specifications require practical validation before broad adoption.
+GNOME’s foundational libraries—including GLib, GTK, and GIO—often serve
+as reference implementations for FreeDesktop.org standards. When a new
+standard is proposed, GNOME developers implement it within GLib or GTK,
+proving its viability in production and exposing edge cases. This
+benefits non-GNOME applications as well, as many third-party programs
+rely on these same libraries to achieve native desktop integration
+across diverse Linux distributions.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Sleep Prevention and Inhibitor Locks Explained - gnome</title>
+    <meta name="description" content="This article provides an overview of how the GNOME desktop environment intercepts, processes, and enforces sleep prevention requests from running applications. It explores the D-Bus interfaces used by clients, the role of gnome-session, and the underlyin">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-sleep-prevention-and-inhibitor-locks-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Sleep Prevention and Inhibitor Locks Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-sleep-prevention-and-inhibitor-locks-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides an overview of how the GNOME desktop environment intercepts, processes, and enforces sleep prevention requests from running applications. It explores the D-Bus interfaces used by clients, the role of gnome-session, and the underlyin" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-sleep-prevention-and-inhibitor-locks-explained">GNOME
+Sleep Prevention and Inhibitor Locks Explained</h1>
+<p>This article provides an overview of how the GNOME desktop
+environment intercepts, processes, and enforces sleep prevention
+requests from running applications. It explores the D-Bus interfaces
+used by clients, the role of <code>gnome-session</code>, and the
+underlying communication with <code>systemd-logind</code> to prevent
+idle timeouts, system suspend, or lid-switch triggers.</p>
+<h3 id="the-inhibition-architecture">The Inhibition Architecture</h3>
+<p>GNOME manages system sleep and idle states through an IPC
+(Inter-Process Communication) mechanism built on D-Bus. When an
+application needs to prevent the system from entering a low-power
+state—such as during media playback, large file transfers, or
+presentations—it does not directly interact with system-level power
+management hardware. Instead, it contacts a session-level broker,
+typically <code>gnome-session</code> or the XDG Desktop Portal service,
+requesting an inhibitor lock.</p>
+<h3 id="d-bus-interfaces-and-request-initiation">D-Bus Interfaces and
+Request Initiation</h3>
+<p>Applications request inhibitor locks by invoking methods on
+designated D-Bus APIs:</p>
+<ul>
+<li><strong>GNOME Session Manager
+(<code>org.gnome.SessionManager</code>):</strong> The legacy and direct
+GNOME interface where applications call the <code>Inhibit</code> method,
+passing their application ID, a reason string, and flags that define the
+scope of the lock.</li>
+<li><strong>XDG Desktop Portals
+(<code>org.freedesktop.portal.Inhibit</code>):</strong> The modern,
+sandboxed approach primarily used by Flatpak and Snap applications. The
+portal service inspects the client's permissions, prompts the user if
+required, and proxies the request to GNOME’s session manager.</li>
+<li><strong>Screensaver Interface
+(<code>org.freedesktop.ScreenSaver</code>):</strong> A widespread
+cross-desktop API specifically used to inhibit screen dimming and
+session idle states.</li>
+</ul>
+<h3 id="types-of-inhibitor-locks">Types of Inhibitor Locks</h3>
+<p>When an application calls the inhibitor API, it specifies bitwise
+flags indicating what behaviors should be blocked:</p>
+<ul>
+<li><strong>Idle Inhibition (Flag 8):</strong> Prevents the session from
+being marked as idle, stopping the screen from dimming, locking, or
+triggering idle-based auto-suspend.</li>
+<li><strong>Suspend/Sleep Inhibition (Flag 4):</strong> Blocks the
+system from automatically suspending or sleeping.</li>
+<li><strong>Logout/Shutdown Inhibition (Flags 1 and 2):</strong>
+Prevents session termination or machine shutdown until critical
+processes complete.</li>
+</ul>
+<h3 id="coordination-with-systemd-logind">Coordination with
+systemd-logind</h3>
+<p>GNOME does not control kernel-level power management directly; it
+delegates low-level power states to <code>systemd-logind</code>.</p>
+<p>When <code>gnome-session</code> grants a sleep inhibitor to an
+application:</p>
+<ol type="1">
+<li><code>gnome-session</code> evaluates the active flags from all
+registered inhibitors.</li>
+<li>If system sleep prevention is required, <code>gnome-session</code>
+calls the <code>Inhibit</code> method on
+<code>org.freedesktop.login1.Manager</code> via
+<code>systemd-logind</code>.</li>
+<li><code>systemd-logind</code> issues a lock (<code>block</code> or
+<code>delay</code>) and assigns a file descriptor back to GNOME.</li>
+<li>While this file descriptor remains open, <code>systemd-logind</code>
+refuses automatic suspend requests generated by idle timers or lid
+closures (unless configured to override inhibitors).</li>
+</ol>
+<h3 id="lock-lifecycle-and-cleanup">Lock Lifecycle and Cleanup</h3>
+<p>To ensure system reliability, GNOME automatically tracks the
+lifecycle of all granted inhibitor locks:</p>
+<ul>
+<li><strong>Cookie-Based Tracking:</strong> Upon a successful request,
+GNOME returns an integer cookie to the application. The application can
+explicitly release the lock at any time by calling
+<code>Uninhibit</code> with this cookie.</li>
+<li><strong>Process Monitoring:</strong> If an application crashes or
+closes unexpectedly without explicitly releasing its lock, the D-Bus
+connection is severed. GNOME detects the closed socket, automatically
+revokes the associated inhibitor cookie, and drops the corresponding
+lock held with <code>systemd-logind</code>.</li>
+</ul>
+<h3 id="policy-overrides-and-user-intent">Policy Overrides and User
+Intent</h3>
+<p>While GNOME respects inhibitor locks for automated events like idle
+timers, direct user intent often takes precedence. Explicit actions,
+such as selecting "Suspend" or "Power Off" from the system menu, can
+prompt the user with a dialog warning that applications are currently
+inhibiting sleep, allowing the user to forcefully bypass the locks.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

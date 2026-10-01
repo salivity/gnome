@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote App Delivery in GNOME Using XDG Desktop Portals - gnome</title>
+    <meta name="description" content="This article examines how the GNOME desktop environment facilitates seamless and secure remote application delivery using XDG Desktop Portal bridges. By decoupling applications from direct host access and bridging communication through standardized D-Bus">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/remote-app-delivery-in-gnome-using-xdg-desktop-portals">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Remote App Delivery in GNOME Using XDG Desktop Portals - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/remote-app-delivery-in-gnome-using-xdg-desktop-portals" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article examines how the GNOME desktop environment facilitates seamless and secure remote application delivery using XDG Desktop Portal bridges. By decoupling applications from direct host access and bridging communication through standardized D-Bus" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="remote-app-delivery-in-gnome-using-xdg-desktop-portals">Remote
+App Delivery in GNOME Using XDG Desktop Portals</h1>
+<p>This article examines how the GNOME desktop environment facilitates
+seamless and secure remote application delivery using XDG Desktop Portal
+bridges. By decoupling applications from direct host access and bridging
+communication through standardized D-Bus interfaces, GNOME allows
+remote, virtualized, and sandboxed software to interact natively with
+host features—such as file dialogs, screencasting, and audio
+streams—without compromising system security.</p>
+<h2 id="the-architecture-of-xdg-desktop-portals">The Architecture of XDG
+Desktop Portals</h2>
+<p>XDG Desktop Portals provide a secure framework for desktop
+integration, primarily designed to allow isolated applications to access
+system resources. In a GNOME environment, this architecture consists of
+two primary components:</p>
+<ol type="1">
+<li><strong><code>xdg-desktop-portal</code> (Frontend):</strong> A
+desktop-agnostic daemon running on the user's session bus that exposes
+stable D-Bus interfaces to applications.</li>
+<li><strong><code>xdg-desktop-portal-gnome</code> (Backend):</strong>
+The GNOME-specific implementation that translates these generic portal
+requests into native GNOME and Mutter compositor operations.</li>
+</ol>
+<p>When an application requires a host service—such as opening a file,
+capturing a screen, or sending a notification—it invokes a method on the
+portal frontend via D-Bus instead of attempting direct system calls or
+accessing device nodes.</p>
+<h2 id="bridging-remote-applications">Bridging Remote Applications</h2>
+<p>In remote application delivery scenarios—such as streaming
+applications via Waypipe, running apps in containers, or serving
+virtualized desktops over RDP—applications lack direct access to local
+host hardware and session daemons. GNOME bridges this gap through socket
+forwarding and proxying:</p>
+<h3 id="d-bus-proxying">D-Bus Proxying</h3>
+<p>Remote execution frameworks use tools like
+<code>xdg-dbus-proxy</code> or SSH/socket tunnels to forward the session
+D-Bus connection from the host to the remote application runtime. The
+application interacts with the forwarded D-Bus interface as if it were
+running natively on the local machine.</p>
+<h3 id="decoupling-from-the-display-server">Decoupling from the Display
+Server</h3>
+<p>Under Wayland, clients are isolated from one another and cannot
+arbitrarily read input, inspect other windows, or scrape the screen. For
+remote applications, this presents a challenge when providing
+interactive features. XDG desktop portals solve this by acting as an
+intermediary; the remote client requests desktop interactions, and the
+GNOME backend renders the necessary prompts (such as native file pickers
+or device selection dialogues) natively on the client display.</p>
+<h2 id="key-integration-capabilities">Key Integration Capabilities</h2>
+<p>GNOME’s portal implementation provides critical bridges that enable
+remote applications to feel integrated with the local operating
+system:</p>
+<ul>
+<li><strong>File Chooser and Document Portal:</strong> When a remote app
+requests a file dialog, GNOME renders the native GTK file picker
+locally. Through the Document Portal daemon
+(<code>xdg-document-portal</code>), chosen files are mounted into a
+virtual FUSE filesystem, granting the remote application access only to
+the explicitly selected files.</li>
+<li><strong>Remote Desktop and Screen Casting:</strong> Utilizing
+PipeWire, GNOME allows remote applications to request display streams or
+inject input events via the
+<code>org.freedesktop.portal.ScreenCast</code> and
+<code>org.freedesktop.portal.RemoteDesktop</code> interfaces. GNOME
+handles user authorization, while Mutter establishes a direct media
+pipeline to stream framebuffers securely.</li>
+<li><strong>Notifications and System Status:</strong> Remote
+applications can trigger system notifications and inhibit system sleep
+states by routing requests through the portal, ensuring system alerts
+appear natively within the GNOME Shell notification center.</li>
+</ul>
+<h2 id="security-and-permission-model">Security and Permission
+Model</h2>
+<p>A primary advantage of using XDG desktop portal bridges in GNOME is
+security enforcement. Direct X11-style forwarding often exposes the
+entire display server to malicious interception. By enforcing portal
+usage:</p>
+<ul>
+<li><strong>Explicit User Consent:</strong> Sensitive operations (such
+as microphone access, location services, or screen recording) require
+the user to explicitly approve a native GNOME dialog.</li>
+<li><strong>Least Privilege:</strong> The remote runtime receives access
+only to the specific resources granted by the user on a per-request
+basis, preventing unauthorized lateral movement into the host
+system.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

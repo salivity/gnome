@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Manages Do Not Disturb Notifications - gnome</title>
+    <meta name="description" content="This article examines how GNOME Shell handles desktop alerts when the "Do Not Disturb" (DND) feature is enabled. It covers the suppression of visible pop-ups, the silent logging of incoming alerts to the central message tray, the handling of high-priorit">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-manages-do-not-disturb-notifications">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Manages Do Not Disturb Notifications - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-manages-do-not-disturb-notifications" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article examines how GNOME Shell handles desktop alerts when the "Do Not Disturb" (DND) feature is enabled. It covers the suppression of visible pop-ups, the silent logging of incoming alerts to the central message tray, the handling of high-priorit" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-manages-do-not-disturb-notifications">How GNOME
+Shell Manages Do Not Disturb Notifications</h1>
+<p>This article examines how GNOME Shell handles desktop alerts when the
+"Do Not Disturb" (DND) feature is enabled. It covers the suppression of
+visible pop-ups, the silent logging of incoming alerts to the central
+message tray, the handling of high-priority critical system warnings,
+and how the desktop maintains productivity without causing information
+loss.</p>
+<h2 id="banner-suppression-and-sound-muting">Banner Suppression and
+Sound Muting</h2>
+<p>When "Do Not Disturb" is toggled on in GNOME Shell, the most
+immediate change is the suppression of standard notification banners
+(often called "toast" notifications). Under normal conditions, incoming
+messages from applications such as email clients, web browsers, or chat
+platforms appear briefly at the top center of the screen. In DND mode,
+the Shell intercepts these events and blocks the visual pop-up animation
+entirely. Additionally, audio alerts linked to incoming notifications
+are muted to prevent auditory distractions.</p>
+<h2 id="silent-queuing-in-the-notification-list">Silent Queuing in the
+Notification List</h2>
+<p>Suppression does not mean notifications are discarded. GNOME Shell
+acts as the display server for the
+<code>org.freedesktop.Notifications</code> D-Bus specification. When an
+application sends a notification signal, GNOME Shell acknowledges the
+payload and immediately writes it to the notification store.</p>
+<p>Instead of showing on the desktop:</p>
+<ul>
+<li>The notification is silently deposited into the Notification Drawer,
+which is embedded inside the Date &amp; Time / Calendar menu on the top
+bar.</li>
+<li>The system indicator dot next to the clock is suppressed or
+modified, ensuring no visual cues interrupt full-screen tasks or
+meetings.</li>
+<li>Users can access these queued items at any time by clicking the
+clock or pressing the <code>Super + V</code> keyboard shortcut.</li>
+</ul>
+<h2 id="critical-and-urgent-exceptions">Critical and Urgent
+Exceptions</h2>
+<p>GNOME Shell differentiates notifications based on their urgency
+level: low, normal, and critical.</p>
+<p>While low and normal priority notifications (like chat pings or
+calendar reminders) are strictly silenced, critical notifications may
+bypass standard suppression rules depending on system state. Critical
+alerts typically involve urgent hardware or power events, such as:</p>
+<ul>
+<li>Imminent battery depletion requiring an immediate shutdown or
+suspend.</li>
+<li>Severe system errors, disk failure alerts, or thermal throttling
+warnings.</li>
+</ul>
+<p>These critical alerts are designed to prevent hardware damage or
+unexpected data loss, ensuring that life-safety and hardware-safety
+operations remain visible.</p>
+<h2 id="restoration-and-deactivation-behavior">Restoration and
+Deactivation Behavior</h2>
+<p>When the user turns off "Do Not Disturb," GNOME Shell does not
+barrage the screen by replaying missed banners all at once. Flooding the
+display with accumulated banners would defeat the purpose of a clean
+workflow. Instead, any notifications that arrived while DND was active
+simply remain organized inside the Notification Drawer until the user
+manually dismisses them, interacts with them, or clears the list using
+the "Clear All" button.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

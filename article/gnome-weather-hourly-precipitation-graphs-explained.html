@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Weather Hourly Precipitation Graphs Explained - gnome</title>
+    <meta name="description" content="GNOME Weather provides users with comprehensive and accessible hourly precipitation forecasts directly within the Linux desktop environment. This functionality is driven by a combination of high-resolution meteorological data integration, a modern GTK4 a">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-weather-hourly-precipitation-graphs-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Weather Hourly Precipitation Graphs Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-weather-hourly-precipitation-graphs-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Weather provides users with comprehensive and accessible hourly precipitation forecasts directly within the Linux desktop environment. This functionality is driven by a combination of high-resolution meteorological data integration, a modern GTK4 a" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-weather-hourly-precipitation-graphs-explained">GNOME
+Weather Hourly Precipitation Graphs Explained</h1>
+<p>GNOME Weather provides users with comprehensive and accessible hourly
+precipitation forecasts directly within the Linux desktop environment.
+This functionality is driven by a combination of high-resolution
+meteorological data integration, a modern GTK4 and Libadwaita user
+interface, and specialized data-visualization components designed to
+render granular, intuitive timeline charts.</p>
+<h3
+id="high-resolution-meteorological-data-via-libgweather">High-Resolution
+Meteorological Data via Libgweather</h3>
+<p>The precision of GNOME Weather's hourly graphs stems from its backend
+library, <code>libgweather</code>. This library queries meteorological
+APIs—primarily the Norwegian Meteorological Institute (MET Norway)—which
+supply dense, hourly forecast models. Rather than relying on simple
+condition strings like "rainy," the feed delivers quantitative metrics,
+including precipitation accumulation values (measured in millimeters or
+inches) and the exact probability of rain or snow for each hour.</p>
+<h3 id="dedicated-bar-graph-visualizations">Dedicated Bar Graph
+Visualizations</h3>
+<p>To translate raw data into an actionable visual format, GNOME Weather
+utilizes tailored bar charts embedded directly into the hourly forecast
+strip:</p>
+<ul>
+<li><strong>Quantitative Volume:</strong> Vertical bars scale
+proportionally to the expected volume of precipitation, allowing users
+to distinguish between trace mist and heavy rainfall at a glance.</li>
+<li><strong>Dynamic Scaling:</strong> The graph dynamically scales its
+vertical axis depending on the maximum expected precipitation for the
+day, ensuring light showers remain visible without distorting data
+during extreme weather events.</li>
+<li><strong>Precipitation Probability Indicators:</strong> Along with
+accumulation bars, the view pairs volume metrics with percentage
+chances, giving a complete picture of likelihood versus severity.</li>
+</ul>
+<h3 id="gtk4-and-libadwaita-timeline-ui">GTK4 and Libadwaita Timeline
+UI</h3>
+<p>The shift to GTK4 and Libadwaita significantly improved how these
+graphs are drawn and navigated. The interface employs a horizontally
+scrollable carousel that maintains smooth rendering across diverse
+display scaling factors and high-DPI screens. Vector-based drawing
+ensures that axes, bars, and typography stay sharp regardless of window
+size.</p>
+<h3 id="integrated-contextual-metrics">Integrated Contextual
+Metrics</h3>
+<p>The precipitation graph is not isolated; it is synchronized
+horizontally with hourly temperature curves, weather condition icons,
+and wind metrics. By aligning precipitation bars directly beneath their
+corresponding hourly intervals, users can quickly correlate approaching
+cold fronts or shifting winds with sudden spikes in rain or
+snowfall.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

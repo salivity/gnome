@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME System Monitor Memory Maps and Open Files - gnome</title>
+    <meta name="description" content="GNOME System Monitor provides detailed insights into active system processes, including the ability to inspect process memory maps and track open files in real time. This capability stems from the tool's integration with Linux kernel interfaces, backend">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-system-monitor-memory-maps-and-open-files">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME System Monitor Memory Maps and Open Files - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-system-monitor-memory-maps-and-open-files" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME System Monitor provides detailed insights into active system processes, including the ability to inspect process memory maps and track open files in real time. This capability stems from the tool's integration with Linux kernel interfaces, backend" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-system-monitor-memory-maps-and-open-files">GNOME System
+Monitor Memory Maps and Open Files</h1>
+<p>GNOME System Monitor provides detailed insights into active system
+processes, including the ability to inspect process memory maps and
+track open files in real time. This capability stems from the tool's
+integration with Linux kernel interfaces, backend data extraction
+libraries, and dedicated graphical inspection utilities. Together, these
+features allow users, system administrators, and developers to debug
+memory usage, detect memory leaks, and identify locked files without
+relying solely on command-line utilities.</p>
+<h3 id="linux-proc-filesystem-integration">Linux <code>/proc</code>
+Filesystem Integration</h3>
+<p>The primary feature enabling GNOME System Monitor to inspect internal
+process states is its deep integration with the Linux <code>/proc</code>
+virtual filesystem:</p>
+<ul>
+<li><strong>Memory Maps Parsing:</strong> For any given process ID
+(PID), the Linux kernel exposes memory layout information through
+<code>/proc/[pid]/maps</code> and <code>/proc/[pid]/smaps</code>. GNOME
+System Monitor reads these files to display the virtual address space,
+permissions (read, write, execute, shared), offset, device numbers,
+inode, and the file backing the mapping (such as shared dynamic
+libraries, executable code, the heap, or the stack).</li>
+<li><strong>Open File Descriptors Tracking:</strong> The kernel tracks
+open files under <code>/proc/[pid]/fd/</code>, where each file
+descriptor is represented as a symbolic link pointing to the actual
+resource. GNOME System Monitor resolves these links to show open regular
+files, UNIX domain sockets, network connections, pipes, and character
+devices held by the target process.</li>
+</ul>
+<h3 id="abstraction-via-the-libgtop-library">Abstraction via the
+<code>libgtop</code> Library</h3>
+<p>GNOME System Monitor does not manually parse every kernel file from
+scratch. Instead, it relies on <strong>libgtop</strong>, a dedicated
+GNOME library designed for system monitoring.</p>
+<p><code>libgtop</code> abstracts kernel-level system calls and
+low-level data structures into standardized C/C++ APIs. It provides
+built-in functions specifically tailored to extract:</p>
+<ul>
+<li>Process memory parameters (clean/dirty memory pages, shared versus
+private memory).</li>
+<li>File descriptor tables and socket references.</li>
+</ul>
+<p>By utilizing <code>libgtop</code>, GNOME System Monitor ensures low
+CPU overhead and high performance when fetching memory segments and file
+lists for processes containing thousands of open handles or mapped
+regions.</p>
+<h3 id="dedicated-gui-inspection-windows">Dedicated GUI Inspection
+Windows</h3>
+<p>To translate raw kernel data into an actionable format, GNOME System
+Monitor includes dedicated contextual dialogs:</p>
+<ul>
+<li><strong>Memory Maps Dialog:</strong> Accessible by right-clicking a
+process and selecting "Memory Maps." This interface organizes memory
+segments in a readable table showing start and end addresses, virtual
+memory flags, virtual size, resident set size (RSS), shared memory, and
+file associations. It also includes an integrated search filter to
+quickly find specific mapped libraries or address ranges.</li>
+<li><strong>Open Files Dialog:</strong> Accessible via the "Open Files"
+option in the process context menu. It aggregates and displays all file
+descriptors held by the process, categorizing them by descriptor number
+and object path. A built-in search tool allows users to locate specific
+file paths or check if a process is preventing a storage volume from
+being unmounted.</li>
+</ul>
+<h3 id="system-permissions-and-access-control">System Permissions and
+Access Control</h3>
+<p>GNOME System Monitor respects Linux Discretionary Access Control
+(DAC) and kernel security models (such as Yama ptrace protections). When
+executed by a standard user, it reads the memory maps and file
+descriptors of processes owned by that user. When elevated permissions
+are provided or when run as root, it can query privileged system
+services, kernel threads, and processes owned by other users across the
+system.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

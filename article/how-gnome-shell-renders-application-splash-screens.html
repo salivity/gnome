@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Renders Application Splash Screens - gnome</title>
+    <meta name="description" content="This article explains how GNOME Shell and its built-in compositor, Mutter, render application splash screens during system startup. It covers the end-to-end rendering pipeline, starting from autostart application triggers and the startup notification pro">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-renders-application-splash-screens">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Renders Application Splash Screens - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-renders-application-splash-screens" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how GNOME Shell and its built-in compositor, Mutter, render application splash screens during system startup. It covers the end-to-end rendering pipeline, starting from autostart application triggers and the startup notification pro" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-renders-application-splash-screens">How GNOME
+Shell Renders Application Splash Screens</h1>
+<p>This article explains how GNOME Shell and its built-in compositor,
+Mutter, render application splash screens during system startup. It
+covers the end-to-end rendering pipeline, starting from autostart
+application triggers and the startup notification protocol to
+Wayland/X11 window mapping, Clutter-based scene graph composition, and
+hardware-accelerated frame delivery to the screen.</p>
+<h3 id="1-application-launch-and-startup-notification">1. Application
+Launch and Startup Notification</h3>
+<p>During system startup, desktop environments launch background
+services and autostart applications defined in
+<code>/etc/xdg/autostart</code> or <code>~/.config/autostart</code>,
+managed either directly by systemd user units or traditional XDG desktop
+files. When an application initiates:</p>
+<ul>
+<li>The application or the launcher emits a startup event using the XDG
+Startup Notification specification or corresponding systemd user session
+signals.</li>
+<li>GNOME Shell listens to these events via D-Bus and registers that a
+launch is in progress.</li>
+<li>GNOME Shell updates the cursor to a busy state or animates the
+corresponding application icon in the dash to provide immediate visual
+feedback while the application processes its internal
+initialization.</li>
+</ul>
+<h3 id="2-window-surface-creation-and-type-assignment">2. Window Surface
+Creation and Type Assignment</h3>
+<p>Applications that feature dedicated splash screens (such as GIMP,
+LibreOffice, or IDEs) create an independent, lightweight window surface
+before loading their heavier UI dependencies.</p>
+<ul>
+<li><strong>On Wayland:</strong> The application requests a surface via
+<code>xdg_wm_base</code> and creates an <code>xdg_toplevel</code>. It
+configures the surface without window decorations (disabling server-side
+decorations) and requests specific initial dimensions.</li>
+<li><strong>On X11 / XWayland:</strong> The application creates a window
+with the <code>_NET_WM_WINDOW_TYPE</code> property explicitly set to
+<code>_NET_WM_WINDOW_TYPE_SPLASH</code>.</li>
+</ul>
+<p>Setting this specific type signals to the window manager that the
+window must be presented without titlebars, borders, or window controls,
+and should be placed centrally on the active monitor.</p>
+<h3 id="3-surface-ingestion-by-mutter">3. Surface Ingestion by
+Mutter</h3>
+<p>GNOME Shell relies on Mutter as its display server and compositing
+manager. When the client application maps the splash window, Mutter
+intercepts the request:</p>
+<ul>
+<li>Mutter creates a tracking structure (<code>MetaWindow</code>) to
+monitor the state, geometry, and properties of the surface.</li>
+<li>A corresponding <code>MetaWindowActor</code> is instantiated. This
+actor wraps the application’s pixel buffer and integrates it into
+Mutter's Clutter scene graph.</li>
+<li>Mutter identifies the window role as a splash screen and
+automatically assigns it to the appropriate display layer within the
+<code>MetaWindowGroup</code>, ensuring it appears centered and above
+standard workspace elements, but below system modal dialogs and lock
+screens.</li>
+</ul>
+<h3 id="4-graphic-buffer-submission-and-compositing">4. Graphic Buffer
+Submission and Compositing</h3>
+<p>The client application renders its splash graphic—typically using
+Cairo, GTK, or direct GPU contexts (OpenGL/Vulkan)—into an allocated
+pixel buffer.</p>
+<ul>
+<li>The application shares this buffer with Mutter via DMA-BUF or shared
+memory (<code>wl_shm</code>) protocols.</li>
+<li>Mutter binds the incoming graphic buffer to an OpenGL or GLES
+texture.</li>
+<li>During the next render cycle, Clutter traverses its scene graph. The
+<code>MetaWindowActor</code> representing the splash screen is
+composited along with other visible desktop layers into a unified
+frame.</li>
+<li>Mutter executes the draw commands through Cogl, its hardware
+abstraction layer, and outputs the frame to the Direct Rendering Manager
+(DRM) and Kernel Mode Setting (KMS) subsystems, delivering the rendered
+image to the display hardware synchronized with the monitor's vertical
+refresh rate (VSync).</li>
+</ul>
+<h3 id="5-transition-to-the-main-application-window">5. Transition to
+the Main Application Window</h3>
+<p>Once the application finishes loading internal libraries, settings,
+and UI components, it unmaps and destroys the splash screen surface:</p>
+<ul>
+<li>The application sends a destruction request for the splash window to
+Mutter.</li>
+<li>Mutter removes the <code>MetaWindowActor</code> from the Clutter
+scene graph, freeing the associated textures.</li>
+<li>The application then creates and maps its primary
+<code>xdg_toplevel</code> window, which Mutter equips with standard
+window decorations and placement policies, completing the transition
+from startup splash to full interactive session.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

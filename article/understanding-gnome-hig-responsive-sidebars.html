@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding GNOME HIG Responsive Sidebars - gnome</title>
+    <meta name="description" content="The GNOME Human Interface Guidelines (HIG) recommend responsive sidebars that collapse on small screens to ensure applications adapt smoothly between desktop displays, mobile devices, and narrow window states. This design pattern guarantees that multi-pa">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/understanding-gnome-hig-responsive-sidebars">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Understanding GNOME HIG Responsive Sidebars - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/understanding-gnome-hig-responsive-sidebars" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Human Interface Guidelines (HIG) recommend responsive sidebars that collapse on small screens to ensure applications adapt smoothly between desktop displays, mobile devices, and narrow window states. This design pattern guarantees that multi-pa" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="understanding-gnome-hig-responsive-sidebars">Understanding GNOME
+HIG Responsive Sidebars</h1>
+<p>The GNOME Human Interface Guidelines (HIG) recommend responsive
+sidebars that collapse on small screens to ensure applications adapt
+smoothly between desktop displays, mobile devices, and narrow window
+states. This design pattern guarantees that multi-pane applications
+prioritize readable content and accessible touch targets without
+sacrificing functionality or screen space, regardless of the user's
+display size.</p>
+<h3 id="adaptability-across-modern-form-factors">Adaptability Across
+Modern Form Factors</h3>
+<p>The modern Linux ecosystem spans traditional desktops, laptops,
+tablets, and mobile devices such as the Librem 5 or PinePhone. A static
+two-pane layout works well on a wide monitor, but it fails on narrow
+viewports. By establishing guidelines for collapsing sidebars, GNOME
+ensures that a single application design functions natively across both
+large desktop windows and portrait-oriented mobile screens without
+requiring separate codebases or divergent interfaces.</p>
+<h3 id="preserving-content-usability-and-legibility">Preserving Content
+Usability and Legibility</h3>
+<p>When screen width drops below a certain threshold—typically around
+720 to 800 pixels—retaining both a navigation sidebar and a main view
+compresses both areas. Text wraps awkwardly, interactive elements
+shrink, and horizontal scrolling may occur. Collapsing the sidebar hides
+secondary navigation while users engage with the primary content,
+dedicating 100% of the horizontal screen real estate to reading,
+viewing, or editing.</p>
+<h3 id="shifting-to-standard-hierarchical-navigation">Shifting to
+Standard Hierarchical Navigation</h3>
+<p>On narrow screens, the HIG advises shifting from a side-by-side pane
+model to a drill-down navigation stack. When collapsed, the sidebar
+becomes its own dedicated view or an overlay sheet. Selecting an item
+navigates forward into the content view, and returning involves a
+standard back button or edge-swipe gesture. This hierarchy aligns with
+mobile user expectations, simplifying navigation and eliminating spatial
+clutter.</p>
+<h3 id="consistency-through-libadwaita-components">Consistency Through
+Libadwaita Components</h3>
+<p>The guidelines are directly tied to GNOME's development platform via
+Libadwaita widgets, such as <code>AdwNavigationSplitView</code> and
+<code>AdwOverlaySplitView</code>. These components implement the
+responsive collapse behavior out of the box, handling transitions,
+threshold breakpoints, and window resizing automatically. By following
+the HIG, developers deliver a unified, predictable experience where
+window snapping, tiling, and mobile use all feel cohesive across the
+entire GNOME desktop environment.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

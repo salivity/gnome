@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Monitor Color Management in GNOME - gnome</title>
+    <meta name="description" content="Managing color consistency across displays with different color gamuts requires precise hardware identification, accurate color profiling, and compositing support. GNOME achieves this through a modern display stack powered by the colord system daemon, st">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/multi-monitor-color-management-in-gnome">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Multi-Monitor Color Management in GNOME - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/multi-monitor-color-management-in-gnome" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Managing color consistency across displays with different color gamuts requires precise hardware identification, accurate color profiling, and compositing support. GNOME achieves this through a modern display stack powered by the colord system daemon, st" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="multi-monitor-color-management-in-gnome">Multi-Monitor Color
+Management in GNOME</h1>
+<p>Managing color consistency across displays with different color
+gamuts requires precise hardware identification, accurate color
+profiling, and compositing support. GNOME achieves this through a modern
+display stack powered by the <code>colord</code> system daemon, standard
+ICC profiles, and native compositor integration within Mutter. This
+setup allows the desktop environment to independently calibrate each
+connected screen, map color spaces correctly, and prevent distortion
+when windows move between standard (sRGB) and wide-gamut (such as DCI-P3
+or Adobe RGB) monitors.</p>
+<h3 id="the-role-of-colord-and-device-identification">The Role of Colord
+and Device Identification</h3>
+<p>At the foundation of GNOME’s color management is <code>colord</code>,
+a system service that manages, installs, and generates color profiles.
+When monitors are connected, GNOME reads each display's Extended Display
+Identification Data (EDID). This data provides the unique manufacturer
+ID, model, serial number, and primary color coordinates.</p>
+<p><code>colord</code> creates a distinct hardware mapping for each
+physical port and panel. This per-device binding ensures that even if
+you connect two identical monitors, GNOME treats them as separate color
+entities, applying dedicated ICC (International Color Consortium)
+profiles to each rather than forcing a global profile across the entire
+workspace.</p>
+<h3 id="x11-vs-wayland-color-pipelines">X11 vs. Wayland Color
+Pipelines</h3>
+<p>The display protocol in use fundamentally dictates how GNOME handles
+mixed-gamut setups:</p>
+<ul>
+<li><strong>Under X11:</strong> Legacy X11 environments have significant
+limitations. Color calibration historically relied on adjusting the
+Video Card Gamma Table (VCGT) per display output (CRTC). While gamma
+ramps can be applied per-monitor in X11, full gamut mapping across
+multiple screens is flawed because the X server treats the entire
+desktop as a single, unified root window. As a result, individual
+applications often cannot dynamically transform color spaces when
+dragged between different displays.</li>
+<li><strong>Under Wayland:</strong> Wayland resolves these legacy
+architectural constraints. Because Mutter serves as both the window
+manager and Wayland compositor, it has direct authority over the final
+pixel buffer sent to each display controller. Wayland enables GNOME to
+apply independent calibration curves and color transformations on a
+per-output basis without interference between screens.</li>
+</ul>
+<h3 id="gamut-mapping-and-color-space-conversion">Gamut Mapping and
+Color Space Conversion</h3>
+<p>Connecting a standard sRGB monitor alongside a wide-gamut panel often
+leads to oversaturation on the wide-gamut screen if colors are not
+properly mapped. GNOME addresses this using a defined rendering
+pipeline:</p>
+<ol type="1">
+<li><strong>Source Content Identification:</strong> Applications provide
+pixel data tagged with a specific color space (typically sRGB by default
+for standard desktop apps, or wide spaces like DCI-P3/Rec. 2020 for
+creative tools).</li>
+<li><strong>Transformations via LittleCMS:</strong> GNOME utilizes color
+management engines like LittleCMS to perform matrix operations and 3D
+Look-Up Table (LUT) calculations.</li>
+<li><strong>Compositor Target Mapping:</strong> Mutter converts the
+window’s source color coordinates into the target monitor's native color
+space, defined by that monitor's assigned ICC profile.</li>
+</ol>
+<p>When an application window straddles two displays with varying
+gamuts, the compositor renders the respective portions according to each
+display’s target profile, ensuring colors appear uniform across both
+screens.</p>
+<h3 id="automated-calibration-via-gnome-settings">Automated Calibration
+via GNOME Settings</h3>
+<p>GNOME integrates profile management directly into its Settings panel
+under the <strong>Color</strong> section. Users can calibrate screens
+using supported hardware colorimeters (such as Datacolor Spyder or
+X-Rite devices). When a colorimeter is plugged in:</p>
+<ul>
+<li>GNOME detects the instrument via <code>colord</code> and
+ArgyllCMS.</li>
+<li>Calibration targets are displayed on the chosen monitor while
+ignoring settings on neighboring screens.</li>
+<li>Once the calibration sequence finishes, an ICC profile is generated,
+saved, and automatically applied specifically to that monitor's EDID
+configuration.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

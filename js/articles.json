@@ -1,0 +1,2678 @@
+[
+  [
+    446,
+    "How GNOME Handles Multi-GPU Desktop Compositing",
+    "Modern multi-GPU systems, such as laptops with hybrid graphics (integrated and discrete GPUs) or multi-card desktop workstations, require coordinated resource sharing to render desktop effects smoothly. The GNOME desktop handles this complexity primarily",
+    false
+  ],
+  [
+    445,
+    "GNOME Foundation Bylaws and Voting Eligibility",
+    "The GNOME Foundation Bylaws serve as the foundational legal instrument establishing the criteria, processes, and rights associated with general membership and voting eligibility. By explicitly defining who qualifies as a voting member, how membership is",
+    false
+  ],
+  [
+    444,
+    "How GNOME Shell Prevents Window Title Flickering",
+    "GNOME Shell maintains smooth, flicker-free dynamic window title updates by decoupling application-level state changes from desktop rendering. Through its tightly integrated compositing window manager, Mutter, GNOME Shell processes window metadata asynchr",
+    false
+  ],
+  [
+    443,
+    "How GNOME Clocks Wakes a Suspended Linux System",
+    "GNOME Clocks can reliably fire alarms even when a computer is in a low-power suspend state by coordinating application-level scheduling with system services and low-level hardware timers. This functionality relies on modern Linux power management framewo",
+    false
+  ],
+  [
+    442,
+    "How GNOME Files Searches Deep Directories Instantly",
+    "GNOME Files, natively known as Nautilus, delivers near-instantaneous search results across deeply nested directory structures by leveraging an integrated background indexing engine called Tracker, real-time filesystem monitoring, and optimized asynchrono",
+    false
+  ],
+  [
+    441,
+    "GNOME HIG Back-Button Navigation in Drill-Down Views",
+    "The GNOME Human Interface Guidelines (HIG) define standard back-button navigation in drill-down views to ensure visual consistency, spatial predictability, and intuitive navigation across the desktop environment. By enforcing strict patterns for moving d",
+    false
+  ],
+  [
+    440,
+    "GNOME Font Anti-Aliasing and Subpixel Rendering",
+    "This article explores how the GNOME desktop environment manages font anti-aliasing through subpixel rendering techniques. It covers the underlying software stack responsible for rendering text, the configuration pipelines provided by GSettings and Fontco",
+    false
+  ],
+  [
+    439,
+    "GNOME's Role in FreeDesktop.org Standards",
+    "The GNOME Development Team plays a foundational role in shaping, implementing, and maintaining cross-desktop standards under FreeDesktop.org (XDG). By collaborating directly with developers from KDE and other environments, GNOME contributors help establi",
+    false
+  ],
+  [
+    438,
+    "How GNOME Shell Isolates Modal Dialog Keyboard Focus",
+    "When a modal authentication dialog appears in GNOME Shell, the desktop environment isolates keyboard navigation by shifting the window manager into a dedicated modal state, capturing raw input at the compositor level, and restricting the focus chain to t",
+    false
+  ],
+  [
+    437,
+    "GNOME System Monitor Memory Maps and Open Files",
+    "GNOME System Monitor provides detailed insights into active system processes, including the ability to inspect process memory maps and track open files in real time. This capability stems from the tool's integration with Linux kernel interfaces, backend",
+    false
+  ],
+  [
+    436,
+    "GNOME Dynamic USB Audio Hotplugging Explained",
+    "GNOME handles dynamic device hotplugging for external USB sound cards and microphones through a coordinated, multi-layered Linux architecture consisting of the kernel, system event managers, sound servers, and desktop interface components. When a user co",
+    false
+  ],
+  [
+    435,
+    "GNOME HIG Spacing and Margins in Dialogs",
+    "The GNOME Human Interface Guidelines (HIG) establish strict standards for spacing and margins to ensure that application dialogs remain predictable, visually balanced, and effortless to navigate. By standardizing layout metrics across the desktop environ",
+    false
+  ],
+  [
+    434,
+    "How GNOME Manages Laptop Battery Charge Thresholds",
+    "This article examines how the GNOME desktop environment handles battery charge thresholds to preserve laptop battery health. By communicating through modern Linux system services like UPower and vendor-specific kernel interfaces, GNOME allows systems to",
+    false
+  ],
+  [
+    433,
+    "GNOME Usability Team Role in Shell A/B Testing",
+    "This article examines how the GNOME Usability Team evaluates desktop shell modifications through structured, comparative usability research and variant testing. It outlines the methodologies used to test competing interface designs, how open-source priva",
+    false
+  ],
+  [
+    432,
+    "How GNOME Shell Renders App Launch Animations",
+    "This article explores how GNOME Shell delivers seamless application launch animations from the app grid to the desktop workspace. By leveraging the integrated Mutter compositor, Clutter's scene graph framework, the Cogl graphics abstraction library, and",
+    false
+  ],
+  [
+    431,
+    "How GNOME Web Isolates Web Application Profiles",
+    "GNOME Web, also known as Epiphany, allows users to transform websites into standalone desktop applications with independent security boundaries. This article explores the core technical features—including dedicated directory structures, WebKitGTK multi",
+    false
+  ],
+  [
+    430,
+    "GNOME Files Bookmarks and Network Mounts Guide",
+    "GNOME Files (also known as Nautilus) provides an intuitive sidebar for quick navigation across local directories, external devices, and remote servers. This article explains how GNOME Files manages user-defined bookmarks and persistent network mount loca",
+    false
+  ],
+  [
+    429,
+    "Purpose of GNOME HIG Standard Keyboard Shortcuts",
+    "The GNOME Human Interface Guidelines (HIG) define standard keyboard shortcuts to create a predictable, accessible, and efficient user experience across all desktop applications. By establishing a uniform baseline for navigation, text manipulation, and co",
+    false
+  ],
+  [
+    428,
+    "GNOME Screen Color Inversion for Accessibility",
+    "The GNOME desktop environment provides built-in visual accessibility features designed to assist users with photophobia, low vision, and severe visual impairments. This article explains how GNOME implements screen color inversion, detailing its architect",
+    false
+  ],
+  [
+    427,
+    "How GNOME Defends Open Source Against Patent Trolls",
+    "The GNOME Foundation plays a critical role in shielding the open-source community from patent assertion entities, commonly known as patent trolls. By choosing to actively litigate rather than settle frivolous infringement claims, the foundation not only",
+    false
+  ],
+  [
+    426,
+    "How GNOME Shell Handles Minimize Animations Without Docks",
+    "When taskbars or persistent docks are absent, GNOME Shell adjusts its window minimization behavior through Mutter, its underlying compositor and window manager. Instead of directing the window into an on-screen launcher icon, the shell calculates fallbac",
+    false
+  ],
+  [
+    425,
+    "How GNOME Maps Displays Public Transit Schedules",
+    "GNOME Maps provides integrated public transit planning by combining modern open-source routing backends, standardized data feeds, and geospatial mapping to display transit stops, schedules, and step-by-step itineraries. Through integrations with services",
+    false
+  ],
+  [
+    424,
+    "Sync Audio Across Network Devices in GNOME",
+    "GNOME manages multi-device audio output synchronization across local networks by leveraging its underlying modern sound server, PipeWire, alongside legacy PulseAudio network modules. Through network streaming protocols, automated service discovery, and c",
+    false
+  ],
+  [
+    423,
+    "GNOME HIG: Inline Editing vs Modal Edit Dialogs",
+    "The GNOME Human Interface Guidelines (HIG) provide clear direction on when to implement direct inline editing versus modal edit dialogs to balance workflow efficiency with user safety. This article examines the core purposes behind these guidelines, deta",
+    false
+  ],
+  [
+    422,
+    "How GNOME Manages CJK Input Methods with IBus",
+    "The GNOME desktop manages complex script input for languages such as Chinese, Japanese, and Korean (CJK) by deeply integrating the Intelligent Input Bus (IBus) directly into its core shell and settings architecture. Rather than treating input method engi",
+    false
+  ],
+  [
+    421,
+    "GNOME Engagement Team Hackathon Sponsorship Role",
+    "The GNOME Community Engagement Team plays a vital role in empowering open-source contributors by facilitating, funding, and organizing hackathons across the globe. By connecting the GNOME Foundation's operational resources with grassroots organizers, the",
+    false
+  ],
+  [
+    420,
+    "How GNOME Shell Dynamic Top Bar Opacity Works",
+    "GNOME Shell dynamically adjusts top bar opacity by continuously evaluating window positions against the panel's screen area using Mutter's window management APIs, then toggling CSS classes via the Shell Toolkit (St). While earlier releases incorporated t",
+    false
+  ],
+  [
+    419,
+    "How GNOME Calculator Handles Variables and Units",
+    "GNOME Calculator is more than a standard desktop utility; it integrates sophisticated calculation engines to handle advanced variable assignments and dynamic unit conversions seamlessly. By combining an intuitive mathematical syntax, a versatile parsing",
+    false
+  ],
+  [
+    418,
+    "How GNOME Files Handles Native Archive Extraction",
+    "GNOME Files, formerly and often known as Nautilus, provides a streamlined experience for handling compressed files directly within its active directory view. Rather than relying on external archive manager windows, modern GNOME Files manages archive extr",
+    false
+  ],
+  [
+    417,
+    "GNOME HIG Adaptive Layouts for Mobile and Desktop",
+    "The GNOME Human Interface Guidelines (HIG) provide a structured framework for designing adaptive layouts, enabling developers to build applications that transition seamlessly between mobile devices and desktop computers. By standardizing design patterns",
+    false
+  ],
+  [
+    416,
+    "How GNOME Supports WebRTC Remote Login",
+    "The GNOME desktop environment modernizes remote access by integrating low-latency media streaming pipelines directly into its Wayland-based display architecture. Instead of relying solely on traditional protocols like VNC or standard RDP, modern GNOME de",
+    false
+  ],
+  [
+    415,
+    "GNOME Release Team Role in Tagging Stable Software",
+    "The GNOME Release Engineering Team oversees the development lifecycle of the GNOME desktop environment, acting as the central authority that transitions software from active development to official production releases. In tagging stable software versions",
+    false
+  ],
+  [
+    414,
+    "Custom Cursors and Pointer Sizes in GNOME Shell",
+    "This article explores how GNOME Shell manages cursor themes and pointer sizing across the Linux desktop environment. It covers the directory hierarchy for cursor installations, the GSettings schemas used by Mutter and GTK, how GNOME Shell synchronizes po",
+    false
+  ],
+  [
+    413,
+    "How GNOME Alerts Users to Location Data Access",
+    "Modern GNOME desktop environments use a combination of system-level privacy controls, backend geolocation services, and visual status indicators to keep users informed whenever an application requests their geographic location. Through integrated tools l",
+    false
+  ],
+  [
+    412,
+    "How GNOME Uses TPM 2.0 for Disk Encryption",
+    "Modern GNOME environments leverage the Trusted Platform Module (TPM 2.0) to streamline Linux full-disk encryption by securely binding encryption keys to system hardware. Instead of requiring users to enter a separate disk passphrase before the operating",
+    false
+  ],
+  [
+    411,
+    "GNOME HIG Confirmation Patterns for File Deletions",
+    "The GNOME Human Interface Guidelines (HIG) define confirmation patterns for file deletions to protect users from accidental data loss while minimizing workflow interruptions. By distinguishing between reversible operations and permanent, irreversible act",
+    false
+  ],
+  [
+    410,
+    "How to Adjust Audio Balance in GNOME Desktop",
+    "The GNOME desktop environment handles audio balance between the left and right speakers through an intuitive graphical interface backed by modern Linux audio subsystems. By routing user adjustments from the GNOME Control Center to underlying sound server",
+    false
+  ],
+  [
+    409,
+    "How GNOME Validates Translated Software Strings",
+    "The GNOME Localization Project plays a critical role in ensuring that the GNOME desktop environment is accessible, accurate, and culturally relevant across hundreds of languages. Beyond merely translating text, the project serves as a quality assurance f",
+    false
+  ],
+  [
+    408,
+    "How GNOME Shell Displays Bluetooth Battery Percentages",
+    "This article explains the technical pipeline that enables GNOME Shell to render connected Bluetooth device battery percentages within its Quick Settings menu. The process spans low-level Linux Bluetooth protocols, D-Bus system buses, intermediate helper",
+    false
+  ],
+  [
+    407,
+    "How GNOME Text Editor Highlights Obscure Scripting Languages",
+    "GNOME Text Editor delivers syntax highlighting for niche and obscure scripting languages through its reliance on the GtkSourceView library, a modular XML-based definition system, and standard Linux desktop file-detection mechanisms. Rather than hardcodin",
+    false
+  ],
+  [
+    406,
+    "GNOME Files External Drive Trash Security Explained",
+    "When you delete a file on a removable or external drive in GNOME Files (Nautilus), the application avoids moving the file to your primary local disk to save transfer time and drive space. Instead, it processes the deletion by following the FreeDesktop.or",
+    false
+  ],
+  [
+    405,
+    "GNOME HIG Search Entry Behaviors and Filters Explained",
+    "This article examines the purpose and role of the GNOME Human Interface Guidelines (HIG) regarding standard search entries and filtering mechanisms. It details how standardized search patterns reduce cognitive friction, preserve user muscle memory, and s",
+    false
+  ],
+  [
+    404,
+    "Active Directory Integration in GNOME Desktop",
+    "The GNOME desktop integrates enterprise identity management with Microsoft Active Directory by coupling its user interface directly with native Linux enterprise subsystems. Through tools like GNOME Control Center and GNOME Initial Setup, users and admini",
+    false
+  ],
+  [
+    403,
+    "GNOME Advisory Board's Role in Platform Architecture",
+    "This article examines how the GNOME Foundation Advisory Board influences the technical direction and platform architecture of the GNOME desktop environment. While technical execution is led by community maintainers and the Release Team, the Advisory Boar",
+    false
+  ],
+  [
+    402,
+    "GNOME Shell Display Scaling on External Projectors",
+    "Connecting a laptop to an external projector often involves pairing a high-density internal screen with a lower-density external output. GNOME Shell manages this display scaling discrepancy dynamically through its compositor, Mutter, with the overall beh",
+    false
+  ],
+  [
+    401,
+    "GNOME Boxes Live Snapshots: Key Features Explained",
+    "GNOME Boxes delivers a streamlined virtualization experience on Linux, allowing users to capture the state of running virtual machines without shutting them down. This live snapshot capability is made possible through a tightly integrated stack consistin",
+    false
+  ],
+  [
+    400,
+    "How GNOME Manages Background Indexing on Laptops",
+    "Modern laptop users expect fast file searching without sacrificing battery life, a balance that the GNOME desktop environment achieves through intelligent task scheduling. GNOME primarily uses a search framework called Tracker (recently rebranded as Loca",
+    false
+  ],
+  [
+    399,
+    "GNOME HIG Window Close Button Placement Explained",
+    "The GNOME Human Interface Guidelines (HIG) define strict standards for the placement of window close buttons to ensure a predictable, efficient, and cohesive user experience across the desktop environment. By standardizing the position and behavior of th",
+    false
+  ],
+  [
+    398,
+    "GNOME User Switching Without Ending Active Sessions",
+    "The GNOME desktop environment allows multiple users to remain logged in simultaneously without terminating ongoing processes through a coordinated architecture involving the GNOME Display Manager (GDM), systemd-logind, and display server resource arbitra",
+    false
+  ],
+  [
+    397,
+    "Role of the GNOME Foundation Executive Committee",
+    "This article provides an overview of the GNOME Foundation Executive Committee and its critical role in managing day-to-day organizational operations. It outlines how this specialized leadership body bridges the gap between the Board of Directors and dail",
+    false
+  ],
+  [
+    396,
+    "How GNOME Shell Optimizes Background Blur Shaders",
+    "GNOME Shell delivers smooth background blur effects across its interface without sacrificing display frame rates by combining modern GPU rendering techniques with aggressive texture caching. By utilizing downscaled offscreen framebuffers, efficient multi",
+    false
+  ],
+  [
+    395,
+    "GNOME Loupe Color Profile Histograms for Photographers",
+    "GNOME Loupe provides photographers with accurate tonal and color analysis by pairing a modern image-decoding architecture with deep color management capabilities. Through its use of the Glycin library, LittleCMS color transformation pipelines, and hardwa",
+    false
+  ],
+  [
+    394,
+    "How GNOME Files Displays File Metadata",
+    "GNOME Files, default known as Nautilus, provides native support for reading and displaying rich file metadata, including image dimensions, audio bitrates, video durations, and camera EXIF information. By integrating closely with the GNOME desktop's under",
+    false
+  ],
+  [
+    393,
+    "GNOME HIG Guidelines for Toast Notifications",
+    "This article examines the purpose and design principles behind non-intrusive toast notifications within the GNOME Human Interface Guidelines (HIG). It explores how these transient feedback mechanisms enhance the user experience by providing timely contex",
+    false
+  ],
+  [
+    392,
+    "How GNOME Manages WireGuard VPN Connections",
+    "The GNOME desktop environment manages WireGuard virtual private network (VPN) connections natively through its tight integration with NetworkManager. This article explains the technical architecture behind GNOME's WireGuard implementation, details how th",
+    false
+  ],
+  [
+    391,
+    "GNOME Documentation Project Role in GTK 4 Tutorials",
+    "The GNOME Documentation Project plays a foundational role in authoring and maintaining developer tutorials for GTK 4, serving as the bridge between core toolkit architecture and application developers. By establishing clear standards, producing step-by-s",
+    false
+  ],
+  [
+    390,
+    "GNOME Shell Top Bar Scaling on Ultra-Wide Monitors",
+    "This article examines how GNOME Shell dynamically scales and adapts its top bar interface for ultra-wide desktop monitors. Through the integration of the Mutter compositor, the Clutter-based Shell Toolkit (St), and a tripartite layout architecture, GNOME",
+    false
+  ],
+  [
+    389,
+    "How to Track World Time Zones Using GNOME Clocks",
+    "GNOME Clocks is a streamlined, user-friendly utility designed for the GNOME desktop environment that makes global time coordination effortless. This article highlights the key features that make GNOME Clocks an ideal application for tracking multiple wor",
+    false
+  ],
+  [
+    388,
+    "How GNOME Handles Crash Dumps with debuginfod",
+    "Modern GNOME environments manage application crashes through a unified pipeline combining Linux core dump handlers, distribution-specific crash reporting tools, and on-demand debug symbol fetching via debuginfod. When a GNOME application encounters a fat",
+    false
+  ],
+  [
+    387,
+    "GNOME HIG Unambiguous Iconography in Toolbars",
+    "This article examines the role of unambiguous iconography within the GNOME Human Interface Guidelines (HIG), specifically focusing on its application in modern application toolbars and header bars. It details how standardized visual metaphors, symbolic d",
+    false
+  ],
+  [
+    386,
+    "How GNOME Desktop Securely Locks the Screen",
+    "GNOME achieves secure screen locking by integrating the lock screen directly into its core display compositor, Mutter, rather than relying on an independent overlay application. By leveraging modern display server architectures—primarily Wayland—and",
+    false
+  ],
+  [
+    385,
+    "How GNOME Preserves Minority Languages in Tech",
+    "The GNOME Translation Teams play a crucial role in digital inclusion by localizing the free and open-source desktop environment into dozens of underrepresented and indigenous languages worldwide. By providing software interfaces in native tongues, develo",
+    false
+  ],
+  [
+    384,
+    "How GNOME Shell Renders Smooth Trackpad Gestures",
+    "GNOME Shell delivers fluid workspace transitions on precision trackpads by combining hardware-level gesture processing, real-time spatial coordinate mapping, kinetic physics solvers, and high-precision frame synchronization. Rather than treating trackpad",
+    false
+  ],
+  [
+    383,
+    "GNOME Disks Features for Editing fstab Mount Options",
+    "GNOME Disks provides a graphical interface that simplifies managing drives, partition tables, and file systems on Linux systems. A key capability of the utility is its ability to directly configure and persist filesystem mount settings inside the /etc/fs",
+    false
+  ],
+  [
+    382,
+    "How GNOME Inhibits Suspend in Brasero Burning",
+    "Optical disc burning is an uninterrupted, real-time operation where any system interruption—such as entering sleep or suspend mode—corrupts the media and results in a failed write. To prevent this, GNOME coordinates with Brasero using system-level po",
+    false
+  ],
+  [
+    381,
+    "Understanding GNOME HIG Responsive Sidebars",
+    "The GNOME Human Interface Guidelines (HIG) recommend responsive sidebars that collapse on small screens to ensure applications adapt smoothly between desktop displays, mobile devices, and narrow window states. This design pattern guarantees that multi-pa",
+    false
+  ],
+  [
+    380,
+    "GNOME Super Key System-Wide Search Shortcuts",
+    "The GNOME desktop environment integrates system-wide search directly into its core navigation flow via the Activities Overview, activated instantly with a single press of the Super key (commonly the Windows or Command key). This article explains how GNOM",
+    false
+  ],
+  [
+    379,
+    "Role of the Friends of GNOME Initiative",
+    "The Friends of GNOME initiative is a vital fundraising program run by the GNOME Foundation that allows individual donors to financially support the GNOME desktop environment and its broader ecosystem. This article provides an overview of the program's pr",
+    false
+  ],
+  [
+    378,
+    "GNOME Shell Window Placement Algorithms Explained",
+    "This article explores how GNOME Shell determines the initial position of newly launched application windows on your desktop. In GNOME, window placement is governed by its underlying compositor and window manager, Mutter. Rather than scattering windows ra",
+    false
+  ],
+  [
+    377,
+    "Evince Interactive PDF Form Filling Features",
+    "GNOME Evince provides a lightweight and reliable solution for filling out interactive PDF forms on Linux and Unix-like operating systems. By pairing the robust Poppler rendering engine with native GTK user interface elements, Evince enables users to comp",
+    false
+  ],
+  [
+    376,
+    "How GNOME Manages Audio Feedback for Typing and Volume",
+    "GNOME manages system audio feedback—such as click sounds during volume adjustments and keypress audio—through a modular architecture consisting of sound themes, desktop daemons, accessibility frameworks, and audio subsystems like PipeWire or PulseAud",
+    false
+  ],
+  [
+    375,
+    "Why GNOME HIG Prefers Clean Lists Over Tables",
+    "The GNOME Human Interface Guidelines (HIG) advocate for clean, focused list views over dense, complex data tables to create an intuitive and accessible user experience. While traditional desktop software frequently relied on spreadsheet-style tables, mod",
+    false
+  ],
+  [
+    374,
+    "GNOME Mutter Hardware Acceleration in Clutter Stage",
+    "The GNOME desktop achieves high-performance graphical rendering by using Mutter, its integrated window manager and Wayland compositor, which relies on an embedded version of the Clutter scene-graph toolkit. At the center of this pipeline is the Clutter s",
+    false
+  ],
+  [
+    373,
+    "GNOME Bug Squad and Bugzilla Ticket Backlogs",
+    "The GNOME Bug Squad was an essential volunteer-driven initiative dedicated to triaging, organizing, and reducing the massive accumulation of reports filed in GNOME's legacy Bugzilla tracking system. By serving as the primary buffer between end-users and",
+    false
+  ],
+  [
+    372,
+    "How GNOME Shell Handles Scaling Under High Load",
+    "GNOME Shell manages dynamic display scaling primarily through Mutter, its underlying window manager and Wayland compositor. During periods of heavy computational load, GNOME Shell balances visual fidelity and system responsiveness by offloading scaling w",
+    false
+  ],
+  [
+    371,
+    "GNOME Software Licensing Metadata Features Explained",
+    "GNOME Software relies on standardized packaging specifications, automated license analysis, and explicit visual tags to inform users whether an application is open source or proprietary. By processing upstream metadata through machine-readable formats an",
+    false
+  ],
+  [
+    370,
+    "How GNOME Files Manages Remote WebDAV Cloud Shares",
+    "GNOME Files, default known as Nautilus, manages remote cloud shares over WebDAV protocols by utilizing the GNOME Virtual File System (GVfs) backend. Rather than mounting remote storage at the kernel level like traditional network drives, GNOME Files inte",
+    false
+  ],
+  [
+    369,
+    "GNOME HIG Guidelines for Application Empty States",
+    "The GNOME Human Interface Guidelines (HIG) provide detailed design patterns for application empty states to ensure users are never left facing confusing, blank screens when an app has no content to display. These guidelines define how applications should",
+    false
+  ],
+  [
+    368,
+    "Configure Drawing Tablet Pressure in GNOME",
+    "The GNOME desktop environment provides native support for graphics tablets, allowing digital artists and designers to adjust stylus tip sensitivity, customize pressure curves, and configure physical stylus buttons directly from the system settings. By in",
+    false
+  ],
+  [
+    367,
+    "GNOME Board of Trustees Role in Sponsor Dues",
+    "In the GNOME Foundation, corporate sponsorships and Advisory Board memberships provide essential financial and strategic resources for the project. While the GNOME Board of Trustees represents the foundation's overarching voting membership, it does not d",
+    false
+  ],
+  [
+    366,
+    "How GNOME Shell Handles App Pagination and Reordering",
+    "GNOME Shell provides an organized, gesture-driven application grid that arranges installed software across horizontal pages and supports full custom reordering. This article breaks down how GNOME Shell manages app launcher pagination, handles spatial nav",
+    false
+  ],
+  [
+    365,
+    "How GNOME Calendar Imports Remote iCalendar Feeds",
+    "GNOME Calendar allows users to subscribe to external, read-only schedule feeds using remote iCalendar standards. This functionality relies on deep integration with core GNOME desktop technologies, standardized internet protocol support, and specialized p",
+    false
+  ],
+  [
+    364,
+    "Create Wi-Fi Hotspot in GNOME Control Center",
+    "This article explains how the GNOME desktop environment handles Wi-Fi hotspot creation and internet connection sharing using the GNOME Control Center. By integrating directly with NetworkManager, GNOME allows users to convert their desktop or laptop into",
+    false
+  ],
+  [
+    363,
+    "GNOME HIG Mobile Touch Target Guidelines",
+    "The GNOME Human Interface Guidelines (HIG) define standards for touch target accessibility to ensure Linux interfaces are usable, responsive, and accessible across different form factors, particularly mobile devices. This article examines the core purpos",
+    false
+  ],
+  [
+    362,
+    "GNOME Dynamic Wallpapers and Wallpaper Positioning",
+    "This guide explains the technical mechanisms the GNOME desktop environment uses to manage custom wallpaper positioning and dynamic day-to-night transitions. GNOME relies on its GSettings configuration database to control image placement and display modes",
+    false
+  ],
+  [
+    361,
+    "GNOME Brand Team Role in Trademark Protection",
+    "The GNOME Brand Team plays a vital role in safeguarding the identity, reputation, and visual assets of the GNOME Project. Working under the auspices of the GNOME Foundation, this team is responsible for managing visual branding guidelines, evaluating thi",
+    false
+  ],
+  [
+    360,
+    "How GNOME Shell Prevents Keystroke Sniffing on Wayland",
+    "GNOME Shell isolates untrusted applications from sniffing keystrokes by fundamentally redesigning the display server architecture. Acting as the Wayland compositor via its window manager, Mutter, GNOME Shell eliminates the shared input pipeline found in",
+    false
+  ],
+  [
+    359,
+    "GNOME Sound Recorder for Audio Transcription",
+    "GNOME Sound Recorder has emerged as an efficient utility for Linux users who need to record voice memos and prepare them for transcription. By combining a lightweight footprint with essential playback tools and broad format compatibility, the application",
+    false
+  ],
+  [
+    358,
+    "GNOME Files Search by File Size and Date",
+    "GNOME Files (Nautilus) offers built-in search capabilities that allow users to locate files across directories using a combination of direct directory traversal and background indexing engines. This article explains how GNOME Files processes searches, ho",
+    false
+  ],
+  [
+    357,
+    "GNOME HIG Semantic Colors in Libadwaita Explained",
+    "This article explores the purpose and function of the semantic color palette defined in the GNOME Human Interface Guidelines (HIG) and implemented through Libadwaita. It breaks down how semantic coloring replaces hardcoded visual values with intent-based",
+    false
+  ],
+  [
+    356,
+    "How GNOME Uses Ambient Light Sensors for Brightness",
+    "The GNOME desktop environment handles automatic display brightness through a modular pipeline that connects physical ambient light sensors (ALS) to the display backlight. This process relies on the Linux Industrial I/O (IIO) kernel subsystem, a middlewar",
+    false
+  ],
+  [
+    355,
+    "How GNOME Maintainers Triage GitLab Pull Requests",
+    "The GNOME Project maintainers group serves as the critical gatekeeper for the GNOME ecosystem, managing and evaluating the flow of contributions submitted to its GitLab instance. This article examines the essential role maintainers play in triaging pull",
+    false
+  ],
+  [
+    354,
+    "How GNOME Shell Renders Calendar and Notifications",
+    "This article examines the internal architecture GNOME Shell uses to display interactive calendar notifications and event summaries. It covers the end-to-end rendering pipeline, detailing how the desktop environment leverages the Evolution Data Server (ED",
+    false
+  ],
+  [
+    353,
+    "GNOME Weather Hourly Precipitation Graphs Explained",
+    "GNOME Weather provides users with comprehensive and accessible hourly precipitation forecasts directly within the Linux desktop environment. This functionality is driven by a combination of high-resolution meteorological data integration, a modern GTK4 a",
+    false
+  ],
+  [
+    352,
+    "How GNOME Mutter Manages Memory Defragmentation",
+    "This article explores how the GNOME desktop environment addresses memory fragmentation within its core compositing window manager, Mutter. Because Mutter blends low-level C libraries with a high-level JavaScript runtime (GJS), managing memory defragmenta",
+    false
+  ],
+  [
+    351,
+    "GNOME HIG: Why Status Bars Were Eliminated",
+    "The GNOME Human Interface Guidelines (HIG) recommend against using traditional bottom status bars in order to maximize screen space, reduce visual clutter, and modernize application interaction. This article explains the design philosophy behind this dec",
+    false
+  ],
+  [
+    350,
+    "Edit Remote Files via SFTP in GNOME Files",
+    "GNOME Files allows users to seamlessly edit remote files over SSH using the SFTP protocol through the GNOME Virtual File System (GVfs). By treating remote directories like local folders, GNOME enables text editors and other software to read and write cha",
+    false
+  ],
+  [
+    349,
+    "GNOME Outreach Committee Role in Google Summer of Code",
+    "The GNOME Outreach Committee plays a central administrative, promotional, and mentoring role in the GNOME Foundation’s annual participation in Google Summer of Code (GSoC). By acting as the operational bridge between Google, project mentors, and prospe",
+    false
+  ],
+  [
+    348,
+    "How GNOME Shell Manages Fullscreen Immersion",
+    "This article explores how GNOME Shell achieves seamless full-screen window immersion by automatically removing the top panel from view, suppressing interface edge triggers, and utilizing Mutter’s direct scanout capabilities. By coordinating display pro",
+    false
+  ],
+  [
+    347,
+    "GNOME Console Command Completion Notifications",
+    "GNOME Console includes an intelligent notification system designed to inform users when long-running terminal tasks finish executing in the background. This article explores the specific features and architectural mechanisms that power this capability, i",
+    false
+  ],
+  [
+    346,
+    "How GNOME Routes Audio to External USB DACs",
+    "When you connect an external USB Digital-to-Analog Converter (DAC) to a modern GNOME desktop environment, audio stream routing is managed through an automated pipeline involving the Linux kernel, a low-level audio server, and GNOME’s user interface. GN",
+    false
+  ],
+  [
+    345,
+    "Why GNOME HIG Recommends Against Nested Preferences",
+    "The GNOME Human Interface Guidelines (HIG) strongly advise against opening secondary, nested dialogs from within an application's preferences window. This article explains the rationale behind this recommendation, detailing how nested preferences degrade",
+    false
+  ],
+  [
+    344,
+    "How GNOME Handles External Monitor Rotation",
+    "The GNOME desktop manages external monitor rotation by coordinating hardware identification, display servers, and its built-in compositor, Mutter. While built-in devices like tablets use physical accelerometers to rotate displays automatically, external",
+    false
+  ],
+  [
+    343,
+    "Role of the GNOME Charter in Community Voting",
+    "The GNOME Foundation Charter serves as the primary constitutional framework that governs the democratic processes of the GNOME project. It defines the rules and protocols for community voting, detailing everything from voter eligibility and the administr",
+    false
+  ],
+  [
+    342,
+    "How GNOME Shell Renders Search Provider Results",
+    "GNOME Shell uses an asynchronous D-Bus architecture combined with its built-in graphical toolkit to aggregate and display search results from various sources. When a user types a query into the Activities Overview, GNOME Shell queries registered search p",
+    false
+  ],
+  [
+    341,
+    "How GNOME Software Detects Major OS Upgrades",
+    "GNOME Software streamlines the Linux desktop experience by identifying and notifying users when a new version of their operating system is ready for installation. This capability relies on an integrated architecture comprising modular plugins, background",
+    false
+  ],
+  [
+    340,
+    "Multi-Monitor Color Management in GNOME",
+    "Managing color consistency across displays with different color gamuts requires precise hardware identification, accurate color profiling, and compositing support. GNOME achieves this through a modern display stack powered by the colord system daemon, st",
+    false
+  ],
+  [
+    339,
+    "GNOME HIG Guide to Header Bar Status Indicators",
+    "The GNOME Human Interface Guidelines (HIG) provide design standards for placing status indicators within header bars to communicate essential application states clearly and unobtrusively. By standardizing these elements, the HIG ensures that users receiv",
+    false
+  ],
+  [
+    338,
+    "High-Performance GNOME Screen Recording via DMA-BUF",
+    "This article explores how the GNOME desktop achieves high-performance screen capture and recording by combining Wayland, PipeWire, and DMA-BUF sharing. By leveraging these modern Linux technologies, GNOME avoids traditional CPU and memory bottlenecks, pa",
+    false
+  ],
+  [
+    337,
+    "GNOME User Research for Non-Technical Users",
+    "The GNOME User Research Team bridges the gap between open-source software developers and everyday desktop users by systematically evaluating desktop workflows, identifying usability barriers, and translating non-technical feedback into actionable design",
+    false
+  ],
+  [
+    336,
+    "How GNOME Shell Handles Notification Stacking",
+    "GNOME Shell manages simultaneous alerts through a combination of sequential banner displays and consolidated application grouping in the system tray. Rather than cluttering the desktop with multiple overlapping banners when several alerts arrive at once,",
+    false
+  ],
+  [
+    335,
+    "How GNOME Maps Generates Driving Directions",
+    "GNOME Maps provides reliable turn-by-turn driving directions through a combination of open-source mapping data, remote routing engines, and native Linux desktop integration. By pairing OpenStreetMap data with dedicated routing services like GraphHopper a",
+    false
+  ],
+  [
+    334,
+    "How GNOME Files Handles Trash Across Multiple Drives",
+    "GNOME Files (also known as Nautilus) provides trash management and restoration across multiple physical drives by adhering to the FreeDesktop.org (XDG) Trash Specification. Instead of transferring deleted files across different storage devices to a singl",
+    false
+  ],
+  [
+    333,
+    "Purpose of GNOME HIG Typography Hierarchies",
+    "The GNOME Human Interface Guidelines (HIG) define a clean typography hierarchy to ensure visual clarity, legibility, and consistency across all desktop applications. By establishing standardized font sizes, weights, and functional roles, the guidelines h",
+    false
+  ],
+  [
+    332,
+    "GNOME Encrypted Home Directories & Vault Unlocking",
+    "The GNOME desktop environment relies on deep integration with Linux security subsystems, particularly Pluggable Authentication Modules (PAM), systemd-homed, and the GNOME Keyring, to manage encrypted home directories and automated vault unlocking. By int",
+    false
+  ],
+  [
+    331,
+    "GNOME Infrastructure Build Runners and Email Relays",
+    "The GNOME Infrastructure Team maintains the digital backbone for the GNOME desktop project, ensuring that developers and contributors worldwide have access to reliable development and communication tools. Among their most critical responsibilities are pr",
+    false
+  ],
+  [
+    330,
+    "GNOME Shell Pointer Barrier Physics Explained",
+    "GNOME Shell uses a dynamic pointer barrier system implemented in its Mutter compositor to solve the multi-monitor boundary problem. By applying velocity- and pressure-based physics to invisible boundaries between screens, GNOME preserves the infinite tar",
+    false
+  ],
+  [
+    329,
+    "GNOME Text Editor Autosave and Document Recovery",
+    "GNOME Text Editor modernizes the Linux desktop editing experience by offering native, invisible document autosaving and automatic session restoration. This article details the underlying features and mechanisms—such as background draft caching, real-ti",
+    false
+  ],
+  [
+    328,
+    "How GNOME Switches Audio Between Speakers and Headphones",
+    "GNOME handles audio output transitions through a synchronized software stack involving the Linux kernel, modern sound servers like PipeWire or PulseAudio, and session managers such as WirePlumber. When a user connects or disconnects headphones, the syste",
+    false
+  ],
+  [
+    327,
+    "GNOME HIG Header Bars: Combining Titles and Toolbars",
+    "The GNOME Human Interface Guidelines (HIG) recommend combining traditional window title bars and toolbars into a single unified element known as a header bar. This design paradigm shifts desktop application layouts by merging window management functions",
+    false
+  ],
+  [
+    326,
+    "GNOME Thunderbolt Device Pairing and Authorization",
+    "This article provides an overview of how the GNOME desktop environment handles Thunderbolt device authorization and pairing. GNOME accomplishes this by integrating directly with a low-level system daemon called bolt, which communicates with Linux kernel",
+    false
+  ],
+  [
+    325,
+    "GNOME Foundation Financial Audit and Transparency",
+    "This article examines how the GNOME Foundation's financial audits serve as a critical mechanism for non-profit transparency, regulatory compliance, and community trust. By subjecting its financial records to independent external reviews, the Foundation p",
+    false
+  ],
+  [
+    324,
+    "GNOME Shell Multi-Monitor Scaling: 4K and 1080p",
+    "Docking a 1080p laptop to a 4K external monitor creates a mixed-DPI environment that presents a unique challenge for desktop environments. GNOME Shell handles this scenario through its display compositor, Mutter, with the overall behavior depending heavi",
+    false
+  ],
+  [
+    323,
+    "Kill Background Processes with GNOME System Monitor",
+    "GNOME System Monitor is a built-in Linux utility that allows users to identify, manage, and terminate unresponsive or rogue background tasks through an intuitive graphical interface. This article outlines the key features that make the tool effective for",
+    false
+  ],
+  [
+    322,
+    "How GNOME Manages Flatpak Sandboxing Permissions",
+    "This article examines how the GNOME desktop environment handles application sandboxing permissions using Flatpak and the underlying XDG permission store architecture. By utilizing Bubblewrap for low-level process isolation, XDG Desktop Portals for dynami",
+    false
+  ],
+  [
+    321,
+    "GNOME HIG Single-Window Application Architecture",
+    "The GNOME Human Interface Guidelines (HIG) strongly advocate for single-window application architectures to streamline user workflows, reduce desktop clutter, and maintain visual consistency across the desktop environment. By favoring a unified interface",
+    false
+  ],
+  [
+    320,
+    "GNOME Touch Gestures for Workspace Switching",
+    "The GNOME desktop environment provides native, fluid touch and touchpad gestures that allow users to seamlessly transition between active workspaces. Built on modern display server architecture and the libinput library, GNOME delivers direct 1:1 tracking",
+    false
+  ],
+  [
+    319,
+    "GNOME Comms Team: Release Notes and Press Kits",
+    "The GNOME Communication Team serves as the essential bridge between core developers and the broader open-source community, transforming complex technical updates into accessible messaging. This article outlines the team's critical responsibilities in pro",
+    false
+  ],
+  [
+    318,
+    "GNOME Shell Window Focus Rules Explained",
+    "This article explores how GNOME Shell handles window focus when new application windows open, detailing the mechanisms behind focus stealing prevention, the role of user-interaction timestamps, and how Wayland and X11 protocols impact this behavior. It a",
+    false
+  ],
+  [
+    317,
+    "Download Linux ISOs Directly with GNOME Boxes",
+    "GNOME Boxes simplifies the virtualization workflow by offering a built-in mechanism to browse, download, and install popular Linux distribution ISOs directly from its interface. Instead of requiring users to manually search external websites, configure d",
+    false
+  ],
+  [
+    316,
+    "How GNOME Files Handles Symlinks Across Volumes",
+    "GNOME Files (Nautilus) relies on POSIX standards and the GIO/GVFS abstraction layer to manage symbolic links (symlinks) and their targets across different storage volumes. When navigating file systems, the application transparently resolves functional li",
+    false
+  ],
+  [
+    315,
+    "GNOME Tweaks: Enable Desktop Icons on Modern Shells",
+    "Modern GNOME desktop environments prioritize a minimalist, distraction-free interface, which led to the removal of native desktop icon management in recent releases. This article explains the purpose of GNOME Tweaks in enabling legacy desktop icons, expl",
+    false
+  ],
+  [
+    314,
+    "GNOME Font Scaling Guide for Visually Impaired Users",
+    "The GNOME desktop environment provides multiple built-in mechanisms to adapt typography for visually impaired users, ranging from simple accessibility toggles to fine-grained font scaling configurations. By modifying system-wide font scaling factors and",
+    false
+  ],
+  [
+    313,
+    "How Damned Lies Manages GNOME Translations",
+    "Damned Lies is the web-based translation management and workflow coordination platform that underpins the GNOME localization ecosystem. It serves as the vital bridge between GNOME's developers and its global translation community, synchronizing code repo",
+    false
+  ],
+  [
+    312,
+    "Wayland Pointer Confinement in GNOME Shell for Gaming",
+    "This article explains how GNOME Shell handles pointer confinement and locking for gaming applications operating under the Wayland display protocol. By leveraging standard Wayland protocol extensions within its compositor, Mutter, GNOME Shell restricts or",
+    false
+  ],
+  [
+    311,
+    "GNOME Calculator Currency and Velocity Conversion",
+    "GNOME Calculator is a default utility across many Linux desktop environments that provides robust conversion tools alongside its standard mathematical functions. This article explores the core features that empower the application to calculate unit conve",
+    false
+  ],
+  [
+    310,
+    "How GNOME Manages Time Sync Using systemd-timesyncd",
+    "GNOME manages system time synchronization through a layered architecture that connects user settings to low-level system services using D-Bus. Rather than directly controlling the background synchronization service, GNOME interfaces with systemd-timedate",
+    false
+  ],
+  [
+    309,
+    "GNOME HIG Primary Action Button Placement",
+    "This article provides an overview of the purpose and principles governing primary action button placement within the GNOME Human Interface Guidelines (HIG). It explores how these design standards optimize reading flow, minimize user error, establish desk",
+    false
+  ],
+  [
+    308,
+    "GNOME WPA3 Enterprise Wi-Fi Authentication",
+    "This article examines how the GNOME desktop environment handles authentication dialogs for WPA3 Enterprise Wi-Fi networks. It covers the underlying architecture involving NetworkManager and wpasupplicant, the interactive credential and certificate prompt",
+    false
+  ],
+  [
+    307,
+    "GNOME Membership Committee Role in Voting Verification",
+    "The GNOME Membership Committee acts as the primary gatekeeper of the GNOME Foundation's governance by evaluating contributor credentials, managing member renewals, and maintaining the official voter rolls. This article explains how the committee verifies",
+    false
+  ],
+  [
+    306,
+    "GNOME Workspace Switcher: Vertical vs Horizontal Layout",
+    "GNOME Shell renders its workspace switchers by managing a scene graph of visual actors powered by Mutter and Clutter, adapting transformation matrices, scrolling coordinates, and layout allocations to fit either a vertical or horizontal axis. While GNOME",
+    false
+  ],
+  [
+    305,
+    "How GNOME Photos Integrates with DLNA Media Servers",
+    "GNOME Photos provides native integration with local Digital Living Network Alliance (DLNA) media servers, allowing users to discover, browse, and access photos across a home network without transferring files manually. This capability is enabled by core",
+    false
+  ],
+  [
+    304,
+    "GNOME Bluetooth Audio Codec Selection: LDAC and aptX",
+    "This article explains how the GNOME desktop environment handles Bluetooth audio codecs like LDAC, aptX, and AAC. It covers the underlying audio subsystem—primarily PipeWire and WirePlumber—that enables high-fidelity wireless streaming, the software c",
+    false
+  ],
+  [
+    303,
+    "GNOME Asia Summit: Expanding Community Participation",
+    "The GNOME.Asia Summit serves as the premier annual conference for the GNOME desktop environment and Free and Open Source Software (FOSS) in Asia. Its primary purpose in expanding community participation is to bridge the geographical, linguistic, and cult",
+    false
+  ],
+  [
+    302,
+    "How GNOME Shell Renders Smooth Fonts on Low-Res Screens",
+    "GNOME Shell produces crisp, readable typography on low-resolution displays by combining an integrated text-rendering pipeline with subpixel anti-aliasing, font hinting, and stem darkening. Powered by foundational libraries including FreeType, HarfBuzz, P",
+    false
+  ],
+  [
+    301,
+    "How desktop-file-utils Validates GNOME Desktop Files",
+    "The desktop-file-utils package is a foundational utility suite in Linux desktop environments that provides the tools required to create, update, and verify .desktop files. In GNOME, its primary role in validation is fulfilled through the desktop-file-val",
+    false
+  ],
+  [
+    300,
+    "GNOME Sleep Prevention and Inhibitor Locks Explained",
+    "This article provides an overview of how the GNOME desktop environment intercepts, processes, and enforces sleep prevention requests from running applications. It explores the D-Bus interfaces used by clients, the role of gnome-session, and the underlyin",
+    false
+  ],
+  [
+    299,
+    "How GNOME Files Generates Video Thumbnails Efficiently",
+    "GNOME Files (Nautilus) delivers fast, responsive video thumbnail previews by decoupling thumbnail generation from the main user interface and utilizing optimized multimedia pipelines. By relying on asynchronous worker processes, intelligent keyframe seek",
+    false
+  ],
+  [
+    298,
+    "Touch Typing on GNOME Virtual Keyboards",
+    "This article examines how the GNOME desktop environment enables high-fidelity touch typing on virtual on-screen keyboards through deep Wayland integration, native compositor rendering, and modern input protocols. By eliminating input lag, processing mult",
+    false
+  ],
+  [
+    297,
+    "Understanding GNOME HIG Destructive Action Patterns",
+    "The GNOME Human Interface Guidelines (HIG) outline specific design patterns for destructive actions to balance user safety with an uninterrupted workflow. Rather than relying on constant, disruptive confirmation dialogs, the GNOME HIG emphasizes reversib",
+    false
+  ],
+  [
+    296,
+    "GNOME Shell Dual Monitor Top Bar Layout",
+    "GNOME Shell approaches multi-monitor setups with a minimalist design philosophy, placing the top bar exclusively on the designated primary monitor by default. This design reserves maximum vertical screen space for active application windows on secondary",
+    false
+  ],
+  [
+    295,
+    "GNOME Accessibility: Testing Screen Reader Trees",
+    "The GNOME Accessibility Team ensures that the GNOME desktop environment is fully usable by people with visual impairments through rigorous maintenance and testing of accessibility navigation trees. By validating the structural hierarchy exposed to screen",
+    false
+  ],
+  [
+    294,
+    "GNOME Custom Keyboard Shortcuts for Shell Scripts",
+    "The GNOME desktop environment allows users to execute arbitrary shell scripts via custom keybindings using either the graphical Settings application or the command-line gsettings tool. Under the hood, these shortcuts are managed by GNOME Shell and the GN",
+    false
+  ],
+  [
+    293,
+    "How GNOME Contacts Merges Duplicate Entries",
+    "GNOME Contacts simplifies address book management by detecting and combining redundant contact records into a unified view. This article explores the core features and underlying architecture—most notably the integration with the Folks library, Evoluti",
+    false
+  ],
+  [
+    292,
+    "GNOME Shell Screen Sharing and Recording Indicators",
+    "This article explains how GNOME Shell visually alerts users when an application is actively recording or sharing the screen. GNOME Shell prioritizes user privacy through distinct top bar icons, interactive Quick Settings controls, and system-level securi",
+    false
+  ],
+  [
+    291,
+    "Analyze Battery Degradation with GNOME Power Statistics",
+    "GNOME Power Statistics is a dedicated system diagnostic tool for Linux desktop environments that provides detailed insights into power consumption and hardware energy metrics. When assessing battery degradation, this utility acts as a critical monitoring",
+    false
+  ],
+  [
+    290,
+    "How GNOME Web Isolates Web Apps into Launchers",
+    "GNOME Web (Epiphany) isolates web applications by treating each site as an independent entity with its own storage, process context, and desktop integration files. Rather than running websites inside shared browser tabs, GNOME Web creates a dedicated pro",
+    false
+  ],
+  [
+    289,
+    "GNOME Release Calendar: Scheduling Feature Freezes",
+    "The GNOME Release Calendar serves as the foundational roadmap for the GNOME desktop environment, establishing a predictable, time-based schedule for every major release. By defining strict milestones months in advance, the calendar dictates precisely whe",
+    false
+  ],
+  [
+    288,
+    "GNOME Pinch-to-Zoom in GNOME Web and Evince",
+    "This article examines how the GNOME desktop environment handles multi-touch pinch-to-zoom gestures within GNOME Web (Epiphany) and the Evince document viewer. It details the complete input and rendering pipeline, tracing touch interactions from the Linux",
+    false
+  ],
+  [
+    287,
+    "GNOME git.gnome.org Migration to GitLab Explained",
+    "The GNOME Project transitioned its infrastructure from git.gnome.org and Bugzilla to a self-hosted GitLab instance to modernize its development environment, consolidate disjointed tools, and streamline contribution workflows. By replacing an aging combin",
+    false
+  ],
+  [
+    286,
+    "How GNOME Shell Renders Application Splash Screens",
+    "This article explains how GNOME Shell and its built-in compositor, Mutter, render application splash screens during system startup. It covers the end-to-end rendering pipeline, starting from autostart application triggers and the startup notification pro",
+    false
+  ],
+  [
+    285,
+    "GNOME Disks SMART Monitoring: Features for Non-Experts",
+    "GNOME Disks provides an intuitive graphical interface for monitoring drive health through Self-Monitoring, Analysis, and Reporting Technology (SMART). While raw SMART data is notoriously cryptic, GNOME Disks translates complex hardware telemetry into cle",
+    false
+  ],
+  [
+    284,
+    "File Conflict Resolution in GNOME Desktop Transfers",
+    "When transferring large directory trees in the GNOME desktop environment, file conflicts are managed through the default file manager, GNOME Files (Nautilus), powered by the GVfs (GNOME Virtual File System) backend. This article explains how GNOME detect",
+    false
+  ],
+  [
+    283,
+    "GNOME Executive Director and Community Expansion",
+    "The GNOME Foundation Executive Director historically served as the primary catalyst for transitioning the project from a localized, volunteer-driven software initiative into a globally coordinated, diverse open-source ecosystem. By securing critical fund",
+    false
+  ],
+  [
+    282,
+    "How GNOME Ensures Libadwaita Accessibility",
+    "GNOME ensures accessibility compliance across all Libadwaita UI components by leveraging the modern accessibility architecture of GTK 4, embedding semantic roles directly into custom widgets, enforcing strict visual and keyboard navigation standards, and",
+    false
+  ],
+  [
+    281,
+    "GNOME Builder Template Wizard for GTK Apps",
+    "GNOME Builder’s template wizard provides a fast, standardized starting point for creating new GTK applications by automating the creation of essential project files, build configurations, and desktop integration assets. Instead of manually writing boil",
+    false
+  ],
+  [
+    280,
+    "Wayland Subsurface Keyboard Focus in GNOME Shell",
+    "This article examines how GNOME Shell, through its underlying window manager and Wayland compositor Mutter, handles keyboard input focus across nested Wayland subsurfaces. While modern client applications frequently utilize nested trees of subsurfaces to",
+    false
+  ],
+  [
+    279,
+    "GTK Inspector: Live Debugging GNOME UI and CSS",
+    "The GTK Inspector is an essential interactive debugging tool integrated directly into the GTK toolkit, functioning much like web browser developer tools for native Linux applications. In the GNOME desktop environment, it allows developers, designers, and",
+    false
+  ],
+  [
+    278,
+    "How GNOME Optimizes Battery Life on postmarketOS",
+    "Running a complete desktop environment on mobile hardware demands aggressive power management. GNOME optimizes battery life on postmarketOS by combining lightweight Wayland rendering, automated display management, Linux kernel suspend states, background",
+    false
+  ],
+  [
+    277,
+    "How GNOME Calendar Adapts to Mobile Screens",
+    "GNOME Calendar achieves seamless responsiveness across desktop monitors and mobile devices by leveraging the modern GTK4 toolkit and the Libadwaita library. Through the use of adaptive breakpoints, dynamic view switchers, collapsible structural panels, a",
+    false
+  ],
+  [
+    276,
+    "GNOME Keyring Password Hashing and Suspend Locking",
+    "GNOME manages desktop secrets through the GNOME Keyring daemon, relying on cryptographic key derivation functions like PBKDF2 and standard ciphers like AES to safeguard credentials on disk. While GNOME integrates with system authentication during initial",
+    false
+  ],
+  [
+    275,
+    "GNOME Network Tool: Diagnose DNS and Routing Issues",
+    "The GNOME Network Tool is a graphical utility for Linux and Unix-like systems that consolidates essential networking diagnostic programs into a unified, user-friendly interface. This article explores how to use the tool's integrated Lookup, Traceroute, a",
+    false
+  ],
+  [
+    274,
+    "GNOME Shell Volume Slider Over-Amplification Rendering",
+    "GNOME Shell renders quick-setting volume sliders with over-amplification by integrating low-level audio state from the GNOME Volume Control (GVC) library with its Clutter-based Shell Toolkit (St). When over-amplification is enabled, the shell dynamically",
+    false
+  ],
+  [
+    273,
+    "GNOME Travel Committee Funding Explained",
+    "The GNOME Travel Committee plays a vital role in sustaining the open-source project's collaborative ecosystem by managing and distributing travel subsidies to community members. Operating under the GNOME Foundation, this committee evaluates funding reque",
+    false
+  ],
+  [
+    272,
+    "GNOME Custom ICC Profiles for Print Proofing",
+    "The GNOME desktop environment handles custom ICC color profiles through a system daemon called Colord, which maps color profiles to displays, printers, and scanners. While GNOME ensures accurate display-level calibration through its native settings, soft",
+    false
+  ],
+  [
+    271,
+    "GNOME HIG: Direct Manipulation vs Abstract Dialogs",
+    "The GNOME Human Interface Guidelines (HIG) emphasize direct manipulation over abstract dialogs to create an intuitive, continuous, and responsive user experience. By allowing users to interact directly with digital objects on the screen rather than confi",
+    false
+  ],
+  [
+    270,
+    "How GNOME Recovers from Display Server Crashes",
+    "Modern GNOME desktop environments integrate deeply with systemd user sessions to manage graphical components, monitor process health, and recover from display server failures. By decoupling components into distinct systemd user services, GNOME isolates t",
+    false
+  ],
+  [
+    269,
+    "Why GNOME Loupe Loads Large RAW Images Faster",
+    "GNOME Loupe, the modern default image viewer for the GNOME desktop environment, dramatically improves the speed of opening and navigating large RAW camera files compared to legacy viewers like Eye of GNOME (eog). By leveraging a modern Rust-based archite",
+    false
+  ],
+  [
+    268,
+    "GNOME Shell Clipboard vs Primary Selection Explained",
+    "GNOME Shell manages two distinct clipboard buffers simultaneously: the standard clipboard, which requires explicit user actions to copy and paste, and the primary selection, which automatically captures highlighted text for middle-click pasting. By relyi",
+    false
+  ],
+  [
+    267,
+    "How Libhandy Brought GNOME Apps to Mobile Screens",
+    "The libhandy library served as the crucial bridge that transformed traditional desktop GNOME applications into adaptive, mobile-friendly software. Developed during the initial push for Linux-based smartphones, it introduced a collection of responsive use",
+    false
+  ],
+  [
+    266,
+    "GNOME Print Job Monitoring and Queue Management",
+    "The GNOME desktop environment delivers a unified print management experience by integrating the Common UNIX Printing System (CUPS) directly into its core shell and system settings. Through native D-Bus interfaces, real-time desktop notifications, and a c",
+    false
+  ],
+  [
+    265,
+    "Purpose of GNOME Nibbles and GNOME Robots Games",
+    "GNOME Nibbles and GNOME Robots are classic, open-source arcade games developed as part of the GNOME desktop environment for Unix-like operating systems. Built to provide lightweight, accessible entertainment, both titles serve to deliver quick casual gam",
+    false
+  ],
+  [
+    264,
+    "How GNOME Handles System-Wide Proxy Settings",
+    "This article examines how the GNOME desktop environment manages and applies system-wide proxy configurations across various software layers. It covers the underlying dconf and GSettings architecture, the role of libraries like GIO and libproxy in communi",
+    false
+  ],
+  [
+    263,
+    "How GVFS Mounts ISO and Zip Files in GNOME Files",
+    "The GVFS (GNOME Virtual File System) archive backend enables GNOME Files to seamlessly inspect and interact with archive formats, such as ZIP files and ISO disk images, as if they were standard storage drives. By providing a virtual abstraction layer in",
+    false
+  ],
+  [
+    262,
+    "Smooth Window Maximize Animations in GNOME Shell",
+    "GNOME Shell achieves fluid, stutter-free window maximize animations by decoupling visual transitions from client-side layout updates. Rather than waiting for an application to continuously recalculate its layout and draw new content for every intermediat",
+    false
+  ],
+  [
+    261,
+    "Multi-Modal Transit Routing in GNOME Maps",
+    "GNOME Maps provides a modern, privacy-focused platform for navigating complex public transportation networks alongside pedestrian travel. By integrating open-source routing backends with community-driven map data, the application allows users to plan jou",
+    false
+  ],
+  [
+    260,
+    "How GNOME Prevents BadUSB Attacks with USBGuard",
+    "The GNOME desktop environment mitigates BadUSB attacks by integrating with the Linux kernel's USB authorization subsystem through an open-source software framework called USBGuard. By dynamically controlling device authorization states, GNOME automatical",
+    false
+  ],
+  [
+    259,
+    "Using GNOME Boxes with SPICE Virtual Machines",
+    "GNOME Boxes functions as both a local virtualization manager and an efficient remote desktop client designed to interface directly with SPICE-enabled virtual machines. By utilizing the SPICE (Simple Protocol for Independent Computing Environments) protoc",
+    false
+  ],
+  [
+    258,
+    "How GNOME Manages Flatpak Background Permissions",
+    "GNOME manages background application permissions for Flatpak packages through the XDG Desktop Portal framework, specifically using the Background portal. Because Flatpak isolates applications inside sandboxes, programs cannot silently spawn persistent ba",
+    false
+  ],
+  [
+    257,
+    "Role of the GNOME Foundation Board of Directors",
+    "The GNOME Foundation Board of Directors serves as the central governing body responsible for the legal, financial, and strategic oversight of the organization. While the technical direction of the GNOME desktop environment is driven by its open-source co",
+    false
+  ],
+  [
+    256,
+    "How GNOME Shell Manages GPU Memory in Long Sessions",
+    "During extended desktop sessions, GNOME Shell prevents graphics memory exhaustion through a combination of compositor-level texture lifecycle management, disciplined garbage collection bridging, and underlying Linux kernel memory paging. By coordinating",
+    false
+  ],
+  [
+    255,
+    "Progressive Disclosure in GNOME HIG Explained",
+    "This article explores the purpose of progressive disclosure within the GNOME Human Interface Guidelines (HIG), detailing how this design pattern helps developers build clean, efficient, and user-friendly desktop applications. By deferring advanced or inf",
+    false
+  ],
+  [
+    254,
+    "How GNOME Implements Rounded Bottom Corners",
+    "This article explains the technical mechanism behind how the modern GNOME desktop environment renders rounded bottom corners on native application windows. Historically restricted to square edges, native bottom-corner rounding is achieved through the tra",
+    false
+  ],
+  [
+    253,
+    "GNOME Software Home Page vs CLI Package Managers",
+    "GNOME Software’s curated home page bridges the gap between raw package archives and modern application discovery, transforming software management into an intuitive, visual experience. While traditional command-line interface (CLI) tools like APT, DNF,",
+    false
+  ],
+  [
+    252,
+    "How GNOME Auto-Rotation Works with IIO Sensors",
+    "Automatic screen rotation in the GNOME desktop environment relies on a coordinated pipeline between the Linux kernel, userspace background daemons, and the Mutter display compositor. On convertible laptops and tablets, GNOME detects device orientation ch",
+    false
+  ],
+  [
+    251,
+    "GNOME Code of Conduct in GitLab Interactions",
+    "The GNOME Code of Conduct defines the behavioral standards for open-source contributors across the GNOME project, serving as a vital governance framework on its GitLab instance. This article explores how the Code of Conduct shapes developer communication",
+    false
+  ],
+  [
+    250,
+    "GNOME Shell Dash: Running Apps vs Favorites",
+    "The GNOME Shell Dash acts as both an application launcher and a task switcher, dynamically balancing user-defined favorite applications with currently running processes. While favorite apps remain permanently pinned in a fixed order for quick access, run",
+    false
+  ],
+  [
+    249,
+    "GNOME Devhelp: Offline API Documentation Guide",
+    "GNOME Devhelp is a dedicated API documentation browser designed primarily for developers working with the GNOME and GTK ecosystems. This article explores the primary purpose of Devhelp, how it organizes and indexes local documentation, its role in enabli",
+    false
+  ],
+  [
+    248,
+    "How GNOME Manages Fonts with Fontconfig",
+    "This article explains how the GNOME desktop environment manages user typography by leveraging Fontconfig under the hood. It covers how fonts placed in user directories are indexed, how GNOME exposes rendering and configuration options via GSettings, and",
+    false
+  ],
+  [
+    247,
+    "GNOME Office in the Early 2000s Desktop Era",
+    "During the early 2000s, the GNOME Office suite served as a vital, lightweight alternative to monolithic productivity suites, proving that open-source operating systems could handle daily professional office tasks. Rather than packaging software as a sing",
+    false
+  ],
+  [
+    246,
+    "How GNOME Protects Privacy with Camera and Mic Indicators",
+    "The GNOME desktop environment incorporates system-level privacy protections by visually alerting users whenever their microphone or camera is active, identifying the specific application accessing the hardware, and providing immediate kill switches to re",
+    false
+  ],
+  [
+    245,
+    "GNOME Clocks Stopwatch and Multi-Timer Guide",
+    "GNOME Clocks provides built-in time-tracking utilities designed for the GNOME desktop environment, featuring a dedicated stopwatch and a robust multi-timer system. This guide explains how both features function, detailing the precision measurement of the",
+    false
+  ],
+  [
+    244,
+    "How GNOME Handles Mixed DPI Displays",
+    "Managing multiple monitors with varying pixel densities—such as a 4K laptop screen paired with a standard 1080p external monitor—presents unique challenges for desktop environments. GNOME addresses mixed DPI (Dots Per Inch) display arrangements prima",
+    false
+  ],
+  [
+    243,
+    "libnotify in GNOME Desktop Notifications",
+    "The libnotify library serves as the standard client-side interface for creating and dispatching desktop notifications within the GNOME desktop environment. Rather than rendering banners itself, libnotify provides an application programming interface (API",
+    false
+  ],
+  [
+    242,
+    "Integrate Nextcloud and ownCloud in GNOME Files",
+    "GNOME Files, commonly known as Nautilus, natively integrates with self-hosted cloud platforms like ownCloud and Nextcloud to provide direct access to remote data. This integration relies on the GNOME desktop ecosystem’s built-in framework, utilizing GN",
+    false
+  ],
+  [
+    241,
+    "Why GNOME HIG Discourages System Tray Icons",
+    "The GNOME Human Interface Guidelines (HIG) recommend against depending on system tray icons—often referred to as status icons or notification area items—to foster a cleaner, distraction-free desktop experience. By moving away from persistent tray ico",
+    false
+  ],
+  [
+    240,
+    "How GNOME Shell Handles Full-Screen Notifications",
+    "GNOME Shell automatically suppresses intrusive notification banners whenever an application is running in full-screen mode to prevent interruptions during video games, movies, and presentations. Instead of displaying pop-up toasts over active windows, th",
+    false
+  ],
+  [
+    239,
+    "GNOME User Groups in Regional Open Source Advocacy",
+    "GNOME User Groups (GUGs) serve as vital regional engines for the Free and Open Source Software (FOSS) movement. By operating at the grassroots level, these localized communities translate global open-source ideals into practical regional impact. They dri",
+    false
+  ],
+  [
+    238,
+    "How GNOME Exposes Hardware Diagnostic Data",
+    "Modern Linux environments require seamless coordination between the desktop interface and underlying hardware. The GNOME desktop exposes critical system diagnostic data to assist hardware vendors and support teams through centralized graphical interfaces",
+    false
+  ],
+  [
+    237,
+    "What is GNOME Document Scanner Simple Scan?",
+    "GNOME Document Scanner, traditionally known as Simple Scan, is the default scanning utility designed for the GNOME desktop environment on Linux operating systems. This article explains the core purpose of the application, explores its essential features,",
+    false
+  ],
+  [
+    236,
+    "GNOME Hybrid Graphics Switching on Gaming Laptops",
+    "Modern gaming laptops typically pair an energy-efficient integrated GPU (iGPU) with a high-performance discrete GPU (dGPU) to balance battery life and computational power. GNOME manages this hybrid setup natively through dynamic on-demand GPU offloading,",
+    false
+  ],
+  [
+    235,
+    "Testing WebKit Rendering on Linux with Epiphany",
+    "The Epiphany web browser, officially known as GNOME Web, serves as the primary real-world platform for evaluating and validating WebKit rendering performance on Linux systems. By functioning as the flagship implementation of the WebKitGTK port, Epiphany",
+    false
+  ],
+  [
+    234,
+    "How GNOME Shell Prevents Authorization Prompt Spoofing",
+    "GNOME Shell isolates modal authorization prompts from application spoofing attacks by embedding the authentication agent directly into the display compositor and enforcing strict input-handling boundaries. By leveraging Wayland’s security model, intern",
+    false
+  ],
+  [
+    233,
+    "GNOME Text Editor Features for Code and Markdown",
+    "GNOME Text Editor is the modern, streamlined default editing tool built for the GNOME desktop environment, designed to balance lightweight performance with developer-friendly capabilities. This article examines the core features that optimize the applica",
+    false
+  ],
+  [
+    232,
+    "GNOME Screen Dimming and Inactivity Detection",
+    "GNOME manages screen dimming through a coordinated subsystem of session monitors, power management daemons, and display compositor interfaces that track user idle time. When input devices cease reporting activity, GNOME calculates inactivity thresholds a",
+    false
+  ],
+  [
+    231,
+    "GNOME Sound Juicer: Rip Audio CDs to Open Formats",
+    "GNOME Sound Juicer is a streamlined CD ripping tool designed for the GNOME desktop environment that enables users to extract audio tracks from physical compact discs and convert them into digital formats. This article explores the primary purpose of Soun",
+    false
+  ],
+  [
+    230,
+    "GNOME VirtIO-GPU Hardware Acceleration in VMs",
+    "GNOME achieves smooth, hardware-accelerated rendering inside virtual machines by pairing its native Wayland compositor, Mutter, with the VirtIO-GPU paravirtualized graphics standard. Through an interconnected graphics pipeline involving guest-side Mesa d",
+    false
+  ],
+  [
+    229,
+    "GNOME Sysadmin Role in Maintaining GitLab",
+    "The GNOME Sysadmin team is responsible for the operational reliability, security, and scalability of GNOME’s central GitLab instance, which acts as the core collaborative hub for the entire GNOME desktop project. This article examines the vital respons",
+    false
+  ],
+  [
+    228,
+    "How GNOME Handles Fractional Scaling on X11 Apps",
+    "Fractional scaling on modern high-DPI displays offers a balanced interface size, but running legacy X11 applications within GNOME’s Wayland session introduces visual artifacts and blurriness. Because the legacy X11 architecture lacks native concepts of",
+    false
+  ],
+  [
+    227,
+    "GNOME Screenshot CLI in Legacy Desktop Scripting",
+    "The GNOME Screenshot command-line utility served as the primary native tool for programmatically capturing screen contents across Linux environments running the GNOME desktop. In legacy automation workflows, it bridged the gap between the desktop display",
+    false
+  ],
+  [
+    226,
+    "GNOME Shell Smooth Workspace Switching Physics",
+    "This article explores how GNOME Shell achieves fluid, direct-manipulation workspace transitions on modern touchpads. It covers the end-to-end pipeline, starting from raw kernel input events handled by libinput, moving through Mutter and Clutter's gesture",
+    false
+  ],
+  [
+    225,
+    "Tracker-Miners Role in GNOME File Indexing",
+    "The tracker-miners package serves as the primary data extraction and file-crawling engine for the GNOME desktop environment. Working as a companion to the core Tracker database (Tracker SPARQL), tracker-miners automatically navigates local user directori",
+    false
+  ],
+  [
+    224,
+    "GNOME High-Contrast Cursors for Visually Impaired Users",
+    "The GNOME desktop environment provides robust accessibility features designed to help visually impaired users navigate their systems comfortably. Among these tools, cursor management plays a vital role in usability. GNOME achieves effective cursor visibi",
+    false
+  ],
+  [
+    223,
+    "GNOME Shell Bookmark Search Providers Explained",
+    "GNOME Shell’s application search provider plugins for web bookmarks integrate your browser's saved links directly into the desktop's global search interface. This article explains the purpose of these plugins, how they bridge the gap between web browse",
+    false
+  ],
+  [
+    222,
+    "How to Manage GNOME Per-Application Volume Settings",
+    "This article provides a direct overview of how the GNOME desktop environment handles per-application volume controls within its native sound settings panel. It covers the dynamic detection of active audio streams, the role of modern sound servers like Pi",
+    false
+  ],
+  [
+    221,
+    "GNOME Web as an Embedded Browser: Core Features",
+    "GNOME Web, historically known as Epiphany, has emerged as a compelling browser option for embedded systems, single-board computers, and IoT displays. Powered by the WebKitGTK rendering engine, it delivers modern web standards compliance without the steep",
+    false
+  ],
+  [
+    220,
+    "GNOME Smart Card Integration for Enterprise Access",
+    "GNOME integrates smart card readers into enterprise environments by combining modular Linux subsystem services with desktop-level event listeners. By interfacing hardware readers through PC/SC middleware, routing cryptographic operations through PKCS#11",
+    false
+  ],
+  [
+    219,
+    "How the GNOME Usability Project Shaped GNOME 2",
+    "The GNOME Usability Project was the driving force behind the transformation of the GNOME desktop from a fragmented, developer-oriented environment into an intuitive, human-centric interface. By introducing formal usability testing, creating comprehensive",
+    false
+  ],
+  [
+    218,
+    "GNOME Audio Input Monitoring and Noise Cancellation",
+    "This article examines how the GNOME desktop environment handles audio input level monitoring and real-time noise suppression. While GNOME provides the user-facing interface through the GNOME Settings application and top bar indicators, the underlying aud",
+    false
+  ],
+  [
+    217,
+    "GNOME Translation Editor for PO File Localization",
+    "The GNOME Translation Editor, known as Gtranslator, is an enhanced gettext PO (Portable Object) file editor designed specifically for the GNOME desktop environment. Its primary purpose is to provide translators with a streamlined, comfortable graphical i",
+    false
+  ],
+  [
+    216,
+    "How GNOME Settings Handles Bluetooth Low Energy Devices",
+    "GNOME Settings manages Bluetooth Low Energy (BLE) peripherals by integrating the graphical desktop interface with the underlying Linux Bluetooth subsystem, BlueZ. Through a combination of dedicated background services, modern Generic Attribute Profile (G",
+    false
+  ],
+  [
+    215,
+    "How GExiv2 Handles Photo Metadata in GNOME",
+    "GExiv2 is a critical middleware component in the GNOME desktop environment, serving as a GObject-based wrapper around the powerful Exiv2 C++ library. It enables GNOME core applications and background services to effortlessly read, write, and manipulate E",
+    false
+  ],
+  [
+    214,
+    "How GNOME Shell Renders CSD Shadows and Blur",
+    "This article explores the technical pipeline GNOME Shell and its underlying compositor, Mutter, use to draw drop shadows and blur effects around client-side decorated (CSD) windows. It breaks down how the compositor negotiates window geometry, delegates",
+    false
+  ],
+  [
+    213,
+    "GNOME Console Features vs Power User Terminals",
+    "GNOME Console, also known by its package name kgx, is a lightweight, modern terminal emulator designed to provide a straightforward, tabbed command-line environment for everyday users. Unlike feature-heavy terminal emulators designed for power users—su",
+    false
+  ],
+  [
+    212,
+    "How GNOME Manages Hardware Tokens and FIDO2 Keys",
+    "This article provides an overview of how the GNOME desktop environment handles hardware-based security tokens, including PKCS#11 smart cards and FIDO2/U2F security keys. It explains the underlying software architecture, covering the integration between s",
+    false
+  ],
+  [
+    211,
+    "How GNOME Split View Optimizes Screen Real Estate",
+    "GNOME split view mechanisms are designed to maximize usable display space by organizing active application windows into structured, side-by-side layouts. By eliminating the manual micro-management of window dimensions and overlapping clutter, these built",
+    false
+  ],
+  [
+    210,
+    "GNOME Display Server Fallback on Proprietary Hardware",
+    "GNOME manages display server fallback primarily through automated hardware detection rules in the GNOME Display Manager (GDM) and runtime validation within the Mutter compositor. While modern GNOME environments default to the Wayland protocol, systems ut",
+    false
+  ],
+  [
+    209,
+    "GNOME Engagement Team Social Media and News Role",
+    "The GNOME Engagement Team serves as the primary communication bridge between the GNOME Project and the wider open-source community, coordinating outreach, public relations, and community journalism. By managing official social media feeds, drafting press",
+    false
+  ],
+  [
+    208,
+    "How GNOME Automatically Clears Trash and Temp Files",
+    "Modern desktop environments accumulate significant amounts of personal data through routine usage, leaving digital footprints that can compromise user confidentiality. The GNOME desktop environment mitigates this concern through automated privacy control",
+    false
+  ],
+  [
+    207,
+    "How to Debug GNOME Shell UI Live With Looking Glass",
+    "GNOME Shell’s Looking Glass tool serves as an integrated, interactive debugging console and graphical inspector specifically designed for the GNOME desktop environment. It allows extension developers and system tweakers to inspect visual UI elements, e",
+    false
+  ],
+  [
+    206,
+    "Batch Rename Multiple Files in GNOME Files",
+    "GNOME Files, also known as Nautilus, includes a built-in batch renaming tool that allows users to quickly organize and rename multiple files simultaneously. By selecting multiple items and accessing the rename dialog, users can leverage pattern matching",
+    false
+  ],
+  [
+    205,
+    "Libgweather Role in GNOME Weather Forecasts and Radar",
+    "This article examines how the libgweather library acts as the central middleware for meteorological data within the GNOME desktop environment. By managing a global database of locations, abstracting API communication with online weather providers, and fe",
+    false
+  ],
+  [
+    204,
+    "How GNOME Manages Workspaces Across Multiple Monitors",
+    "The GNOME desktop environment handles window organization through an automated, dynamic workspace model paired with configurable multi-monitor behavior. Unlike traditional desktop interfaces that rely on fixed numbers of virtual desktops, GNOME automatic",
+    false
+  ],
+  [
+    203,
+    "GNOME HIG Responsive Window Scaling Explained",
+    "The GNOME Human Interface Guidelines (HIG) specify responsive application window scaling to ensure software adapts fluidly across diverse screen sizes, form factors, and display resolutions. By establishing adaptive layout patterns, the HIG enables appli",
+    false
+  ],
+  [
+    202,
+    "How GNOME Handles App Badges and Unread Counts",
+    "GNOME Shell handles application badges and unread counts differently than traditional desktop operating systems, opting by default not to display numeric badges on pinned Dash icons. While upstream GNOME restricts unread indicators to its centralized not",
+    false
+  ],
+  [
+    201,
+    "How GTK 3 Revolutionized CSS Theming in GNOME",
+    "The migration from GTK 2 to GTK 3 fundamentally reshaped GNOME's visual architecture by replacing rigid, C-based theme engines with a standardized, CSS-driven styling system. This transition modernized interface development, decoupled visual appearance f",
+    false
+  ],
+  [
+    200,
+    "How GNOME Handles Laptop Lid Close Suspension",
+    "When a laptop lid is closed within the GNOME desktop environment, the system initiates a coordinated power-management workflow between low-level hardware listeners and high-level desktop services. GNOME intercepts the hardware switch signal through syste",
+    false
+  ],
+  [
+    199,
+    "GNOME Network Displays for Miracast Desktop Streaming",
+    "GNOME Network Displays is an open-source tool designed to wirelessly stream a Linux desktop session to external monitors, smart TVs, and streaming dongles. By acting as a Miracast source, the application discovers compatible wireless receivers, negotiate",
+    false
+  ],
+  [
+    198,
+    "How GNOME Software Manages Automatic Flatpak Updates",
+    "GNOME Software streamlines application maintenance by automatically handling Flatpak updates in the background. It achieves this by coordinating its background service with the libflatpak API, monitoring network conditions, and taking advantage of Flatpa",
+    false
+  ],
+  [
+    197,
+    "Dex in GNOME: Modern Asynchronous Programming",
+    "This article explores how the Dex library modernizes asynchronous development in GNOME applications by introducing futures, promises, and fiber-based coroutines. Traditionally, asynchronous programming in the GObject and GLib ecosystem has relied heavily",
+    false
+  ],
+  [
+    196,
+    "How GNOME Uses MPRIS for Lock Screen Media Controls",
+    "The GNOME desktop environment allows users to control actively playing media directly from the lock screen without compromising system security. This functionality relies on the Media Player Remote Interfacing Specification (MPRIS), a standardized D-Bus",
+    false
+  ],
+  [
+    195,
+    "Purpose of GNOME Sudoku and GNOME Chess",
+    "GNOME Sudoku and GNOME Chess serve as core staples of the GNOME desktop's default application suite, providing users with accessible, timeless intellectual challenges right out of the box. Beyond basic entertainment, these games demonstrate modern GNOME",
+    false
+  ],
+  [
+    194,
+    "GNOME Shell: Focus-Follows-Mouse vs Click-to-Focus",
+    "GNOME Shell manages window focus through its underlying compositing window manager, Mutter, allowing users to choose between the traditional \"click-to-focus\" model and cursor-driven \"focus-follows-mouse\" policies. While the desktop environment defaults t",
+    false
+  ],
+  [
+    193,
+    "GNOME Terminal Profiles, Colors, and Bash Aliases",
+    "GNOME Terminal is the default command-line emulator for the GNOME desktop environment, built on modern Linux technologies to provide deep customization. This article examines the core architectural features—specifically the Virtual Terminal Emulator (V",
+    false
+  ],
+  [
+    192,
+    "GNOME Power-Saving Heuristics and System Metrics",
+    "Modern versions of the GNOME desktop environment optimize energy consumption by integrating real-time system metrics, hardware telemetry, and user interaction states into a multi-layered heuristic framework. By coordinating services such as UPower, power",
+    false
+  ],
+  [
+    191,
+    "GNOME Developer Center: Libraries and SDK Documentation",
+    "The GNOME Developer Center serves as the centralized technical hub for software engineers building native applications within the GNOME desktop ecosystem. This article outlines the core purpose of the Developer Center in documenting platform libraries an",
+    false
+  ],
+  [
+    190,
+    "GNOME Files Tags, Starred Files, and Search Filters",
+    "GNOME Files, formerly known as Nautilus, provides an integrated system for organizing, prioritizing, and locating documents without relying solely on rigid directory trees. Through the combination of starred bookmarks for instant access, metadata-driven",
+    false
+  ],
+  [
+    189,
+    "How Libinput Handles Multi-Touch Gestures in GNOME",
+    "This article explores the critical role of libinput within the modern GNOME desktop environment, specifically focusing on how it captures, filters, and translates multi-touch inputs into system actions. As the primary input-handling library in the Linux",
+    false
+  ],
+  [
+    188,
+    "How GNOME Runs Background Apps Without System Trays",
+    "Modern versions of the GNOME desktop environment have eliminated legacy system tray icons in favor of a standardized, secure, and user-centric application lifecycle. Instead of allowing persistent tray icons to arbitrarily manage process lifecycles and c",
+    false
+  ],
+  [
+    187,
+    "GNOME Migration from Autotools to Meson",
+    "The migration of the GNOME desktop environment from GNU Autotools to the Meson build system marked a foundational architectural transformation in how modern open-source software is configured, compiled, and maintained. This article examines the core shif",
+    false
+  ],
+  [
+    186,
+    "How GNOME Shell Adjusts Font Contrast Dynamically",
+    "GNOME Shell maintains optimal font contrast across light and dark desktop themes through a coordinated pipeline involving system-wide preference signals, semantic CSS variables, and the Shell Toolkit (St). By decoupling interface colors from hardcoded va",
+    false
+  ],
+  [
+    185,
+    "GNOME ColorHug Open Source Display Calibration",
+    "The GNOME ColorHug project was created to provide the open-source community with an affordable, fully open-source hardware colorimeter for display calibration. Designed primarily for Linux environments, it bridges the gap between high-cost, proprietary d",
+    false
+  ],
+  [
+    184,
+    "Sandboxed Printing in GNOME Using XDG Portals",
+    "Modern Linux desktop security relies heavily on sandboxing to isolate applications, presenting challenges for hardware access such as printing. GNOME resolves this using the XDG Desktop Portal architecture, which decouples the print dialog and CUPS print",
+    false
+  ],
+  [
+    183,
+    "Role of the GNOME Code of Conduct Committee",
+    "The GNOME Code of Conduct Committee is responsible for establishing, monitoring, and enforcing behavioral standards across the GNOME project to ensure a welcoming, inclusive, and professional environment. This article outlines the committee’s primary d",
+    false
+  ],
+  [
+    182,
+    "GNOME Alt-Tab Application Switching Explained",
+    "The GNOME desktop environment handles multitasking through a specialized, application-centric switching overlay triggered by the standard Alt-Tab keyboard shortcut. Rather than cycling through flat lists of individual open windows by default, GNOME group",
+    false
+  ],
+  [
+    181,
+    "How GNOME Archive Manager Extracts Tarballs and Zips",
+    "GNOME Archive Manager, historically known as File Roller, serves as the default graphical user interface (GUI) for archive management in the GNOME desktop environment. This article explains how the tool functions to decompress tarballs and ZIP archives,",
+    false
+  ],
+  [
+    180,
+    "How GNOME Shell Renders Quick Settings Toggles",
+    "This article provides a technical overview of how GNOME Shell renders the Quick Settings toggles introduced in GNOME 43 and refined in subsequent releases. It examines the architectural stack—from the JavaScript API and the Shell Toolkit (St) to the Cl",
+    false
+  ],
+  [
+    179,
+    "Raw Disk Backups with GNOME Disks: Key Features",
+    "GNOME Disks is a built-in storage management utility for Linux environments that offers a robust, graphical method for creating raw disk image backups. This article outlines the specific core features that make GNOME Disks a dependable choice for sector-",
+    false
+  ],
+  [
+    178,
+    "How GNOME Integrates with systemd-oomd",
+    "Modern Linux desktops historically suffered from catastrophic system lockups and unresponsive interfaces when physical memory and swap were exhausted. This article explains how the GNOME desktop environment integrates with systemd-oomd using cgroups v2 a",
+    false
+  ],
+  [
+    177,
+    "WebKitGTK Role in Native GNOME Web Views",
+    "WebKitGTK is the primary engine responsible for rendering web content inside native GNOME client applications, bridging the standard WebKit browser engine with the GTK toolkit. This article explains how WebKitGTK provides developers with a full-featured",
+    false
+  ],
+  [
+    176,
+    "How GTK 4 Spatial Focus Rings Improve Accessibility",
+    "GNOME delivers an intuitive keyboard navigation experience by combining a spatial focus engine with redesigned, high-contrast visual focus rings in GTK 4. By shifting from traditional widget-tree traversal to a visually intuitive coordinate-based model,",
+    false
+  ],
+  [
+    175,
+    "GNOME System Log for Hardware Initialization Bugs",
+    "The GNOME System Log tool serves as an accessible graphical interface for monitoring and analyzing system events, playing a vital role in identifying hardware initialization failures during startup or hotplugging. This article examines how the utility co",
+    false
+  ],
+  [
+    174,
+    "GNOME Keyboard Layout Switching and Compose Keys",
+    "The GNOME desktop environment offers integrated, user-friendly mechanisms for typing in multiple languages and inserting special characters. This article explains how GNOME manages keyboard input sources, the mechanics behind switching between layouts, a",
+    false
+  ],
+  [
+    173,
+    "GNOME CommOps in Event Management and Advocacy",
+    "The GNOME Community Operations (CommOps) committee serves as the operational backbone for the GNOME project’s non-technical initiatives, focusing on community health, public engagement, and organizational growth. By coordinating global events, leading",
+    false
+  ],
+  [
+    172,
+    "How GNOME Software Displays Reviews and Ratings",
+    "GNOME Software provides an integrated, community-driven feedback system that displays user reviews and star ratings directly on an application's details page. By leveraging the Open Desktop Ratings Service (ODRS), GNOME Software aggregates feedback acros",
+    false
+  ],
+  [
+    171,
+    "Purpose of GNOME Sound Recorder Waveform Visualizer",
+    "GNOME Sound Recorder features a built-in waveform visualizer that transforms raw audio data into an intuitive visual graph during playback. This article examines the core purposes of this waveform display, highlighting how it assists users with precise t",
+    false
+  ],
+  [
+    170,
+    "GNOME Wayland Screen Casting Security and Tokens",
+    "Under the Wayland display protocol, direct screen capturing is blocked by design to prevent unauthorized applications from snooping on the desktop. GNOME solves this by routing screen capture requests through an isolated pipeline consisting of D-Bus port",
+    false
+  ],
+  [
+    169,
+    "Role of GNOME Panel in GNOME 2 Workflow",
+    "The GNOME panel was the cornerstone of the traditional GNOME 2 desktop environment, defining both how users navigated their systems and how they tailored their workspaces. Serving as the primary interface for launching applications, managing active windo",
+    false
+  ],
+  [
+    168,
+    "GNOME Wayland Direct Scanout for Gaming Performance",
+    "GNOME enhances high-performance gaming on Wayland primarily through a display pipeline optimization known as direct scanout. Implemented in GNOME's compositor, Mutter, direct scanout allows fullscreen games to bypass the compositor's rendering pass and s",
+    false
+  ],
+  [
+    167,
+    "Architectural Purpose of GIO in GLib and GNOME",
+    "GIO is the modern I/O, networking, and platform integration layer of the GLib library, serving as the foundational middleware for the GNOME desktop environment. This article examines the architectural role of GIO within the GLib ecosystem, highlighting h",
+    false
+  ],
+  [
+    166,
+    "How GNOME Shell Groups App Icons into Folders",
+    "GNOME Shell provides an intuitive, clutter-free application grid that allows users to organize software into custom app folders. This article explains the mechanisms behind this functionality, detailing how GNOME handles drag-and-drop folder creation, ma",
+    false
+  ],
+  [
+    165,
+    "GNOME Web Tracking Protection vs Mainstream Browsers",
+    "GNOME Web, also known as Epiphany, provides a privacy-first web experience by combining WebKit's native security architecture with an open-source philosophy free from commercial advertising incentives. While mainstream proprietary browsers like Google Ch",
+    false
+  ],
+  [
+    164,
+    "GNOME Automatic Time Zone Detection with GeoClue",
+    "This article explains how the GNOME desktop environment automates time zone configuration using GeoClue and system-level services. It covers the technical pipeline from initial geographic coordinate discovery to the final updates applied to system clocks",
+    false
+  ],
+  [
+    163,
+    "Managing GPG and SSH Keys with GNOME Seahorse",
+    "GNOME Seahorse, often labeled simply as \"Passwords and Keys\" in Linux desktop environments, serves as a centralized graphical interface for managing encryption keys, credentials, and keyrings. This article explains how Seahorse facilitates the creation,",
+    false
+  ],
+  [
+    162,
+    "GNOME Mouse Speed, Acceleration, and Scrolling",
+    "This article explains how the GNOME desktop environment manages input preferences for mice and touchpads. Users can configure pointer speed, acceleration profiles, and natural scrolling through the built-in Settings application, the GNOME Tweaks utility,",
+    false
+  ],
+  [
+    161,
+    "Role of Clutter-Gst in GNOME Shell Video Rendering",
+    "The clutter-gst library serves as the critical integration bridge between the GStreamer multimedia framework and the Clutter scene-graph engine powering GNOME Shell. By translating decoded video streams directly into hardware-accelerated Clutter actors a",
+    false
+  ],
+  [
+    160,
+    "How GNOME Manages VA-API and VDPAU Video Decoding",
+    "This article provides an overview of how the GNOME desktop environment handles hardware-accelerated video decoding through the VA-API and VDPAU interfaces. It covers the underlying architectural pipeline—from multimedia frameworks and display servers t",
+    false
+  ],
+  [
+    159,
+    "GNOME Recipes and Community Cooking App Testing",
+    "GNOME Recipes serves as a practical, open-source recipe manager that doubles as a real-world testing ground for community-contributed application design, content curation, and desktop integration. By analyzing how non-developer contributions fit into ope",
+    false
+  ],
+  [
+    158,
+    "How GNOME Shell Manages Do Not Disturb Notifications",
+    "This article examines how GNOME Shell handles desktop alerts when the \"Do Not Disturb\" (DND) feature is enabled. It covers the suppression of visible pop-ups, the silent logging of incoming alerts to the central message tray, the handling of high-priorit",
+    false
+  ],
+  [
+    157,
+    "How GNOME i18n Expands Global Open Source Access",
+    "The GNOME Internationalization (i18n) community plays a critical role in globalizing open-source software by eliminating language barriers for computer users worldwide. By translating core desktop environments, applications, and documentation into dozens",
+    false
+  ],
+  [
+    156,
+    "Remote App Delivery in GNOME Using XDG Desktop Portals",
+    "This article examines how the GNOME desktop environment facilitates seamless and secure remote application delivery using XDG Desktop Portal bridges. By decoupling applications from direct host access and bridging communication through standardized D-Bus",
+    false
+  ],
+  [
+    155,
+    "GNOME OS Build Pipeline for Daily Testing",
+    "The GNOME OS build pipeline serves as an automated continuous delivery system that compiles, packages, and deploys daily development branches of the GNOME desktop stack into a functional, bootable operating system. By integrating the latest commits acros",
+    false
+  ],
+  [
+    154,
+    "How GNOME Handles Monitor Hotplugging and Displays",
+    "GNOME manages monitor hotplugging and multi-display arrangements through a coordinated stack involving the Linux kernel, the Mutter compositor, and the GNOME Control Center. When displays are connected or reconfigured, the system automatically detects ha",
+    false
+  ],
+  [
+    153,
+    "Role of JSON-GLib in GNOME System Services",
+    "This article provides an overview of JSON-GLib's essential function as the primary JSON serialization and parsing engine within the GNOME desktop ecosystem. It examines how the library translates native C and GObject data structures into interchange form",
+    false
+  ],
+  [
+    152,
+    "How GNOME Adapts Typography With Inter and Cantarell",
+    "This article explores how the GNOME desktop environment refines its user interface typography by transitioning from Cantarell to customized builds of Inter. It examines the technical and visual adaptations made to font metrics, OpenType features, and ver",
+    false
+  ],
+  [
+    151,
+    "What Is the GNOME Character Map (Gucharmap)?",
+    "The GNOME Character Map, officially known as Gucharmap, is a dedicated desktop utility designed to help users locate, inspect, and copy specialized characters and symbols defined by the Unicode standard. This article explains the primary purpose of Gucha",
+    false
+  ],
+  [
+    150,
+    "How GNOME Shell Isolates Broken Extensions",
+    "GNOME Shell extensions run directly within the compositor process, making true process-level sandboxing impossible without architectural redesigns. To prevent faulty or malicious code from bringing down the entire desktop session, GNOME Shell relies on J",
+    false
+  ],
+  [
+    149,
+    "How Miguel de Icaza and Nat Friedman Shaped GNOME",
+    "In August 1997, Miguel de Icaza and Nat Friedman announced the GNOME project to build a completely free, open-source desktop environment for Unix-like systems. Originally conceived as a direct response to the proprietary licensing issues surrounding the",
+    false
+  ],
+  [
+    148,
+    "GNOME User Avatars and Enterprise Accounts Guide",
+    "The GNOME desktop environment combines user-friendly graphical tools with low-level system daemons to manage identity and authentication. This article outlines how GNOME handles user avatar customization through AccountsService and the GNOME Control Cent",
+    false
+  ],
+  [
+    147,
+    "GNOME Builder for C, Rust, and Python Development",
+    "GNOME Builder is the official integrated development environment (IDE) designed specifically for creating native GNOME desktop applications. By pairing a streamlined interface with deep system integration, it removes much of the friction associated with",
+    false
+  ],
+  [
+    146,
+    "GNOME Per-Application Volume Control Explained",
+    "This article explores how the GNOME desktop environment dynamically manages audio stream volumes for individual applications. It covers the interaction between the GNOME user interface and underlying sound servers like PipeWire and PulseAudio, explaining",
+    false
+  ],
+  [
+    145,
+    "GUPnP Role in GNOME UPnP Media Sharing",
+    "The GUPnP library serves as the core framework for implementing Universal Plug and Play (UPnP) and Digital Living Network Alliance (DLNA) technologies within the GNOME desktop environment. It provides developers with an asynchronous, object-oriented API",
+    false
+  ],
+  [
+    144,
+    "GNOME Shell Window Tiling and Edge Snapping",
+    "GNOME Shell provides built-in window management features that allow users to organize their workspace efficiently using half-tiling and edge snapping. Handled internally by GNOME’s compositing window manager, Mutter, these features rely on predefined k",
+    false
+  ],
+  [
+    143,
+    "How the GTK Scene Graph (GSK) Improves GNOME Apps",
+    "The GTK Scene Graph (GSK) serves as the modern rendering engine introduced in GTK 4, fundamentally transforming how visual elements are processed and displayed in GNOME applications. By shifting from an immediate-mode, CPU-bound drawing model to a retain",
+    false
+  ],
+  [
+    142,
+    "Managing LUKS Encrypted Drives in GNOME",
+    "This guide explains how the GNOME desktop environment natively manages Linux Unified Key Setup (LUKS) encrypted drives through GNOME Files and GNOME Disks. By leveraging underlying system daemons like UDisks2, GNOME provides an intuitive graphical interf",
+    false
+  ],
+  [
+    141,
+    "GNOME Firmware: Managing Hardware Updates via LVFS",
+    "GNOME Firmware is a dedicated graphical utility that allows Linux users to inspect, update, and manage the firmware of connected hardware peripherals and system components. Operating as a front-end interface for the fwupd system daemon, it directly conne",
+    false
+  ],
+  [
+    140,
+    "How GNOME Updates Systems via PackageKit and OSTree",
+    "GNOME delivers seamless and stable system updates by moving away from risky in-session patching toward robust offline update models. Through GNOME Software, the desktop environment coordinates with PackageKit on traditional distributions and OSTree on im",
+    false
+  ],
+  [
+    139,
+    "How GNOME Design Team Vets Core App Interfaces",
+    "The GNOME Design Team serves as both a mentor and a quality gatekeeper for software aspiring to become a GNOME Core application. Before an app is accepted into the core suite, the design team rigorously evaluates its user interface, workflows, and adhere",
+    false
+  ],
+  [
+    138,
+    "GNOME Headless RDP Sessions in Enterprise Infrastructure",
+    "Modern enterprise infrastructure increasingly requires secure, scalable remote access to Linux desktop environments without the overhead of physical displays or third-party VDI software. GNOME facilitates headless desktop sessions through its native inte",
+    false
+  ],
+  [
+    137,
+    "The Purpose of the GNOME Circle Initiative",
+    "The GNOME Circle initiative is a program designed to champion and support high-quality third-party applications and libraries built for the GNOME desktop environment. By spotlighting independent developers who utilize GNOME technologies, the initiative e",
+    false
+  ],
+  [
+    136,
+    "GNOME Background Portal Permissions for Location and Webcam",
+    "GNOME restricts unauthorized access to sensitive hardware and user data by utilizing the XDG Desktop Portal framework, a centralized permission store, and background runtime monitors. When sandboxed applications (such as Flatpaks) request access to webca",
+    false
+  ],
+  [
+    135,
+    "How AppStream Powers Metadata in GNOME Software",
+    "The AppStream specification serves as the universal metadata standard that bridges upstream software projects and modern Linux software centers like GNOME Software. By defining a consistent format for rich application data, AppStream enables GNOME Softwa",
+    false
+  ],
+  [
+    134,
+    "GNOME Graphic Tablet and Stylus Mapping Guide",
+    "GNOME provides built-in support for external graphic tablets and styluses directly through the GNOME Control Center. Powered by underlying Linux libraries like libwacom and libinput, the desktop environment automatically detects compatible hardware and e",
+    false
+  ],
+  [
+    133,
+    "Why GNOME HIG Replaced Traditional Menu Bars",
+    "The GNOME Human Interface Guidelines (HIG) moved away from traditional application menu bars—such as \"File,\" \"Edit,\" and \"View\"—in favor of unified header bars and contextual action menus. This architectural shift was designed to maximize screen real",
+    false
+  ],
+  [
+    132,
+    "Responsive Window Resizing in GNOME Wayland",
+    "Responsive window resizing in modern Wayland environments relies on a tightly coordinated architecture between the compositor and client applications. In the GNOME desktop environment, responsive resizing is primarily driven by Mutter, GNOME’s Wayland",
+    false
+  ],
+  [
+    131,
+    "The Role of libsoup in Core GNOME Services",
+    "The libsoup library is the native HTTP client and server library for the GNOME desktop environment, providing seamless networking capabilities built on GLib and GObject. This article examines the critical role libsoup plays across the GNOME ecosystem, de",
+    false
+  ],
+  [
+    130,
+    "How GNOME Unified Search Works for Files and Apps",
+    "The GNOME desktop environment delivers a unified search experience through a modular, asynchronous architecture built into the Activities Overview. By leveraging system daemons, file indexing frameworks, and a standardized inter-process communication pro",
+    false
+  ],
+  [
+    129,
+    "GNOME MultiWriter: Write ISOs to Multiple USB Drives",
+    "GNOME MultiWriter is a specialized Linux utility designed to write an ISO, IMG, or raw disk image to multiple USB drives simultaneously. Instead of requiring users to manually flash drives one by one, this tool automates and parallelizes the process acro",
+    false
+  ],
+  [
+    128,
+    "How to Get a Traditional Taskbar in GNOME",
+    "GNOME’s modern interface favors a minimalist, workspace-driven workflow that hides open applications behind an overview screen, which can be a difficult adjustment for users accustomed to traditional desktop environments like Windows or KDE Plasma. GNO",
+    false
+  ],
+  [
+    127,
+    "GNOME 3 Desktop Icons Controversy Explained",
+    "When GNOME 3 launched in April 2011, its radical departure from the traditional desktop metaphor sparked one of the fiercest controversies in Linux history, primarily driven by the removal of desktop icons. The redesign replaced the familiar, customizabl",
+    false
+  ],
+  [
+    126,
+    "Managing System Modal Dialogs in GNOME Shell",
+    "This article examines how GNOME Shell handles system modal dialogs and authentication prompt overlays at an architectural level. It covers the underlying mechanisms that capture user input, the role of the Mutter compositor, the JavaScript framework mana",
+    false
+  ],
+  [
+    125,
+    "GNOME Dictionary and DICT Server Lookups Explained",
+    "GNOME Dictionary functions as a dedicated graphical front-end that queries online and local dictionaries using the DICT protocol (RFC 2229). By connecting to DICT servers, the application allows users to search across multiple reference databases simulta",
+    false
+  ],
+  [
+    124,
+    "GNOME Cellular Configuration via ModemManager",
+    "The GNOME desktop environment provides seamless cellular broadband integration through a unified software stack consisting of the GNOME Control Center, NetworkManager, and ModemManager. By abstracting complex cellular hardware protocols behind system D-B",
+    false
+  ],
+  [
+    123,
+    "Flatpak Runtimes in Linux Software Distribution",
+    "Flatpak runtimes provide a standardized execution environment that decouples applications from the underlying Linux distribution. By offering shared sets of essential libraries and dependencies, runtimes like org.gnome.Platform solve the long-standing pr",
+    false
+  ],
+  [
+    122,
+    "Switch Audio Devices in GNOME Quick Settings",
+    "This article provides a comprehensive overview of how modern GNOME desktop environments handle audio sink (output) and source (input) switching directly from the Quick Settings menu. Starting with GNOME 43, the desktop environment overhauled its system s",
+    false
+  ],
+  [
+    121,
+    "What Is GNOME Tecla Keyboard Layout Viewer?",
+    "This article explores GNOME Tecla, the dedicated keyboard layout preview tool developed for the GNOME desktop environment. It explains Tecla's core functions, how it visualizes localized and international key assignments, and the role it plays in simplif",
+    false
+  ],
+  [
+    120,
+    "How GNOME Manages Power Profiles",
+    "GNOME manages system power profiles through a dedicated background service called power-profiles-daemon, which bridges the desktop interface with Linux kernel power management interfaces. By translating user selections—Balanced, Power Saver, and Perfor",
+    false
+  ],
+  [
+    119,
+    "GNOME Shell vs Ubuntu Dock: Key Differences Explained",
+    "This article compares upstream GNOME Shell with downstream desktop implementations, focusing specifically on Ubuntu and its modified Ubuntu Dock. While both desktop environments share the same core codebase, they differ significantly in design philosophy",
+    false
+  ],
+  [
+    118,
+    "GNOME Crash Reporting: Using ABRT and GNOME Logs",
+    "The GNOME desktop environment handles application failures through an integrated pipeline that captures, analyzes, and visualizes crash data without disrupting the user experience. By leveraging system-level crash detection tools such as the Automatic Bu",
+    false
+  ],
+  [
+    117,
+    "GNOME User Guide: Onboarding New Linux Desktop Users",
+    "Transitioning to a Linux operating system can be intimidating for beginners accustomed to Windows or macOS. The GNOME User Guide serves as the foundational documentation integrated directly into the desktop, designed to bridge this knowledge gap. This ar",
+    false
+  ],
+  [
+    116,
+    "GNOME Color Blindness and High Contrast Settings",
+    "GNOME provides robust native accessibility tools designed to support users with visual impairments, featuring built-in high-contrast themes and system-wide color-blindness filters. This article explains how the desktop environment natively handles visual",
+    false
+  ],
+  [
+    115,
+    "Role of CORBA in GNOME 1.x Architecture",
+    "In the late 1990s, the nascent GNOME project adopted the Common Object Request Broker Architecture (CORBA) as a foundational middleware layer to achieve seamless component reusability, inter-process communication (IPC), and programming language neutralit",
+    false
+  ],
+  [
+    114,
+    "GNOME Shell Dynamic Panel Transparency Explained",
+    "Dynamic panel transparency in GNOME Shell alters the opacity of the top bar based on whether a window is maximized or touching the panel edge. This feature relies on real-time event tracking through GNOME's compositor (Mutter), state evaluation logic in",
+    false
+  ],
+  [
+    113,
+    "GNOME Pomodoro Productivity Tracker Overview",
+    "GNOME Pomodoro is a dedicated time-management utility and shell extension designed for the GNOME desktop environment on Linux. This article explores the core purpose of GNOME Pomodoro, detailing how it leverages the Pomodoro Technique to structure work r",
+    false
+  ],
+  [
+    112,
+    "How GNOME Boxes Clipboard Sharing Works",
+    "GNOME Boxes enables seamless bidirectional clipboard sharing between a physical host and a virtual guest by integrating the SPICE display protocol with dedicated guest-level agents. This mechanism allows users to copy text, and in some cases files or ima",
+    false
+  ],
+  [
+    111,
+    "The Role of the GNOME Documentation Team",
+    "The GNOME Documentation Team is responsible for creating, maintaining, and evolving the written resources that support the entire GNOME desktop ecosystem. Serving both everyday users and software developers, the team bridges the gap between complex softw",
+    false
+  ],
+  [
+    110,
+    "How GNOME Manages Default Browsers and MIME Types",
+    "The GNOME desktop environment manages default web browsers and file associations by leveraging standardized Freedesktop.org specifications. Through a combination of MIME-type databases, .desktop entry files, user-specific override lists, and GNOME-specif",
+    false
+  ],
+  [
+    109,
+    "GNOME Adwaita vs Clearlooks: Key Design Changes",
+    "When GNOME 3 launched in 2011, it replaced the long-standing Clearlooks theme from GNOME 2 with a completely redesigned default theme called Adwaita. This transition marked a fundamental shift in the GNOME desktop philosophy, moving away from traditional",
+    false
+  ],
+  [
+    108,
+    "How GNOME Integrates Smart Cards and SSSD Directory Logins",
+    "This article explains how the GNOME desktop environment works in tandem with the System Security Services Daemon (SSSD) and smart card infrastructure to enable secure, centralized authentication. By bridging low-level hardware drivers, the Pluggable Auth",
+    false
+  ],
+  [
+    107,
+    "Architectural Role of GNOME Display Manager (GDM)",
+    "The GNOME Display Manager (GDM) serves as the primary gateway between the underlying operating system initialization and the user-facing graphical environment. During system boot, GDM's architectural purpose is to manage display servers, isolate login cr",
+    false
+  ],
+  [
+    106,
+    "GNOME Shell Smooth Animations with Clutter Framework",
+    "GNOME Shell delivers a fluid, responsive user experience by combining hardware-accelerated rendering with Clutter's implicit animation framework. Clutter, integrated directly into GNOME's Mutter window manager, abstracts complex animation math away from",
+    false
+  ],
+  [
+    105,
+    "Libsecret: Secure Password Storage in GNOME",
+    "The libsecret library is the standard client-side interface used across the GNOME desktop environment to store, query, and retrieve passwords and authentication tokens securely. By implementing the cross-desktop Secret Service API specification over D-Bu",
+    false
+  ],
+  [
+    104,
+    "GNOME Fingerprint Authentication with fprintd",
+    "GNOME delivers seamless biometric authentication by integrating the fprintd daemon and its underlying library, libfprint, directly into core desktop components. This integration allows users to enroll their fingerprints through the native GNOME Settings",
+    false
+  ],
+  [
+    103,
+    "Synchronize Captions with GNOME Subtitles",
+    "GNOME Subtitles is an open-source subtitle editor for the Linux desktop that provides robust tools for timing and aligning text with multimedia. This guide outlines the core features GNOME Subtitles offers to accurately synchronize closed captions and su",
+    false
+  ],
+  [
+    102,
+    "How GNOME Manages UI Audio Feedback via libcanberra",
+    "This article examines how the GNOME desktop environment produces user interface (UI) audio cues and event sounds using the libcanberra library. It covers the architectural relationship between GNOME, the XDG Sound Theme specifications, the GTK toolkit, a",
+    false
+  ],
+  [
+    101,
+    "GObject Introspection: Binding GNOME to Python and JS",
+    "GObject Introspection (GI) is a middleware layer that bridges C-based GNOME libraries with high-level languages like Python and JavaScript. Instead of requiring developers to manually write and maintain separate bindings for each language, GObject Intros",
+    false
+  ],
+  [
+    100,
+    "How GNOME Shell Uses CSS for Interface Theming",
+    "GNOME Shell separates its interface structure from visual presentation by using Cascading Style Sheets (CSS) to define the appearance of core desktop elements. Built on top of the Clutter toolkit and the Shell Toolkit (St), the desktop environment parses",
+    false
+  ],
+  [
+    99,
+    "Purpose of GNOME Community Engagement Challenge",
+    "The GNOME Foundation Community Engagement Challenge was designed to stimulate community growth, foster diversity, and attract new contributors to the Free and Open Source Software (FOSS) ecosystem. Launched as a multi-stage competition with monetary priz",
+    false
+  ],
+  [
+    98,
+    "How to Use GNOME Touch Gestures for Workspaces",
+    "GNOME integrates modern gesture support directly into its desktop environment, allowing users to navigate workspaces, view active applications, and access the application grid seamlessly. Powered by the Wayland display server protocol and the libinput li",
+    false
+  ],
+  [
+    97,
+    "Pango in GNOME: Text Layout and Internationalization",
+    "Pango serves as the foundational text layout and rendering library within the GNOME desktop environment, ensuring that text is displayed legibly, consistently, and accurately across diverse languages and scripts. By bridging the gap between raw Unicode s",
+    false
+  ],
+  [
+    96,
+    "How GNOME Sandboxes Flatpak File Access",
+    "GNOME isolates Flatpak applications from direct filesystem access by combining Linux kernel-level containerization with an external portal-based permission system. Flatpak applications run in restricted environments created via Bubblewrap, which strip th",
+    false
+  ],
+  [
+    95,
+    "How GNOME Yelp Renders Mallard Documentation",
+    "GNOME Help, known internally as Yelp, is the default documentation viewer for the GNOME desktop environment. Its primary purpose when working with Mallard-based documentation is to resolve, assemble, and render topic-oriented help files dynamically for e",
+    false
+  ],
+  [
+    94,
+    "GNOME Wayland and XWayland Drag and Drop Explained",
+    "GNOME manages drag-and-drop operations between native Wayland applications and legacy XWayland clients through a translation layer integrated into its compositor and window manager, Mutter. Because Wayland and the X Window System rely on completely diffe",
+    false
+  ],
+  [
+    93,
+    "Understanding the Role of GLib in GNOME",
+    "GLib serves as the core foundational system library that underpins the GNOME desktop environment and its application ecosystem. Originally developed as part of the GIMP Toolkit (GTK), it was separated into an independent library to provide essential C-la",
+    false
+  ],
+  [
+    92,
+    "How GNOME Manages System Shortcuts and Hotkeys",
+    "The GNOME desktop exposes system-level keyboard shortcuts and window navigation hotkeys primarily through Mutter, its integrated window manager and Wayland compositor, backed by the GSettings configuration system. By centralizing shortcut handling at the",
+    false
+  ],
+  [
+    91,
+    "Significance of the Outreachy Internship Program",
+    "The Outreachy internship program is a landmark initiative designed to promote diversity and inclusion within free and open-source software (FOSS). Originally established within the GNOME community, Outreachy provides paid, remote, three-month internships",
+    false
+  ],
+  [
+    90,
+    "How GNOME Integrates Night Light Scheduling",
+    "GNOME features a built-in color management system called Night Light, designed to reduce blue light exposure during evening hours to decrease eye strain and prevent sleep disruption. The desktop environment natively handles this transition by modifying d",
+    false
+  ],
+  [
+    89,
+    "Why GNOME Replaced Bonobo: Architectural Benefits",
+    "The GNOME project's transition away from the Bonobo component model marked one of the most critical evolutions in the desktop environment's history. By phasing out Bonobo—a heavyweight framework built on top of the Common Object Request Broker Architec",
+    false
+  ],
+  [
+    88,
+    "How GNOME Manages Idle Timeouts, Locking, and Privacy",
+    "The GNOME desktop environment handles display power management, user authentication, and visual privacy through a coordinated architecture involving Mutter, the GNOME Settings Daemon, and GNOME Shell. This article examines how GNOME monitors system inact",
+    false
+  ],
+  [
+    87,
+    "GNOME Snapshot Replaces Cheese as Default Camera",
+    "GNOME Snapshot represents a modern transition for the GNOME desktop environment, officially stepping in to replace Cheese as the default camera application. Designed from the ground up using current GNOME design standards, Snapshot addresses long-standin",
+    false
+  ],
+  [
+    86,
+    "How GNOME Shell Handles Multi-Monitor Workspaces",
+    "GNOME Shell manages multi-monitor workspace switching through two distinct operational modes: keeping workspaces confined to the primary display or spanning them across all connected screens. By default, GNOME isolates virtual workspace switching to the",
+    false
+  ],
+  [
+    85,
+    "Purpose of GNOME Classic Mode in Enterprise Linux",
+    "GNOME Classic mode was introduced to provide conservative enterprise users with a familiar, traditional desktop workflow following the disruptive launch of GNOME 3. By using a curated set of GNOME Shell extensions, Classic mode simulated the two-panel la",
+    false
+  ],
+  [
+    84,
+    "How GNOME Achieves Crisp Font Rendering",
+    "The GNOME desktop environment delivers crisp, legible text across a wide variety of displays by coordinating a specialized text rendering pipeline. At the core of this system are two critical libraries: HarfBuzz, which handles complex text shaping and la",
+    false
+  ],
+  [
+    83,
+    "How to Preview and Install Fonts in GNOME",
+    "GNOME Fonts, internally known as gnome-font-viewer, is the default graphical utility designed to inspect, preview, and install typographic files on the GNOME desktop environment. This article outlines how the application functions, detailing its capabili",
+    false
+  ],
+  [
+    82,
+    "GNOME Notification System: Banners and Lists",
+    "This article explores how the GNOME desktop environment manages system and application alerts through non-intrusive banners and an integrated notification list. It covers the mechanics of top-bar banner pop-ups, the behavior of the central message tray w",
+    false
+  ],
+  [
+    81,
+    "GNOME Disk Usage Analyzer Baobab Explained",
+    "The GNOME Disk Usage Analyzer, officially known as Baobab, is a graphical utility designed to inspect, visualize, and monitor storage capacity on Linux systems. This article explains the core purpose of Baobab, detailing how it scans drives, visualizes d",
+    false
+  ],
+  [
+    80,
+    "How GNOME Shell Offloads Rendering to Threads",
+    "GNOME Shell maintains a smooth, responsive desktop environment by decoupling its user interface logic, compositing, and display hardware updates across multiple specialized threads. Historically, GNOME Shell and its underlying window manager, Mutter, exe",
+    false
+  ],
+  [
+    79,
+    "Role of GNOME Advisory Board for Enterprise Sponsors",
+    "The GNOME Advisory Board serves as a vital bridge between the commercial organizations that invest in open-source infrastructure and the community of developers who build the desktop environment. By providing a structured forum for non-voting communicati",
+    false
+  ],
+  [
+    78,
+    "Integrate Nextcloud and Microsoft 365 in GNOME",
+    "The GNOME desktop environment provides seamless integration for cloud services like Nextcloud and Microsoft 365 through a centralized subsystem known as GNOME Online Accounts (GOA). By linking these accounts at the desktop level, users automatically conn",
+    false
+  ],
+  [
+    77,
+    "The Historical Significance of GNOME 1.0 in Open Source",
+    "Released on March 3, 1999, GNOME 1.0 marked a transformative milestone in open-source computing by delivering the first fully free, viable desktop environment for Unix-like operating systems. Initiated as a direct response to licensing controversies surr",
+    false
+  ],
+  [
+    76,
+    "GNOME Native Screenshot and Screen Recording Explained",
+    "GNOME manages screen capture and recording directly within GNOME Shell to provide a unified, secure, and performant user interface under modern display protocols. This article covers the architecture behind this system, detailing how the compositor handl",
+    false
+  ],
+  [
+    75,
+    "What Is the GNOME Accessibility Toolkit (ATK)?",
+    "The GNOME Accessibility Toolkit (ATK) is a foundational software library designed to make graphical user interfaces accessible to users with disabilities. By providing a standardized set of interfaces for user interface components, ATK enables assistive",
+    false
+  ],
+  [
+    74,
+    "How GNOME Videos Handles Hardware Acceleration",
+    "GNOME Videos, traditionally known as Totem, serves as the default media player for the GNOME desktop environment, relying on modular multimedia frameworks to handle complex audio and video tasks. This article explores the internal architecture of Totem,",
+    false
+  ],
+  [
+    73,
+    "GNOME Music vs Full Media Management Suites",
+    "GNOME Music stands apart from traditional, full-featured media management suites by prioritizing extreme minimalism, automated organization, and seamless desktop integration over expansive utility. While power-user applications like Rhythmbox, Clementine",
+    false
+  ],
+  [
+    72,
+    "GNOME Power Management with power-profiles-daemon",
+    "This article explores how the modern GNOME desktop environment manages system power states and optimizes battery life through its integration with power-profiles-daemon. It covers the system architecture, how the D-Bus communication works between GNOME S",
+    false
+  ],
+  [
+    71,
+    "GNOME Usage vs System Monitor: A Simple Alternative",
+    "GNOME Usage is designed as a streamlined, modern alternative to the traditional GNOME System Monitor, prioritizing essential diagnostics over granular technical data. This article examines how GNOME Usage fulfills this role within the GNOME desktop envir",
+    false
+  ],
+  [
+    70,
+    "How the GNOME Translation Project Localizes the Desktop",
+    "The GNOME Translation Project ensures consistent, high-quality localization across dozens of languages through a structured framework of autonomous language teams, standard toolsets, and strict release schedules. By utilizing web-based tracking platforms",
+    false
+  ],
+  [
+    69,
+    "The Role of Vala in GNOME Development",
+    "Vala is an object-oriented programming language created to bring modern language features to the GNOME desktop environment without sacrificing the speed and memory efficiency of C. By providing modern syntax akin to C# or Java while targeting the GNOME G",
+    false
+  ],
+  [
+    68,
+    "GNOME Shell Top Bar Design and Balance",
+    "The GNOME Shell top bar balances notifications, system status, and application menus by dividing the screen edge into three distinct, predictable functional zones: left, center, and right. By separating tasks based on their purpose—navigation on the le",
+    false
+  ],
+  [
+    67,
+    "GNOME Connections for Quick VNC and RDP Access",
+    "GNOME Connections is a lightweight remote desktop client designed specifically for the GNOME desktop environment on Linux. This article explores the primary purpose of GNOME Connections, how it streamlines remote desktop sessions using the Virtual Networ",
+    false
+  ],
+  [
+    66,
+    "GNOME Bluetooth Pairing and Audio Routing with BlueZ",
+    "This article explains how the GNOME desktop environment orchestrates Bluetooth device pairing and audio routing using BlueZ and modern Linux audio servers. It details the underlying architecture, from user-initiated interactions in GNOME Shell to D-Bus c",
+    false
+  ],
+  [
+    65,
+    "GNOME Color Manager: Calibration and ICC Profiles",
+    "GNOME Color Manager is a core system utility in the GNOME desktop environment designed to provide accurate and consistent color reproduction across screens and connected devices. This article explains how the tool operates, how it communicates with hardw",
+    false
+  ],
+  [
+    64,
+    "GTK 4 Rendering Performance: Vulkan and OpenGL",
+    "GTK 4 represents a major architectural leap forward for the GNOME desktop environment, fundamentally redesigning how user interfaces are rendered to deliver smoother animations, lower latency, and reduced power consumption. By transitioning from legacy C",
+    false
+  ],
+  [
+    63,
+    "Cairo 2D Graphics Engine in Older GNOME Stacks",
+    "This article explores the foundational role that Cairo played as the primary 2D vector graphics rendering engine within older GNOME desktop stacks, specifically throughout the GNOME 2.x and early GNOME 3.x eras. It outlines the architectural limitations",
+    false
+  ],
+  [
+    62,
+    "How GNOME Logs Displays Systemd Journal Entries",
+    "GNOME Logs serves as a user-friendly graphical front end for the systemd journal, allowing users and administrators to view, filter, and analyze system events without running complex command-line queries. By interfacing directly with systemd-journald, th",
+    false
+  ],
+  [
+    61,
+    "GNOME Shell Search Provider Architecture Explained",
+    "The GNOME Shell search provider architecture is a standardized desktop integration framework that allows independent, external applications to plug directly into the GNOME Shell overview search bar. By leveraging D-Bus inter-process communication, this a",
+    false
+  ],
+  [
+    60,
+    "How GNOME Extensions One-Click Installation Works",
+    "The GNOME Extensions website facilitates seamless, one-click installation of community add-ons by bridging the gap between web browsers and the local desktop environment. This capability relies on a multi-tiered communication pipeline consisting of a ded",
+    false
+  ],
+  [
+    59,
+    "GNOME Application Profiling Tools Using Sysprof",
+    "Profiling application performance within the GNOME desktop environment relies heavily on Sysprof, a system-wide sampling profiler designed to capture call trees, memory usage, CPU load, and system events with low overhead. The GNOME ecosystem integrates",
+    false
+  ],
+  [
+    58,
+    "How GNOME Supports Variable Refresh Rates",
+    "Variable Refresh Rate (VRR) support in GNOME allows compatible monitors to synchronize their refresh rates with the frame rate of applications, drastically reducing screen tearing and motion stutter during gaming and video playback. Implemented directly",
+    false
+  ],
+  [
+    57,
+    "The Purpose of GNOME Tour for New Users",
+    "GNOME Tour is a lightweight, built-in welcome application designed to introduce first-time users to the GNOME desktop environment. Because GNOME departs significantly from traditional desktop paradigms like those found in Windows or macOS, the primary pu",
+    false
+  ],
+  [
+    56,
+    "GNOME Dynamic Workspaces vs Fixed Workspaces",
+    "Modern desktop environments manage multitasking through virtual desktops, but their underlying philosophies differ significantly. This article examines how the GNOME desktop environment implements dynamic workspaces—automatically generating and removin",
+    false
+  ],
+  [
+    55,
+    "GNOME Release Team: The Six-Month Release Cycle",
+    "The GNOME desktop environment follows a strict, time-based six-month release schedule that delivers updates every March and September. Orchestrating this complex timeline requires precise organization, which is the primary responsibility of the GNOME Rel",
+    false
+  ],
+  [
+    54,
+    "How GNOME Sound Recorder Captures Audio",
+    "GNOME Sound Recorder provides a focused, user-friendly utility for capturing, encoding, and organizing audio on Linux desktop environments. By integrating directly with the system's underlying audio architecture, the application streamlines the recording",
+    false
+  ],
+  [
+    53,
+    "GNOME App Grid Layout and Navigation Changes",
+    "The evolution of the GNOME desktop environment’s application launcher reflects a broader effort to unify spatial navigation, improve touch gestures, and optimize screen ergonomics. Transitioning between vertical and horizontal app drawer models require",
+    false
+  ],
+  [
+    52,
+    "How GNOME Papers Modernizes the Evince Document Viewer",
+    "GNOME Papers represents the next-generation evolution of Evince, the long-standing default document viewer for the GNOME desktop environment. While Evince served reliably for nearly two decades, its aging codebase struggled to adapt to modern desktop sta",
+    false
+  ],
+  [
+    51,
+    "How Evince Renders PDF and PostScript Files",
+    "GNOME Document Viewer, commonly known as Evince, is the default document viewing application for the GNOME desktop environment, designed to provide a unified, lightweight interface for reading multi-page documents. Rather than processing raw file formats",
+    false
+  ],
+  [
+    50,
+    "GNOME Background App Permissions via XDG Portals",
+    "Modern Linux desktop environments prioritize sandboxing and user privacy, making background execution control a vital security feature. The GNOME desktop manages background app permissions primarily through XDG Desktop Portals—specifically utilizing th",
+    false
+  ],
+  [
+    49,
+    "The Importance of GUADEC for GNOME Developers",
+    "The GNOME Users' And Developers' European Conference (GUADEC) serves as the primary annual gathering for the GNOME community, driving both technical innovation and organizational growth. This article examines the significance of GUADEC, highlighting how",
+    false
+  ],
+  [
+    48,
+    "How GNOME Maps Uses OpenStreetMap for Navigation",
+    "GNOME Maps is the default map and navigation client for the GNOME desktop environment, built entirely around the open-source ecosystem. Rather than maintaining proprietary cartographic databases, the application leverages OpenStreetMap (OSM) as its found",
+    false
+  ],
+  [
+    47,
+    "Role of GStreamer in GNOME Multimedia Applications",
+    "GStreamer serves as the foundational multimedia framework for the GNOME desktop environment, powering audio playback, video rendering, streaming, and hardware acceleration across the entire software ecosystem. By abstracting the complexities of low-level",
+    false
+  ],
+  [
+    46,
+    "How to Use GNOME Characters for Emojis and Symbols",
+    "GNOME Characters is a lightweight utility for Linux environments that streamlines the process of finding and inserting uncommon Unicode characters, punctuation marks, and emojis. By offering an organized catalog, intelligent search capabilities, and dire",
+    false
+  ],
+  [
+    45,
+    "Track CPU Memory and Disk in GNOME System Monitor",
+    "GNOME System Monitor is a core utility for Linux desktop environments that provides real-time visualization and management of hardware resources. This article details the specific features available within the application to track and analyze processor (",
+    false
+  ],
+  [
+    44,
+    "GNOME Parental Controls with Malcontent Explained",
+    "The GNOME desktop implements parental controls through an integrated framework named Malcontent, which allows system administrators to set usage restrictions for standard user accounts. By bridging the underlying Linux system with GNOME's graphical envir",
+    false
+  ],
+  [
+    43,
+    "Role of Clutter in GNOME Shell Architecture",
+    "This article examines the architectural role of the Clutter graphics library within the GNOME desktop environment. It explores how Clutter functions as the primary scene-graph engine for GNOME Shell, managing hardware-accelerated rendering, compositing w",
+    false
+  ],
+  [
+    42,
+    "How GNOME Shell Adapts to Tablets and Convertibles",
+    "GNOME Shell dynamically adapts to touchscreens and 2-in-1 convertible devices by continuously monitoring hardware posture states and sensor data through the Linux kernel. When a user folds back a convertible laptop or detaches a keyboard, the desktop env",
+    false
+  ],
+  [
+    41,
+    "GNOME Evolution: Legacy Enterprise Groupware Suite",
+    "GNOME Evolution has long served as the premier enterprise-grade personal information management (PIM) suite for the Linux desktop, functioning as the open-source counterpart to Microsoft Outlook. This article examines Evolution’s architectural foundati",
+    false
+  ],
+  [
+    40,
+    "How GNOME Contacts Integrates with Evolution Data Server",
+    "GNOME Contacts serves as a streamlined, dedicated graphical user interface for managing personal information, but it does not store or synchronize address book data on its own. Instead, it relies on Evolution Data Server (EDS), a robust backend system se",
+    false
+  ],
+  [
+    39,
+    "Purpose of GNOME Tweaks vs Default GNOME Settings",
+    "This article examines the distinct roles of the default GNOME Settings application and the GNOME Tweaks utility in Linux desktop environments. While both tools manage desktop configuration, they serve different user needs and design philosophies. Below i",
+    false
+  ],
+  [
+    38,
+    "How GNOME Weather Shows Data in Notification Tray",
+    "This article provides an overview of the technical pipeline GNOME Weather uses to retrieve, process, and display meteorological information within the GNOME Shell notification and calendar area. By utilizing location services like Geoclue, backend librar",
+    false
+  ],
+  [
+    37,
+    "Texture Caching Benefits in GNOME Mutter",
+    "Texture caching in GNOME’s Mutter compositor significantly improves graphical performance, fluid motion, and system responsiveness across the Linux desktop. By retaining frequently used graphical surfaces—such as window decorations, interface panels,",
+    false
+  ],
+  [
+    36,
+    "How GNOME Uses systemd for User Sessions",
+    "The GNOME desktop environment relies heavily on systemd's user instance (systemd --user) to oversee user session management, shifting process monitoring, startup sequences, and resource control from custom desktop code to the underlying init system. This",
+    false
+  ],
+  [
+    35,
+    "GNOME Boxes: Simple Virtual Machines & Remote Access",
+    "GNOME Boxes is a lightweight virtualization and remote desktop application designed to make managing virtual environments and remote systems effortless for everyday Linux users. By removing the steep learning curve associated with traditional hypervisors",
+    false
+  ],
+  [
+    34,
+    "How GNOME Calendar Syncs CalDAV and Google Accounts",
+    "GNOME Calendar synchronizes events with remote CalDAV servers and Google accounts through a modular architecture powered by GNOME Online Accounts and Evolution Data Server. Rather than implementing network protocols and synchronization algorithms directl",
+    false
+  ],
+  [
+    33,
+    "PipeWire Audio and Video Streaming in GNOME",
+    "PipeWire serves as the foundational multimedia subsystem in the modern GNOME desktop, acting as a low-latency routing engine for both audio and video streams. By replacing legacy audio servers like PulseAudio and JACK, while integrating directly with Way",
+    false
+  ],
+  [
+    32,
+    "GNOME Loupe: Modern Rust Image Viewer for GNOME",
+    "GNOME Loupe stands as the default, next-generation image viewer for the GNOME desktop environment, replacing the long-standing Eye of GNOME (eog). Engineered from the ground up using the Rust programming language alongside GTK4 and Libadwaita, Loupe brin",
+    false
+  ],
+  [
+    31,
+    "GNOME Photos vs Eye of GNOME: Key Differences",
+    "While both applications serve the GNOME desktop environment, GNOME Photos and Eye of GNOME (eog) fulfill entirely different roles. Eye of GNOME is a traditional, lightweight file viewer designed to open individual image files directly from a directory, w",
+    false
+  ],
+  [
+    30,
+    "GNOME Disks: Partitioning, Benchmarking, and SMART Data",
+    "GNOME Disks (also known as gnome-disk-utility) is a versatile, graphical storage management tool for Linux that simplifies low-level disk operations. This article explores how the utility enables users to easily configure drive partitions, evaluate drive",
+    false
+  ],
+  [
+    29,
+    "How NetworkManager Manages Interfaces in GNOME",
+    "NetworkManager serves as the core networking engine within the GNOME desktop environment, abstracting complex low-level Linux networking configurations into seamless automated operations. This article explores how NetworkManager interacts with GNOME's us",
+    false
+  ],
+  [
+    28,
+    "How GNOME Integrates System-Wide Dark Mode",
+    "GNOME integrates system-wide dark mode using a standardized cross-desktop specification that communicates appearance preferences across modern toolkits and sandboxed applications. Through the Freedesktop.org XDG Desktop Portal and modern GTK libraries, G",
+    false
+  ],
+  [
+    27,
+    "What Is the Purpose of GNOME Builder IDE?",
+    "GNOME Builder is an integrated development environment (IDE) specifically engineered to streamline the creation of native applications for the GNOME desktop and the broader Linux ecosystem. This article outlines the primary purpose of GNOME Builder, deta",
+    false
+  ],
+  [
+    26,
+    "How Orca Screen Reader Works in GNOME Desktop",
+    "Orca is the default screen reader in the GNOME desktop environment, providing visually impaired users with access to graphical applications through speech synthesis and refreshable braille. It acts as an intermediary between the user and the operating sy",
+    false
+  ],
+  [
+    25,
+    "GNOME Accessibility Tools and Screen Reader Guide",
+    "The GNOME desktop environment includes a comprehensive suite of built-in accessibility features designed to make modern computing usable for individuals with visual, auditory, cognitive, and motor impairments. This article explores GNOME’s primary assi",
+    false
+  ],
+  [
+    24,
+    "GNOME Text Editor vs Gedit: Key Differences Explained",
+    "For over two decades, Gedit served as the default text editor for the GNOME desktop environment, but recent GNOME releases have introduced a modern replacement called GNOME Text Editor. While both applications serve the primary purpose of viewing and edi",
+    false
+  ],
+  [
+    23,
+    "How GNOME Keyring Secures User Credentials",
+    "The GNOME Keyring daemon is a background service in Linux desktop environments that provides centralized, encrypted storage for sensitive user data, including application passwords, SSH keys, and encryption certificates. This article explores how the dae",
+    false
+  ],
+  [
+    22,
+    "GNOME 40 Redesign: Workspaces and Activities",
+    "The release of GNOME 40 marked a major milestone in Linux desktop design by replacing the traditional vertical workflow with an intuitive, unified horizontal paradigm. This article explores how GNOME 40 overhauled the Activities Overview, transformed wor",
+    false
+  ],
+  [
+    21,
+    "GNOME Tracker Role in File and Metadata Indexing",
+    "This article explores the critical role of Tracker within the GNOME desktop environment, explaining how it functions as a centralized search engine and metadata storage framework. Readers will gain an understanding of how Tracker extracts information fro",
+    false
+  ],
+  [
+    20,
+    "GNOME Calculator Financial and Programming Guide",
+    "GNOME Calculator is a versatile default utility for Linux desktops that extends far beyond simple arithmetic through its dedicated Financial and Programming modes. By leveraging the GNU Multiple Precision Arithmetic Library (GMP) and MPFR under the hood,",
+    false
+  ],
+  [
+    19,
+    "What Protocol Does GNOME Remote Desktop Use?",
+    "GNOME Remote Desktop primarily uses the Remote Desktop Protocol (RDP) to support native screen sharing and remote system control. While earlier iterations of the GNOME desktop relied on Virtual Network Computing (VNC), modern GNOME environments have shif",
+    false
+  ],
+  [
+    18,
+    "GNOME Clocks World Time in GNOME Shell",
+    "The GNOME desktop environment provides a seamless way to monitor multiple time zones by integrating the standalone GNOME Clocks application directly into the GNOME Shell interface. Rather than requiring users to keep the application open, the desktop env",
+    false
+  ],
+  [
+    17,
+    "How GNOME Manages Fractional Scaling on HiDPI Displays",
+    "This article examines the underlying mechanisms used by the GNOME desktop environment to support fractional scaling—such as 125% or 175%—on high-density (HiDPI) displays. It details the architecture of GNOME's compositor, Mutter, the shift from integ",
+    false
+  ],
+  [
+    16,
+    "How GNOME Control Center Manages Hardware Settings",
+    "GNOME Control Center, commonly known as Settings, serves as the unified graphical interface for configuring hardware and system behavior on the GNOME desktop. It organizes complex device controls into a clean, searchable, two-pane navigation layout, cate",
+    false
+  ],
+  [
+    15,
+    "GNOME Software: Discover, Install, and Update Packages",
+    "GNOME Software serves as the primary graphical application store and package manager front-end for the GNOME desktop environment, providing users with a centralized, user-friendly interface to manage their operating system. This article examines the core",
+    false
+  ],
+  [
+    14,
+    "How Libadwaita Enforces Modern GNOME App Styling",
+    "This article explores how the Libadwaita library serves as the foundational design framework for modern GNOME applications. By functioning as a companion to GTK 4, Libadwaita translates GNOME’s Human Interface Guidelines (HIG) directly into code, enfor",
+    false
+  ],
+  [
+    13,
+    "Flatpak Security Improvements for the GNOME Desktop",
+    "The adoption of Flatpak packaging introduces modern application isolation and robust access control mechanisms to the GNOME desktop environment. By shifting away from traditional, fully privileged package formats toward containerized sandboxing, GNOME si",
+    false
+  ],
+  [
+    12,
+    "How GNOME Files Manages Remote File Systems via GVFS",
+    "GNOME Files, commonly known as Nautilus, relies on GVFS (the GNOME Virtual File System) to manage remote file systems seamlessly alongside local storage. By abstracting network protocols like SFTP, SMB, FTP, and WebDAV into standard virtual directories,",
+    false
+  ],
+  [
+    11,
+    "GNOME Terminal vs GNOME Console: Key Differences",
+    "This article provides a direct comparison between GNOME Terminal, the long-standing terminal emulator for the GNOME desktop environment, and GNOME Console (formerly code-named King's Cross), its modern, streamlined replacement. While both tools provide a",
+    false
+  ],
+  [
+    10,
+    "How Does GNOME Web Integrate With WebKitGTK?",
+    "GNOME Web, codenamed Epiphany, delivers a tailored browsing experience by combining the GNOME application framework with WebKitGTK, the official GTK port of the open-source WebKit rendering engine. Rather than treating the browser engine as an isolated b",
+    false
+  ],
+  [
+    9,
+    "What Is the GNOME HIG Design Philosophy?",
+    "The GNOME Human Interface Guidelines (HIG) are grounded in a philosophy of purposeful minimalism, clarity, and distraction-free utility. Rather than overwhelming users with exhaustive configuration panels and dense menus, the GNOME HIG prioritises core w",
+    false
+  ],
+  [
+    8,
+    "How Does GNOME Shell Handle JavaScript Extensions?",
+    "GNOME Shell executes user extensions by running them directly within the compositor's main process via GJS (GNOME JavaScript), integrating them into the desktop environment through standard lifecycle methods and GObject Introspection bindings. Because ex",
+    false
+  ],
+  [
+    7,
+    "How Do GSettings and dconf Manage Preferences in GNOME?",
+    "In the GNOME desktop environment, managing configuration preferences relies on a two-tier architecture composed of GSettings and dconf. GSettings serves as the high-level, schema-driven application programming interface (API) that applications interact w",
+    false
+  ],
+  [
+    6,
+    "How Does the GNOME Foundation Support Ecosystem Growth?",
+    "The GNOME Foundation sustains the ongoing development of the GNOME ecosystem by providing essential technical infrastructure, direct financial support, legal protection, and community-building programs. Rather than directly dictating day-to-day code deci",
+    false
+  ],
+  [
+    5,
+    "Why Did GNOME 3 Change the Linux Desktop Paradigm?",
+    "The transition from GNOME 2 to GNOME 3 in April 2011 marked one of the most radical redesigns in the history of open-source software. Rather than refining the traditional desktop model inherited from Windows 95, the GNOME Project discarded decades of est",
+    false
+  ],
+  [
+    4,
+    "What Role Does Mutter Play in GNOME Shell?",
+    "Mutter serves as the core compositor and window manager at the heart of the modern GNOME desktop environment, handling window placement, graphical rendering, input routing, and display server duties. Rather than running as a standalone background utility",
+    false
+  ],
+  [
+    3,
+    "How Does GNOME Use GTK as Its GUI Toolkit?",
+    "This article examines how the GNOME desktop environment uses GTK (GIMP Toolkit) as its foundational framework for creating graphical user interfaces. It details the structural relationship between GNOME's core design philosophy and GTK's component hierar",
+    false
+  ],
+  [
+    2,
+    "Who Co-Founded the Original GNOME Project?",
+    "The original GNOME desktop environment was founded in August 1997 by Mexican programmers Miguel de Icaza and Federico Mena Quintero. Created as a free software alternative to the proprietary dependencies of early desktop environments, GNOME was designed",
+    false
+  ],
+  [
+    1,
+    "Why Was the GNOME Project Founded in 1997?",
+    "The GNOME project was founded in August 1997 by Miguel de Icaza and Federico Mena Quintero primarily in response to software licensing concerns surrounding the KDE desktop environment and its underlying Qt toolkit. While KDE provided an intuitive graphic",
+    false
+  ]
+]

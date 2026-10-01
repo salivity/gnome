@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Performance GNOME Screen Recording via DMA-BUF - gnome</title>
+    <meta name="description" content="This article explores how the GNOME desktop achieves high-performance screen capture and recording by combining Wayland, PipeWire, and DMA-BUF sharing. By leveraging these modern Linux technologies, GNOME avoids traditional CPU and memory bottlenecks, pa">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/high-performance-gnome-screen-recording-via-dma-buf">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="High-Performance GNOME Screen Recording via DMA-BUF - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/high-performance-gnome-screen-recording-via-dma-buf" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how the GNOME desktop achieves high-performance screen capture and recording by combining Wayland, PipeWire, and DMA-BUF sharing. By leveraging these modern Linux technologies, GNOME avoids traditional CPU and memory bottlenecks, pa" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1
+id="high-performance-gnome-screen-recording-via-dma-buf">High-Performance
+GNOME Screen Recording via DMA-BUF</h1>
+<p>This article explores how the GNOME desktop achieves high-performance
+screen capture and recording by combining Wayland, PipeWire, and DMA-BUF
+sharing. By leveraging these modern Linux technologies, GNOME avoids
+traditional CPU and memory bottlenecks, passing raw GPU buffers directly
+to recording applications and hardware encoders for an efficient
+zero-copy pipeline.</p>
+<h3 id="the-traditional-screen-capture-problem">The Traditional Screen
+Capture Problem</h3>
+<p>Historically, screen recording on Linux under X11 or early Wayland
+architectures relied on shared memory (<code>shm</code>) buffers. In
+this setup, the compositor or display server renders desktop frames into
+GPU Video RAM (VRAM), copies the data back across the PCIe bus into
+system RAM, and then delivers it to the recording software. If the
+recording software uses hardware encoding (such as VA-API or NVENC), the
+frame must travel across the PCIe bus a second time back to the GPU.
+This constant back-and-forth movement introduces high CPU utilization,
+memory bandwidth contention, increased latency, and dropped frames at
+higher resolutions (such as 1440p or 4K) or high refresh rates.</p>
+<h3 id="the-role-of-dma-buf-in-modern-linux">The Role of DMA-BUF in
+Modern Linux</h3>
+<p>DMA-BUF (Direct Memory Access Buffer) is a Linux kernel subsystem
+designed to enable sharing of memory buffers across different hardware
+devices and device drivers. In graphic stacks, a DMA-BUF allows one
+process to share a handle—represented as a standard Linux file
+descriptor—pointing directly to a buffer stored in GPU memory. Rather
+than reading and copying pixel arrays, applications simply pass this
+file descriptor. Any process with appropriate permissions and driver
+support can import the buffer directly into its own graphics context or
+video encoding engine.</p>
+<h3 id="how-gnome-implements-the-zero-copy-capture-pipeline">How GNOME
+Implements the Zero-Copy Capture Pipeline</h3>
+<p>GNOME’s screen recording pipeline involves three core components: the
+Mutter compositor, the XDG Desktop Portal, and PipeWire.</p>
+<ol type="1">
+<li><strong>Session Negotiation via Portals:</strong> When a user
+triggers GNOME's built-in recorder or a third-party application (such as
+OBS Studio or a web browser) initiates a capture, the request goes
+through the <code>xdg-desktop-portal-gnome</code> interface. The user
+grants permission, and the portal requests a video stream from
+Mutter.</li>
+<li><strong>Buffer Allocation in Mutter:</strong> Mutter renders the
+desktop scene directly on the GPU. Instead of copying these finished
+frames to system memory, Mutter marks the native GPU surface or creates
+a lightweight secondary GPU buffer as a DMA-BUF.</li>
+<li><strong>Transport via PipeWire:</strong> Mutter forwards the stream
+to PipeWire, the modern multimedia subsystem for Linux. PipeWire acts as
+an IPC broker capable of handling DMA-BUF metadata and file descriptors
+natively. PipeWire delivers the DMA-BUF file descriptor to the consuming
+capture application without touching the actual pixel payload.</li>
+<li><strong>Hardware-Accelerated Consumption:</strong> The recording
+application receives the DMA-BUF file descriptor via PipeWire. If the
+application supports hardware-accelerated encoding via VA-API, NVENC, or
+Vulkan Video, it imports the DMA-BUF directly into the encoder
+hardware.</li>
+</ol>
+<h3 id="performance-benefits">Performance Benefits</h3>
+<p>Because pixel data remains within GPU memory from the moment Mutter
+renders it to the moment the hardware video encoder compresses it, the
+CPU is completely bypassed during frame transport. This zero-copy
+approach delivers several key benefits:</p>
+<ul>
+<li><strong>Minimal CPU Overhead:</strong> The CPU only manages control
+messages and file descriptors, leaving processing cores free for system
+tasks or running applications.</li>
+<li><strong>Low Latency:</strong> Frames become available for encoding
+immediately after composition without waiting on memory copies.</li>
+<li><strong>High Resolution and Framerate Support:</strong> The pipeline
+easily sustains 4K, 8K, and 120+ FPS captures, where traditional PCIe
+memory transfers would saturate system bandwidth.</li>
+<li><strong>Lower Power Consumption:</strong> Bypassing CPU-bound memory
+operations significantly reduces energy usage, which is especially
+beneficial for battery life on laptops.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

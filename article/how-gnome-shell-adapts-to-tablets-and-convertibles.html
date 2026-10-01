@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Adapts to Tablets and Convertibles - gnome</title>
+    <meta name="description" content="GNOME Shell dynamically adapts to touchscreens and 2-in-1 convertible devices by continuously monitoring hardware posture states and sensor data through the Linux kernel. When a user folds back a convertible laptop or detaches a keyboard, the desktop env">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-adapts-to-tablets-and-convertibles">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Adapts to Tablets and Convertibles - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-adapts-to-tablets-and-convertibles" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell dynamically adapts to touchscreens and 2-in-1 convertible devices by continuously monitoring hardware posture states and sensor data through the Linux kernel. When a user folds back a convertible laptop or detaches a keyboard, the desktop env" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-adapts-to-tablets-and-convertibles">How GNOME
+Shell Adapts to Tablets and Convertibles</h1>
+<p>GNOME Shell dynamically adapts to touchscreens and 2-in-1 convertible
+devices by continuously monitoring hardware posture states and sensor
+data through the Linux kernel. When a user folds back a convertible
+laptop or detaches a keyboard, the desktop environment automatically
+transitions into a touch-optimized interface, altering touch target
+sizes, activating multi-touch gestures, handling display orientation,
+and enabling a responsive on-screen keyboard.</p>
+<h3 id="hardware-posture-and-sensor-detection">Hardware Posture and
+Sensor Detection</h3>
+<p>The adaptation process begins at the hardware abstraction layer.
+GNOME relies on <code>libinput</code> and the Linux kernel’s input
+subsystem to listen for posture events, specifically the
+<code>SW_TABLET_MODE</code> hardware switch found in convertible hinges.
+When this switch triggers, GNOME Shell instantly knows that the physical
+keyboard is disabled or moved out of reach.</p>
+<p>Concurrently, screen orientation is handled by
+<code>iio-sensor-proxy</code>, a background service that reads built-in
+accelerometers and gyroscopes. Mutter, GNOME’s Wayland display server
+and window manager, queries this service to rotate the display
+dynamically in 90-degree increments, while also offering an orientation
+lock option in the Quick Settings menu.</p>
+<h3 id="touch-target-scaling-and-interface-layout">Touch Target Scaling
+and Interface Layout</h3>
+<p>Once tablet mode is triggered, GNOME Shell adjusts its visual
+elements to accommodate finger taps rather than precise mouse
+clicks:</p>
+<ul>
+<li><strong>Top Bar and Spacing:</strong> The system padding increases
+across the top panel, making clock, status, and Quick Settings menus
+easier to hit.</li>
+<li><strong>App Grid and Menus:</strong> Context menus, buttons, and app
+grid icons expand in touch-active contexts to prevent accidental
+mis-taps.</li>
+<li><strong>Window Management:</strong> On smaller mobile screens,
+applications automatically maximize when launched to reduce the need for
+manual window resizing and dragging.</li>
+</ul>
+<h3 id="11-gesture-navigation">1:1 Gesture Navigation</h3>
+<p>GNOME provides fluid, 1:1 touchpad and touchscreen gestures powered
+directly by Mutter. Unlike discrete shortcut triggers, these gestures
+follow the user's fingers in real time:</p>
+<ul>
+<li><strong>Accessing Activities:</strong> Swiping up from the bottom of
+the screen smoothly brings up the Activities Overview and the
+application dock. A second swipe up exposes the full application
+grid.</li>
+<li><strong>Switching Workspaces:</strong> Horizontal multi-touch swipes
+allow users to move back and forth between active workspaces.</li>
+<li><strong>Dismissing Applications:</strong> Swiping windows up within
+the Overview closes or organizes them across multiple virtual
+desktops.</li>
+</ul>
+<h3 id="on-screen-keyboard-integration">On-Screen Keyboard
+Integration</h3>
+<p>In tablet mode, GNOME Shell automatically manages text entry. When a
+text field receives focus via a tap, the enhanced On-Screen Keyboard
+(OSK) slides up from the bottom of the screen. If an external or
+hardware keyboard is re-engaged, the virtual keyboard remains
+suppressed. Users can also manually reveal or dismiss the keyboard at
+any time by swiping up from the bottom edge of the display.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

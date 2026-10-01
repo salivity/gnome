@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Application Profiling Tools Using Sysprof - gnome</title>
+    <meta name="description" content="Profiling application performance within the GNOME desktop environment relies heavily on Sysprof, a system-wide sampling profiler designed to capture call trees, memory usage, CPU load, and system events with low overhead. The GNOME ecosystem integrates">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-application-profiling-tools-using-sysprof">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Application Profiling Tools Using Sysprof - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-application-profiling-tools-using-sysprof" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Profiling application performance within the GNOME desktop environment relies heavily on Sysprof, a system-wide sampling profiler designed to capture call trees, memory usage, CPU load, and system events with low overhead. The GNOME ecosystem integrates" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-application-profiling-tools-using-sysprof">GNOME
+Application Profiling Tools Using Sysprof</h1>
+<p>Profiling application performance within the GNOME desktop
+environment relies heavily on Sysprof, a system-wide sampling profiler
+designed to capture call trees, memory usage, CPU load, and system
+events with low overhead. The GNOME ecosystem integrates Sysprof across
+multiple layers of the development stack, offering developers a cohesive
+suite consisting of a dedicated graphical analyzer, IDE integration,
+command-line utilities, background capture daemons, and low-level
+runtime hooks embedded directly inside core libraries like GTK and
+GLib.</p>
+<h3 id="sysprof-graphical-application">Sysprof Graphical
+Application</h3>
+<p>The standalone Sysprof GUI (<code>sysprof</code>) serves as the
+primary visual interface for performance analysis. It records both
+kernel- and user-space activity, presenting the data through several
+interactive views:</p>
+<ul>
+<li><strong>Callgraph and Bottom-up Trees:</strong> Shows aggregated
+execution time, highlighting critical paths and functions consuming the
+most CPU cycles.</li>
+<li><strong>Flame Graphs:</strong> Provides visual hierarchy
+representations of stack traces to identify nested bottlenecks
+quickly.</li>
+<li><strong>Timeline and Marks:</strong> Visualizes process execution
+across time, correlating CPU frequency, thread states, battery
+consumption, and GTK frame presentation marks on an interactive
+timeline.</li>
+</ul>
+<h3 id="gnome-builder-integration">GNOME Builder Integration</h3>
+<p>GNOME Builder, the official IDE for GNOME development, features
+native, first-class Sysprof integration. Developers can launch an
+application under Sysprof with a single click or keyboard shortcut.
+GNOME Builder visualizes the generated trace directly inside the
+workspace, allowing developers to jump from a performance bottleneck
+directly to the corresponding line of source code. It also supports
+profiling Flatpak sandboxed applications seamlessly.</p>
+<h3 id="sysprof-cli-command-line-tool"><code>sysprof-cli</code>
+Command-Line Tool</h3>
+<p>For headless environments, Continuous Integration (CI) pipelines, or
+remote profiling over SSH, GNOME provides <code>sysprof-cli</code>. This
+command-line utility controls the capture process, specifies sample
+frequencies, and targets individual processes or the entire system.
+Traces captured via <code>sysprof-cli</code> are saved as
+<code>.syscap</code> capture files, which can later be transferred and
+inspected in the Sysprof desktop GUI.</p>
+<h3 id="core-library-tracepoints-and-runtime-markers">Core Library
+Tracepoints and Runtime Markers</h3>
+<p>Sysprof works in tandem with built-in instrumentation across
+fundamental GNOME libraries:</p>
+<ul>
+<li><strong>GTK:</strong> By enabling the profiler using the environment
+flag <code>GTK_DEBUG=profiler</code>, GTK automatically records frame
+rendering intervals, layout calculations, and CSS parsing metrics into
+the active Sysprof capture.</li>
+<li><strong>GLib:</strong> GMainLoop iterations, thread wakeups, and
+source dispatches can be logged directly into Sysprof, clarifying
+application latency caused by main-thread blocking.</li>
+<li><strong>Mutter and Shell:</strong> GNOME Shell and the Mutter
+compositor output pipeline stage metrics to assist in diagnosing
+desktop-level rendering stutters.</li>
+</ul>
+<h3 id="libsysprof-and-libsysprof-capture"><code>libsysprof</code> and
+<code>libsysprof-capture</code></h3>
+<p>Developers can instrument their own C, C++, or Rust applications
+using <code>libsysprof-capture</code>. This lightweight, non-blocking
+library allows applications to emit custom markers, track
+application-specific counters, and record metadata into the active
+capture session with minimal runtime overhead.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

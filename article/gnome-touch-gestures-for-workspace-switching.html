@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Touch Gestures for Workspace Switching - gnome</title>
+    <meta name="description" content="The GNOME desktop environment provides native, fluid touch and touchpad gestures that allow users to seamlessly transition between active workspaces. Built on modern display server architecture and the libinput library, GNOME delivers direct 1:1 tracking">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-touch-gestures-for-workspace-switching">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Touch Gestures for Workspace Switching - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-touch-gestures-for-workspace-switching" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop environment provides native, fluid touch and touchpad gestures that allow users to seamlessly transition between active workspaces. Built on modern display server architecture and the libinput library, GNOME delivers direct 1:1 tracking" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-touch-gestures-for-workspace-switching">GNOME Touch
+Gestures for Workspace Switching</h1>
+<p>The GNOME desktop environment provides native, fluid touch and
+touchpad gestures that allow users to seamlessly transition between
+active workspaces. Built on modern display server architecture and the
+libinput library, GNOME delivers direct 1:1 tracking, meaning workspace
+transitions directly mirror the physical movement and speed of the
+user's fingers. This article explains how GNOME implements these
+gestures, the hardware and software requirements needed to use them, and
+the specific touch inputs required for navigation.</p>
+<h3 id="the-underlying-technology-wayland-and-libinput">The Underlying
+Technology: Wayland and libinput</h3>
+<p>GNOME’s touch gesture system relies heavily on the Wayland display
+protocol and the <code>libinput</code> input-handling library. Unlike
+older X11 sessions, Wayland allows the window manager (Mutter) to
+receive raw multi-touch events directly. This direct communication
+enables true 1:1 physical tracking. As you move your fingers across a
+touchpad or touchscreen, the desktop environment moves the workspace
+view concurrently, allowing gestures to be paused, reversed, or
+completed smoothly mid-motion.</p>
+<h3 id="touchpad-gestures-for-workspaces">Touchpad Gestures for
+Workspaces</h3>
+<p>Beginning with GNOME 40, the desktop adopted a horizontal spatial
+model where workspaces are arranged in a continuous horizontal strip.
+Touchpad navigation takes advantage of this layout through three-finger
+gestures:</p>
+<ul>
+<li><strong>Switching Workspaces:</strong> Swiping horizontally with
+three fingers moves between adjacent workspaces. Swiping three fingers
+from right to left moves to the workspace on the right, while swiping
+from left to right moves to the workspace on the left.</li>
+<li><strong>Activities Overview Integration:</strong> Swiping upward
+with three fingers opens the Activities Overview, displaying all open
+windows and the workspace strip. A second upward swipe reveals the
+application grid. Swiping downward with three fingers returns to the
+active workspace.</li>
+</ul>
+<h3 id="touchscreen-gestures">Touchscreen Gestures</h3>
+<p>For laptops with touch-enabled screens, 2-in-1 convertibles, and
+tablets, GNOME translates these multi-finger interactions directly to
+screen surfaces:</p>
+<ul>
+<li><strong>Three-Finger Screen Swipe:</strong> Placing three fingers on
+the screen and dragging horizontally switches between the active
+workspaces with the same 1:1 direct tracking seen on touchpads.</li>
+<li><strong>Edge Gestures and Touch Controls:</strong> Users can also
+bring up the workspace switcher by swiping up from the bottom edge of
+the display to access the Overview, where workspaces can be selected
+directly with a single tap.</li>
+</ul>
+<h3 id="system-requirements-and-compatibility">System Requirements and
+Compatibility</h3>
+<p>To ensure touch gestures for workspace switching function
+properly:</p>
+<ul>
+<li><strong>Display Server:</strong> The session must be running
+Wayland. While basic gestures can sometimes be emulated on X11 through
+third-party utilities, native 1:1 gestures are exclusive to Wayland
+sessions.</li>
+<li><strong>Hardware Support:</strong> The device must feature a
+precision touchpad or a multi-touch-capable touchscreen recognized by
+the Linux kernel and <code>libinput</code>.</li>
+<li><strong>Out-of-the-Box Configuration:</strong> Modern distributions
+shipping GNOME (such as Fedora, Ubuntu, and Arch Linux) enable these
+gestures by default, requiring no extra configuration or third-party
+extensions to function.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

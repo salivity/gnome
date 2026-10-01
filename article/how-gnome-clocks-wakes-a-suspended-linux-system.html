@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Clocks Wakes a Suspended Linux System - gnome</title>
+    <meta name="description" content="GNOME Clocks can reliably fire alarms even when a computer is in a low-power suspend state by coordinating application-level scheduling with system services and low-level hardware timers. This functionality relies on modern Linux power management framewo">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-clocks-wakes-a-suspended-linux-system">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Clocks Wakes a Suspended Linux System - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-clocks-wakes-a-suspended-linux-system" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Clocks can reliably fire alarms even when a computer is in a low-power suspend state by coordinating application-level scheduling with system services and low-level hardware timers. This functionality relies on modern Linux power management framewo" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-clocks-wakes-a-suspended-linux-system">How GNOME
+Clocks Wakes a Suspended Linux System</h1>
+<p>GNOME Clocks can reliably fire alarms even when a computer is in a
+low-power suspend state by coordinating application-level scheduling
+with system services and low-level hardware timers. This functionality
+relies on modern Linux power management frameworks, kernel-level alarm
+mechanisms, and hardware RTC (Real-Time Clock) capabilities to
+transition the system out of sleep just before an alarm is due.</p>
+<h3 id="hardware-real-time-clock-rtc-wakealarms">Hardware Real-Time
+Clock (RTC) Wakealarms</h3>
+<p>At the core of the wakeup capability is the hardware Real-Time Clock
+(RTC) present on modern motherboards. The Linux kernel exposes this
+hardware via <code>/sys/class/rtc/rtc0/wakealarm</code>. When supported
+by the system's UEFI or ACPI implementation, this interface allows the
+operating system to program a specific epoch timestamp into the RTC
+chip. When the hardware clock matches this timestamp, it triggers an
+electrical interrupt capable of waking the CPU from ACPI sleep states
+(such as S3 or S0ix modern standby).</p>
+<h3 id="kernel-level-clock_realtime_alarm-timers">Kernel-Level
+<code>CLOCK_REALTIME_ALARM</code> Timers</h3>
+<p>Instead of directly writing to hardware registers, modern
+applications rely on Linux timer interfaces. GNOME Clocks leverages
+Linux timer mechanisms such as <code>timerfd_create</code> configured
+with the clock ID <code>CLOCK_REALTIME_ALARM</code> or
+<code>CLOCK_BOOTTIME_ALARM</code>. Unlike standard monotonic or
+real-time clocks, these alarm-capable clock variants specifically
+instruct the kernel to program the underlying RTC or platform wakeup
+device whenever an armed timer will occur during system suspension.</p>
+<h3 id="systemd-and-d-bus-power-management">Systemd and D-Bus Power
+Management</h3>
+<p>User-space desktop applications running in unprivileged sessions
+typically cannot manipulate low-level kernel wakealarms directly due to
+permission restrictions. GNOME Clocks bridges this gap by communicating
+over the D-Bus system bus with system daemons like <code>systemd</code>
+and <code>systemd-logind</code>. Through systemd's scheduling
+mechanisms, upcoming alarm events can be registered as scheduled
+wakeups. This ensures the system does not enter a permanent sleep state
+that ignores pending software deadlines.</p>
+<h3 id="gnome-settings-daemon-and-shell-coordination">GNOME Settings
+Daemon and Shell Coordination</h3>
+<p>When an alarm is configured in GNOME Clocks, the application
+registers the event with the GNOME desktop session. The GNOME Settings
+Daemon power plugins coordinate with the application to evaluate whether
+the computer should be allowed to sleep. If a user manual suspend or
+automatic idle timeout occurs, the system verifies all pending alarm
+times, sets the hardware wakeup event accordingly, and ensures audio
+subsystems and display servers are ready to output the alarm sound and
+UI notification the moment the system resumes.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

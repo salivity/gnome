@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Uses CSS for Interface Theming - gnome</title>
+    <meta name="description" content="GNOME Shell separates its interface structure from visual presentation by using Cascading Style Sheets (CSS) to define the appearance of core desktop elements. Built on top of the Clutter toolkit and the Shell Toolkit (St), the desktop environment parses">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-uses-css-for-interface-theming">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Uses CSS for Interface Theming - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-uses-css-for-interface-theming" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell separates its interface structure from visual presentation by using Cascading Style Sheets (CSS) to define the appearance of core desktop elements. Built on top of the Clutter toolkit and the Shell Toolkit (St), the desktop environment parses" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-uses-css-for-interface-theming">How GNOME Shell
+Uses CSS for Interface Theming</h1>
+<p>GNOME Shell separates its interface structure from visual
+presentation by using Cascading Style Sheets (CSS) to define the
+appearance of core desktop elements. Built on top of the Clutter toolkit
+and the Shell Toolkit (St), the desktop environment parses standard CSS
+rules to dynamically apply colors, margins, fonts, and transitions to
+everything from the top panel and system menus to the Dash and
+notification popups.</p>
+<h2 id="the-underlying-architecture-st-and-clutter">The Underlying
+Architecture: St and Clutter</h2>
+<p>Unlike web browsers that use HTML DOM nodes, GNOME Shell manages its
+interface using an actor hierarchy provided by Clutter, an
+OpenGL/Vulkan-based scenegraph library. To make these Clutter actors
+themeable, GNOME Shell uses the Shell Toolkit (<code>St</code>).</p>
+<p><code>St</code> widgets (such as <code>St.Label</code>,
+<code>St.Button</code>, and <code>St.BoxLayout</code>) implement a CSS
+parser and style-matching engine. Each actor in the UI tree can be
+assigned CSS classes, ID selectors, and pseudo-classes. When GNOME Shell
+launches, it loads a stylesheet, parses the selector rules, and maps
+graphical properties directly to the underlying Clutter actors.</p>
+<h2 id="the-entry-point-gnome-shellcss">The Entry Point:
+gnome-shell.css</h2>
+<p>The central stylesheet controlling the shell interface is
+<code>gnome-shell.css</code>. In default installations, this file is
+bundled into a compiled binary resource (<code>gresource</code>), but
+custom themes load it from disk via paths such as:</p>
+<ul>
+<li>System-wide:
+<code>/usr/share/themes/&lt;Theme-Name&gt;/gnome-shell/gnome-shell.css</code></li>
+<li>User-specific:
+<code>~/.local/share/themes/&lt;Theme-Name&gt;/gnome-shell/gnome-shell.css</code></li>
+</ul>
+<p>When a theme is active, GNOME Shell reads this file and its
+<code>@import</code> dependencies to establish the desktop’s
+appearance.</p>
+<h2 id="theming-core-interface-elements">Theming Core Interface
+Elements</h2>
+<p>GNOME Shell uses specific selectors and IDs to expose interface
+components to CSS targeting:</p>
+<h3 id="1-the-top-panel">1. The Top Panel</h3>
+<p>The top bar spanning the screen is identified by the
+<code>#panel</code> ID. CSS controls its background opacity, height, and
+edge borders:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#panel</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">background-color</span><span class="ch">:</span> <span class="fu">rgba(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0.8</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-weight</span><span class="ch">:</span> <span class="dv">bold</span><span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">height</span><span class="ch">:</span> <span class="dv">32</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Interactive elements inside the panel, such as clock indicators and
+status icons, use classes like <code>.panel-button</code>. States such
+as hover or active are handled with pseudo-classes (<code>:hover</code>,
+<code>:active</code>, <code>:focus</code>).</p>
+<h3 id="2-the-overview-and-dash">2. The Overview and Dash</h3>
+<p>The Activities Overview relies on CSS to format the workspace
+switcher, background dimming, and the dock:</p>
+<ul>
+<li><strong>Dash:</strong> The launcher dock uses <code>#dash</code> to
+define its background capsule, padding, and border radius.</li>
+<li><strong>App Icons:</strong> Elements within the grid use
+<code>.app-well-app</code> to manage icon sizes, spacing, and label
+visibility.</li>
+<li><strong>Search Entry:</strong> The search bar uses the St entry
+styling classes (<code>.search-entry</code>) to set field radius,
+borders, and text selection highlights.</li>
+</ul>
+<h3 id="3-popups-menus-and-dialogs">3. Popups, Menus, and Dialogs</h3>
+<p>Drop-down menus (such as the quick settings and power menu) inherit
+styles from <code>.popup-menu</code> and
+<code>.popup-menu-content</code>. Modal dialogs—including run prompts,
+authentication requests, and shutdown confirmations—are styled using
+<code>.modal-dialog</code>.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.popup-menu</span> {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="cn">#eeeeee</span><span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">background-color</span><span class="ch">:</span> <span class="cn">#2e3436</span><span class="op">;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">border-radius</span><span class="ch">:</span> <span class="dv">12</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">box-shadow</span><span class="ch">:</span> <span class="dv">0</span> <span class="dv">4</span><span class="dt">px</span> <span class="dv">8</span><span class="dt">px</span> <span class="fu">rgba(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0.3</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h2 id="supported-properties-and-limitations">Supported Properties and
+Limitations</h2>
+<p>While GNOME Shell's style engine mirrors web standards, it implements
+a subset of modern CSS specifications tailored to desktop rendering:</p>
+<ul>
+<li><strong>Box Model:</strong> Standard properties like
+<code>margin</code>, <code>padding</code>, <code>border</code>,
+<code>border-radius</code>, and <code>width</code>/<code>height</code>
+operate normally.</li>
+<li><strong>Color and Blending:</strong> Gradients
+(<code>linear-gradient</code>), transparency (<code>rgba</code>), and
+drop shadows (<code>box-shadow</code>) are fully supported.</li>
+<li><strong>Transitions:</strong> Property transitions (such as
+<code>transition-duration: 200ms;</code>) are supported for creating
+smooth state changes during hover or focus actions.</li>
+<li><strong>St-Specific Extensions:</strong> GNOME Shell includes custom
+attributes prefixed with <code>-st-</code>, such as
+<code>-st-natural-width</code> or custom icon coloring variables
+(<code>-st-icon-style</code>), allowing fine control over
+toolkit-specific behaviors.</li>
+</ul>
+<p>Because the engine is not a full web browser, advanced CSS features
+such as complex CSS Grid, <code>@media</code> queries based on viewport
+states, and advanced layout models like multi-nested flexbox are either
+limited or unavailable. Layout structure is largely dictated by
+JavaScript and Clutter layout managers, while the CSS strictly handles
+visual styling.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

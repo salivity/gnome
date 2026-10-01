@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Files Bookmarks and Network Mounts Guide - gnome</title>
+    <meta name="description" content="GNOME Files (also known as Nautilus) provides an intuitive sidebar for quick navigation across local directories, external devices, and remote servers. This article explains how GNOME Files manages user-defined bookmarks and persistent network mount loca">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-files-bookmarks-and-network-mounts-guide">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Files Bookmarks and Network Mounts Guide - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-files-bookmarks-and-network-mounts-guide" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Files (also known as Nautilus) provides an intuitive sidebar for quick navigation across local directories, external devices, and remote servers. This article explains how GNOME Files manages user-defined bookmarks and persistent network mount loca" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-files-bookmarks-and-network-mounts-guide">GNOME Files
+Bookmarks and Network Mounts Guide</h1>
+<p>GNOME Files (also known as Nautilus) provides an intuitive sidebar
+for quick navigation across local directories, external devices, and
+remote servers. This article explains how GNOME Files manages
+user-defined bookmarks and persistent network mount locations, detailing
+the underlying technologies like GTK bookmark files and the GVfs virtual
+filesystem that keep your locations accessible across user sessions.</p>
+<h3 id="managing-local-and-remote-bookmarks">Managing Local and Remote
+Bookmarks</h3>
+<p>GNOME Files manages user-created shortcuts through the GTK bookmarks
+system. When you drag a folder into the sidebar or press
+<code>Ctrl + D</code> on an open directory, the application appends that
+location to a plain text file located at:</p>
+<p><code>~/.config/gtk-3.0/bookmarks</code></p>
+<p>Each entry in this file consists of a URI and an optional custom
+label. Because this file belongs to the shared GTK configuration,
+bookmarks created in GNOME Files immediately appear in the file chooser
+dialogs of other GTK applications across your desktop environment.</p>
+<p>You can reorder, rename, or remove bookmarks directly through the
+sidebar context menu (right-click) or by manually editing the
+<code>bookmarks</code> configuration file.</p>
+<h3 id="handling-network-mount-locations-via-gvfs">Handling Network
+Mount Locations via GVfs</h3>
+<p>Network connections in GNOME Files rely on GVfs (GNOME Virtual file
+system), an abstraction layer that enables users to mount remote
+protocols such as SFTP, SMB/CIFS, WebDAV, NFS, and FTP directly in user
+space.</p>
+<p>When you connect to a server via <strong>Other Locations</strong>
+&gt; <strong>Connect to Server</strong>, the following process takes
+place:</p>
+<ol type="1">
+<li><strong>User-Space Mounting:</strong> GVfs authenticates and
+establishes the remote connection. The remote share is mounted in user
+space without requiring root privileges and exposed locally under
+<code>/run/user/$UID/gvfs/</code>.</li>
+<li><strong>Dynamic Sidebar Appearance:</strong> While active, the
+mounted share automatically appears in the sidebar under the network
+section, accompanied by an "unmount" or "eject" icon.</li>
+<li><strong>Session Persistence:</strong> By default, standard GVfs
+network mounts are ephemeral. When you log out or reboot, the connection
+terminates, and the dynamic mount disappears from the active sidebar
+list.</li>
+</ol>
+<h3 id="making-network-mounts-persistent-in-the-sidebar">Making Network
+Mounts Persistent in the Sidebar</h3>
+<p>To make remote network locations easily accessible across reboots,
+GNOME Files provides two distinct methods:</p>
+<h4 id="1-bookmarking-gvfs-remote-uris">1. Bookmarking GVfs Remote
+URIs</h4>
+<p>The simplest way to retain access to a network share is to bookmark
+it while connected:</p>
+<ul>
+<li>Connect to the server using its URI (e.g.,
+<code>sftp://user@server.local/share</code>).</li>
+<li>Once mounted, right-click the remote folder or the sidebar entry and
+select <strong>Add to Bookmarks</strong>.</li>
+<li>The network URI is written to
+<code>~/.config/gtk-3.0/bookmarks</code>.</li>
+</ul>
+<p>Even after a system reboot—when the share is not actively mounted—the
+bookmark remains permanently visible in the sidebar. Clicking the
+bookmarked remote entry triggers GNOME Files and GVfs to automatically
+reconnect and re-mount the location on demand, retrieving credentials
+from GNOME Keyring if previously saved.</p>
+<h4 id="2-using-system-level-mounts-etcfstab">2. Using System-Level
+Mounts (<code>/etc/fstab</code>)</h4>
+<p>For network shares that must be mounted automatically at system boot
+rather than on-demand inside the file manager:</p>
+<ul>
+<li>Configure the mount point in <code>/etc/fstab</code> using protocols
+such as NFS or CIFS.</li>
+<li>Include the <code>x-gvfs-show</code> mount option in the
+configuration line.</li>
+<li>The <code>x-gvfs-show</code> flag explicitly instructs GNOME Files
+to display the system-level mount point in the sidebar, providing
+seamless integration for permanent, system-wide network drives.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Handles Fractional Scaling on X11 Apps - gnome</title>
+    <meta name="description" content="Fractional scaling on modern high-DPI displays offers a balanced interface size, but running legacy X11 applications within GNOME’s Wayland session introduces visual artifacts and blurriness. Because the legacy X11 architecture lacks native concepts of">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-handles-fractional-scaling-on-x-11-apps">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Handles Fractional Scaling on X11 Apps - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-handles-fractional-scaling-on-x-11-apps" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Fractional scaling on modern high-DPI displays offers a balanced interface size, but running legacy X11 applications within GNOME’s Wayland session introduces visual artifacts and blurriness. Because the legacy X11 architecture lacks native concepts of" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-handles-fractional-scaling-on-x11-apps">How GNOME
+Handles Fractional Scaling on X11 Apps</h1>
+<p>Fractional scaling on modern high-DPI displays offers a balanced
+interface size, but running legacy X11 applications within GNOME’s
+Wayland session introduces visual artifacts and blurriness. Because the
+legacy X11 architecture lacks native concepts of per-monitor or
+non-integer scaling, GNOME relies on a combination of compositor-level
+upscaling, Xwayland emulation, and display filtering to display these
+clients. This article explains the technical mechanisms GNOME’s Mutter
+window manager uses to handle fractional scaling for older X11
+applications, the root causes of the resulting artifacts, and how modern
+display protocols manage this limitation.</p>
+<h2 id="the-architectural-disconnect-between-x11-and-wayland">The
+Architectural Disconnect Between X11 and Wayland</h2>
+<p>Modern Wayland architectures handle fractional scaling via dedicated
+protocols (such as <code>wp-fractional-scale-v1</code>), allowing the
+compositor to negotiate precise surface dimensions directly with
+clients. In contrast, the decades-old X11 protocol inherently assumes
+that display coordinates directly map to physical hardware pixels across
+a global, uniform coordinate space.</p>
+<p>When running an X11 application under GNOME, the app does not
+communicate directly with Wayland. Instead, it interacts with
+<strong>Xwayland</strong>, an X11 server running as a Wayland client.
+Because standard X11 clients cannot request fractional scaling factors
+like 125% or 150%, GNOME must mediate the scale discrepancy using the
+Mutter compositor.</p>
+<h2 id="integer-rendering-and-compositor-upscaling">Integer Rendering
+and Compositor Upscaling</h2>
+<p>To prevent legacy software from breaking or miscalculating input
+coordinates, GNOME generally instructs X11 applications to render at a
+standard scale factor of 100% (1x).</p>
+<p>Once the application renders its buffer at standard resolution,
+GNOME's compositor takes over:</p>
+<ol type="1">
+<li><strong>Buffer Interception:</strong> Mutter captures the rendered
+pixel buffer from Xwayland at its native 1x resolution.</li>
+<li><strong>Viewport Scaling:</strong> The compositor applies a
+transformation to stretch the surface to match the configured fractional
+scale of the target display (for example, scaling a 1x surface up by
+1.5x on a 150% scaled display).</li>
+<li><strong>Filtering:</strong> Mutter applies texture filtering
+(typically bilinear filtering) to smooth out the enlarged pixels.</li>
+</ol>
+<p>While this approach prevents the application from rendering tiny,
+unusable UI elements on high-density screens, it introduces noticeable
+blurriness. Because non-integer multiples do not map evenly onto
+physical subpixels, fine details such as font glyphs and line borders
+lose sharpness.</p>
+<h2 id="the-alternative-integer-oversampling-and-downscaling">The
+Alternative: Integer Oversampling and Downscaling</h2>
+<p>In some configurations and experimental branches, Mutter has utilized
+a "scale-up, scale-down" rendering pipeline to handle fractional
+coordinates:</p>
+<ul>
+<li><strong>Rendering at 2x:</strong> The application is told to scale
+to the nearest higher integer factor (typically 200%).</li>
+<li><strong>Downsampling:</strong> The compositor downscales the
+high-resolution buffer to the fractional target (e.g., downscaling a
+200% render to 150% target display space).</li>
+</ul>
+<p>This technique sharpens text and vector icons significantly compared
+to stretching a 1x buffer. However, downscaling introduces its own
+visual artifacts, such as moiré patterns, shimmering during window
+movement, and uneven line thickness. It also incurs a notable
+performance penalty, as legacy applications are forced to render
+substantially more pixels than necessary, increasing memory bandwidth
+and GPU load.</p>
+<h2 id="input-coordinate-mapping">Input Coordinate Mapping</h2>
+<p>Artifacts are not exclusively visual; fractional scaling can also
+cause input inaccuracies. Because the X11 application believes its
+window exists in a standard 1x coordinate space, Mutter must transform
+input events on the fly:</p>
+<ul>
+<li><strong>Mouse Events:</strong> Wayland pointer coordinates are
+converted into the scaled coordinate space before being passed through
+Xwayland to the client.</li>
+<li><strong>Window Dimensions:</strong> Mutter maps window geometry
+requests back and forth, preventing cursor drift or missed click targets
+around small UI elements like close buttons and dropdown menus.</li>
+</ul>
+<p>Without this coordinate translation, clicks would register offset
+from their visually scaled locations.</p>
+<h2 id="moving-beyond-xwayland-scaling">Moving Beyond Xwayland
+Scaling</h2>
+<p>GNOME treats compositor-side scaling of X11 applications as an
+unavoidable compatibility compromise. The long-term resolution for
+fractional scaling artifacts does not lie within X11 fixes, but in
+transitioning applications off the legacy protocol entirely.</p>
+<p>When applications are updated to run natively on Wayland using modern
+toolkits (such as GTK 4 or Qt 6), they bypass Xwayland entirely. In
+these native environments, GNOME can instruct the application to render
+directly at the fractional scale factor using Wayland fractional scaling
+protocols, eliminating scaling artifacts and delivering crisp text and
+UI elements.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

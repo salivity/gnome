@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Wayland Direct Scanout for Gaming Performance - gnome</title>
+    <meta name="description" content="GNOME enhances high-performance gaming on Wayland primarily through a display pipeline optimization known as direct scanout. Implemented in GNOME's compositor, Mutter, direct scanout allows fullscreen games to bypass the compositor's rendering pass and s">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-wayland-direct-scanout-for-gaming-performance">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Wayland Direct Scanout for Gaming Performance - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-wayland-direct-scanout-for-gaming-performance" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME enhances high-performance gaming on Wayland primarily through a display pipeline optimization known as direct scanout. Implemented in GNOME's compositor, Mutter, direct scanout allows fullscreen games to bypass the compositor's rendering pass and s" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-wayland-direct-scanout-for-gaming-performance">GNOME
+Wayland Direct Scanout for Gaming Performance</h1>
+<p>GNOME enhances high-performance gaming on Wayland primarily through a
+display pipeline optimization known as direct scanout. Implemented in
+GNOME's compositor, Mutter, direct scanout allows fullscreen games to
+bypass the compositor's rendering pass and send their framebuffers
+straight to the display controller. This overview examines how direct
+scanout eliminates compositing overhead, drastically lowers input
+latency, works alongside modern features like Variable Refresh Rate
+(VRR), and transforms GNOME on Wayland into a responsive environment for
+competitive gaming.</p>
+<p>In standard desktop operation, Wayland compositors composite every
+visible window into a single scene before presenting it to the screen.
+An application renders into an offscreen buffer, sends that buffer to
+Mutter, and Mutter combines it with window decorations, background
+tasks, and other UI layers using the 3D graphics engine. While this
+guarantees tear-free, seamless desktop rendering, it introduces a
+penalty: an extra copy operation and at least one additional frame of
+latency. For fast-paced, latency-sensitive games, this compositing delay
+can noticeably degrade responsiveness.</p>
+<p>Direct scanout solves this problem by detecting when a single
+application surface—such as a fullscreen game—completely covers an
+active display output. When Mutter detects this condition, it stops
+drawing the game buffer as a texture inside its own render loop.
+Instead, Mutter passes the application's graphics buffer directly to the
+Linux Kernel Mode Setting (KMS) display plane via the Direct Rendering
+Manager (DRM). The display hardware then reads the game's buffer
+directly from video memory to scan it out onto the monitor, effectively
+turning Mutter into a pass-through layer.</p>
+<p>This bypass offers significant performance advantages. By eliminating
+the compositor render pass, GPU resources that would have been spent
+re-drawing the scene are freed up entirely for the game engine. Memory
+bandwidth consumption drops because frames are read directly by the
+display hardware rather than copied between GPU memory locations. The
+most critical benefit, however, is the reduction in latency: direct
+scanout removes the compositor-induced display lag, delivering frame
+presentation times equivalent to native fullscreen modes traditionally
+found in X11 or bare-metal environments.</p>
+<p>GNOME has continually refined direct scanout to support modern gaming
+requirements:</p>
+<ul>
+<li><strong>XWayland Direct Scanout:</strong> Because many Windows games
+running through Proton/Wine still rely on X11, Mutter provides direct
+scanout paths for XWayland surfaces. This ensures that non-native
+Wayland games achieve the same low-latency advantages as native Wayland
+titles.</li>
+<li><strong>Per-Monitor Scanout:</strong> Mutter can engage direct
+scanout on a primary display where a game runs fullscreen while
+continuing normal compositing on secondary monitors, preventing
+background displays from breaking the game's performance profile.</li>
+<li><strong>Variable Refresh Rate (VRR):</strong> Direct scanout is
+foundational for G-Sync and FreeSync support. Because the game interacts
+directly with the KMS plane, Mutter can dynamically align the monitor's
+refresh cycles with the game's actual frame output, eliminating stutter
+without introducing V-Sync latency.</li>
+<li><strong>Tearing Protocol Support:</strong> GNOME has introduced
+support for the Wayland tearing-control protocol. Combined with direct
+scanout, this allows competitive gamers to disable vertical
+synchronization completely, presenting asynchronous frames immediately
+to achieve the lowest possible input delay.</li>
+<li><strong>DMA-BUF and Explicit Sync:</strong> Mutter leverages modern
+Linux graphics primitives, such as <code>linux-dmabuf</code> and
+explicit synchronization (<code>syncobj</code>), ensuring zero-copy
+frame handoffs between GPU drivers (such as Mesa or proprietary NVIDIA
+drivers) and the display pipeline without synchronization stalls.</li>
+</ul>
+<p>Through these direct scanout mechanisms, GNOME effectively eliminates
+the traditional performance trade-offs of Wayland compositing.
+Fullscreen games gain direct hardware-level access to the display
+controller, ensuring maximum frame delivery, minimal latency, and full
+compatibility with the latest Linux gaming technologies.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

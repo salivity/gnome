@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrate Nextcloud and ownCloud in GNOME Files - gnome</title>
+    <meta name="description" content="GNOME Files, commonly known as Nautilus, natively integrates with self-hosted cloud platforms like ownCloud and Nextcloud to provide direct access to remote data. This integration relies on the GNOME desktop ecosystem’s built-in framework, utilizing GN">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/integrate-nextcloud-and-own-cloud-in-gnome-files">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Integrate Nextcloud and ownCloud in GNOME Files - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/integrate-nextcloud-and-own-cloud-in-gnome-files" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Files, commonly known as Nautilus, natively integrates with self-hosted cloud platforms like ownCloud and Nextcloud to provide direct access to remote data. This integration relies on the GNOME desktop ecosystem’s built-in framework, utilizing GN" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="integrate-nextcloud-and-owncloud-in-gnome-files">Integrate
+Nextcloud and ownCloud in GNOME Files</h1>
+<p>GNOME Files, commonly known as Nautilus, natively integrates with
+self-hosted cloud platforms like ownCloud and Nextcloud to provide
+direct access to remote data. This integration relies on the GNOME
+desktop ecosystem’s built-in framework, utilizing GNOME Online Accounts
+to authenticate and GVfs to mount remote directories over standard
+network protocols. Users can browse, edit, and organize their remote
+files directly from the desktop file manager without needing third-party
+desktop synchronization clients.</p>
+<h3 id="gnome-online-accounts-goa">GNOME Online Accounts (GOA)</h3>
+<p>The foundation of the integration is GNOME Online Accounts. Rather
+than configuring connections directly inside the file manager, the
+desktop uses a centralized credential manager located in the system
+settings.</p>
+<p>When configuring a Nextcloud or ownCloud account, GOA prompts the
+user for the server address, username, and an authentication password or
+app token. Once verified, GOA acts as a single sign-on mechanism. It
+detects the services exposed by the server instance and provisions
+access across multiple desktop components simultaneously, including
+GNOME Files, GNOME Calendar (via CalDAV), and GNOME Contacts (via
+CardDAV).</p>
+<h3 id="the-gvfs-architecture-and-webdav">The GVfs Architecture and
+WebDAV</h3>
+<p>GNOME Files interacts with the remote server using GVfs (GNOME
+Virtual File System), the virtual filesystem abstraction layer designed
+for the GNOME desktop.</p>
+<p>Nextcloud and ownCloud both use WebDAV (Web Distributed Authoring and
+Versioning) as their underlying communication protocol for file
+handling. When an account is registered in GOA, GVfs mounts the user’s
+remote storage endpoint using the <code>davs://</code> (secure WebDAV)
+URI scheme. The remote storage is represented internally at a path
+typically structured under <code>/run/user/&lt;UID&gt;/gvfs/</code>,
+allowing the operating system to map remote network requests into
+standard POSIX-like file operations.</p>
+<h3 id="file-manager-interface-and-user-experience">File Manager
+Interface and User Experience</h3>
+<p>Once mounted, the cloud instance appears as a distinct volume in the
+GNOME Files sidebar under the network or remote locations section.</p>
+<p>Users can interact with remote directories as if they were local
+folders. Operations such as opening documents, renaming files, creating
+folders, and moving items via drag-and-drop are translated in real time
+into corresponding HTTP/WebDAV methods (<code>GET</code>,
+<code>PUT</code>, <code>MOVE</code>, <code>PROPFIND</code>, and
+<code>DELETE</code>). Applications supporting the GIO/GVfs API can open
+and save files directly to the cloud without creating intermediate
+manual transfers.</p>
+<h3 id="network-mounting-vs-file-synchronization">Network Mounting vs.
+File Synchronization</h3>
+<p>It is important to distinguish GNOME Files' native integration from
+official desktop sync clients. GNOME Files provides a real-time network
+mount rather than a local mirror:</p>
+<ul>
+<li><strong>Bandwidth and Storage:</strong> Files remain on the remote
+server and are fetched on demand. This saves local disk space because
+files are not duplicated on the host drive.</li>
+<li><strong>Network Dependency:</strong> Because files are streamed
+directly over WebDAV, an active internet connection is required to
+browse directories and open documents.</li>
+<li><strong>Offline Access:</strong> Unlike dedicated ownCloud or
+Nextcloud desktop clients, the GVfs integration does not maintain an
+offline cache or perform background two-way synchronization.</li>
+</ul>
+<p>This native approach provides a lightweight, integrated solution for
+interacting with Nextcloud and ownCloud infrastructure directly within
+standard Linux desktop workflows.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

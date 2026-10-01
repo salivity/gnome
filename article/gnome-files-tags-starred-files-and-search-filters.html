@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Files Tags, Starred Files, and Search Filters - gnome</title>
+    <meta name="description" content="GNOME Files, formerly known as Nautilus, provides an integrated system for organizing, prioritizing, and locating documents without relying solely on rigid directory trees. Through the combination of starred bookmarks for instant access, metadata-driven">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-files-tags-starred-files-and-search-filters">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Files Tags, Starred Files, and Search Filters - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-files-tags-starred-files-and-search-filters" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Files, formerly known as Nautilus, provides an integrated system for organizing, prioritizing, and locating documents without relying solely on rigid directory trees. Through the combination of starred bookmarks for instant access, metadata-driven" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-files-tags-starred-files-and-search-filters">GNOME Files
+Tags, Starred Files, and Search Filters</h1>
+<p>GNOME Files, formerly known as Nautilus, provides an integrated
+system for organizing, prioritizing, and locating documents without
+relying solely on rigid directory trees. Through the combination of
+starred bookmarks for instant access, metadata-driven tagging via the
+underlying Tracker indexing engine, and dynamic contextual search
+filters, users can rapidly manage and retrieve data across local and
+remote storage.</p>
+<h3 id="starred-bookmarks-for-high-priority-files">Starred Bookmarks for
+High-Priority Files</h3>
+<p>GNOME Files replaces traditional ad-hoc tagging with a native
+"Starred" system designed for quick bookmarking. Users can star any file
+or folder by right-clicking the item and selecting the star option, or
+by toggling the star icon directly in the list view.</p>
+<p>Once starred, items remain in their original directories but are
+aggregated globally under the "Starred" section in the left sidebar.
+This system operates as a unified virtual directory, allowing immediate
+access to critical files regardless of where they reside in the
+filesystem hierarchy. The metadata is tracked internally, ensuring that
+moving files within supported locations does not break the starred
+status.</p>
+<h3 id="file-metadata-and-tagging-via-gnome-tracker">File Metadata and
+Tagging via GNOME Tracker</h3>
+<p>Rather than maintaining a separate, isolated tagging database, GNOME
+Files leverages GNOME Tracker—a low-footprint search engine and metadata
+database. Tracker indexes files automatically, reading embedded tags and
+metadata such as EXIF data in photographs, ID3 tags in audio files, and
+author or keyword tags embedded within PDFs and office documents.</p>
+<p>This deep indexing allows GNOME Files to recognize arbitrary semantic
+tags already baked into your files. When searching, these embedded tags
+function as primary identifiers, allowing users to query items based on
+embedded project names, topics, or categories without requiring manual
+tag configuration within the file manager interface.</p>
+<h3 id="contextual-search-filters">Contextual Search Filters</h3>
+<p>The search functionality in GNOME Files activates automatically when
+a user starts typing within any active directory, or by pressing
+<code>Ctrl + F</code>. The search engine adapts contextually based on
+the user's current location, offering options to search either the
+active folder specifically or the entire system via indexed
+locations.</p>
+<p>Beside the search bar, GNOME Files provides contextual drop-down
+filters to refine search queries without requiring complex syntax:</p>
+<ul>
+<li><strong>File Type Filters:</strong> Users can restrict queries to
+specific classifications, such as Documents, Images, Audio, Video,
+Folders, or Software.</li>
+<li><strong>Date Modified Filters:</strong> Results can be constrained
+by temporal ranges, including "Today," "Since Yesterday," "Last Week,"
+"Last Month," "Last Year," or a custom date range.</li>
+<li><strong>Content vs. Name Matching:</strong> Thanks to Tracker
+integration, the contextual search queries both file names and the
+internal text content of documents. If an exact name match is not found,
+the search surfaces files containing the query string within the file
+body.</li>
+</ul>
+<p>By coupling continuous background indexing with intuitive front-end
+filters and quick-access bookmarks, GNOME Files delivers a streamlined
+search and retrieval workflow tailored for modern Linux desktops.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

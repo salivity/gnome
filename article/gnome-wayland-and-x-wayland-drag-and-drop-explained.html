@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Wayland and XWayland Drag and Drop Explained - gnome</title>
+    <meta name="description" content="GNOME manages drag-and-drop operations between native Wayland applications and legacy XWayland clients through a translation layer integrated into its compositor and window manager, Mutter. Because Wayland and the X Window System rely on completely diffe">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-wayland-and-x-wayland-drag-and-drop-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Wayland and XWayland Drag and Drop Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-wayland-and-x-wayland-drag-and-drop-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME manages drag-and-drop operations between native Wayland applications and legacy XWayland clients through a translation layer integrated into its compositor and window manager, Mutter. Because Wayland and the X Window System rely on completely diffe" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-wayland-and-xwayland-drag-and-drop-explained">GNOME
+Wayland and XWayland Drag and Drop Explained</h1>
+<p>GNOME manages drag-and-drop operations between native Wayland
+applications and legacy XWayland clients through a translation layer
+integrated into its compositor and window manager, Mutter. Because
+Wayland and the X Window System rely on completely different
+inter-process communication mechanisms for data exchange, Mutter acts as
+an active proxy. It translates native Wayland data transfer protocols
+into the X11 XDnD protocol and vice versa, allowing users to drag files,
+text, and other payloads between legacy and modern applications
+seamlessly.</p>
+<h3 id="the-protocol-divide">The Protocol Divide</h3>
+<p>Native Wayland and X11 implement clipboard and drag-and-drop (DnD)
+systems using fundamentally different architectures:</p>
+<ul>
+<li><strong>Wayland Native:</strong> Relies on the
+<code>wl_data_device</code>, <code>wl_data_source</code>, and
+<code>wl_data_offer</code> interfaces. The compositor directly mediates
+the transfer using standard UNIX file descriptors (pipes) negotiated via
+MIME types.</li>
+<li><strong>X11 / XWayland:</strong> Relies on the standard X
+Drag-and-Drop protocol (XDnD). Clients exchange X11
+<code>ClientMessage</code> events (<code>XdndEnter</code>,
+<code>XdndPosition</code>, <code>XdndStatus</code>,
+<code>XdndDrop</code>) and transfer actual data payloads via X11
+properties and atom-based selection mechanisms.</li>
+</ul>
+<p>Because clients under XWayland cannot directly communicate with the
+Wayland compositor’s internal data-device architecture, Mutter bridges
+the two environments.</p>
+<h3 id="dragging-from-a-wayland-native-app-to-xwayland">Dragging from a
+Wayland Native App to XWayland</h3>
+<p>When a user initiates a drag action within a native Wayland client
+and moves the pointer into an XWayland-managed window:</p>
+<ol type="1">
+<li><strong>Offer Registration:</strong> The Wayland source client
+advertises the offered MIME types using
+<code>wl_data_source.offer</code> to Mutter.</li>
+<li><strong>Boundary Crossing:</strong> When Mutter detects the pointer
+crossing into an XWayland surface, it initializes an internal
+proxy.</li>
+<li><strong>XDnD Emulation:</strong> Mutter translates the Wayland MIME
+offers into corresponding X11 atoms (for example, mapping
+<code>text/plain;charset=utf-8</code> to <code>UTF8_STRING</code>).
+Mutter then generates synthetic X11 XDnD events, sending
+<code>XdndEnter</code> and <code>XdndPosition</code> events to the
+target XWayland window on behalf of a virtual X11 drag source.</li>
+<li><strong>The Drop Action:</strong> Upon release, Mutter sends an
+<code>XdndDrop</code> event to the target X11 window.</li>
+<li><strong>Payload Streaming:</strong> The XWayland application issues
+a standard <code>XConvertSelection</code> request for the data. Mutter
+intercepts this request, opens a UNIX pipe to the native Wayland source
+via <code>wl_data_source.send</code>, reads the stream, and transfers
+the data into the requested X11 window property.</li>
+</ol>
+<h3 id="dragging-from-xwayland-to-a-wayland-native-app">Dragging from
+XWayland to a Wayland Native App</h3>
+<p>When dragging begins inside an XWayland window and targets a native
+Wayland window:</p>
+<ol type="1">
+<li><strong>XDnD Interception:</strong> The XWayland client emits an
+<code>XdndEnter</code> event containing a list of supported X11 atoms.
+Mutter intercepts these messages before they reach the root window.</li>
+<li><strong>MIME Synthesis:</strong> Mutter creates a synthetic Wayland
+<code>wl_data_source</code> that advertises the corresponding MIME types
+equivalent to the detected X11 atoms.</li>
+<li><strong>Wayland Negotiation:</strong> As the pointer enters the
+native Wayland window, Mutter sends <code>wl_data_device.enter</code>
+and <code>wl_data_device.data_offer</code> events to the native client,
+presenting the synthesized MIME options.</li>
+<li><strong>The Drop Action:</strong> When the user releases the input
+button, the native Wayland client accepts an offered MIME type and
+passes a writable file descriptor back to Mutter via
+<code>wl_data_offer.receive</code>.</li>
+<li><strong>Selection Request and Pipe Transfer:</strong> Mutter
+requests the selection from the XWayland source application via the X11
+mechanism (<code>XdndSelection</code>). As the XWayland application
+writes the data to the X selection, Mutter reads the payload and writes
+it directly into the file descriptor supplied by the native Wayland
+target.</li>
+</ol>
+<h3 id="format-and-atom-mapping">Format and Atom Mapping</h3>
+<p>A critical function of Mutter during this bridging process is data
+type conversion. Wayland relies strictly on Internet media types (MIME
+types, such as <code>text/uri-list</code> or <code>image/png</code>),
+whereas X11 applications often rely on legacy target atoms (such as
+<code>STRING</code>, <code>TEXT</code>, <code>UTF8_STRING</code>, or
+<code>image/x-win-bitmap</code>). Mutter maintains a bidirectional
+lookup table that maps standard MIME formats to their historical X11
+equivalents, ensuring that file managers, web browsers, and text editors
+correctly interpret the data payload regardless of the display server
+protocol they target.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

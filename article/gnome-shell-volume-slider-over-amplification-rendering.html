@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Shell Volume Slider Over-Amplification Rendering - gnome</title>
+    <meta name="description" content="GNOME Shell renders quick-setting volume sliders with over-amplification by integrating low-level audio state from the GNOME Volume Control (GVC) library with its Clutter-based Shell Toolkit (St). When over-amplification is enabled, the shell dynamically">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-shell-volume-slider-over-amplification-rendering">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Shell Volume Slider Over-Amplification Rendering - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-shell-volume-slider-over-amplification-rendering" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell renders quick-setting volume sliders with over-amplification by integrating low-level audio state from the GNOME Volume Control (GVC) library with its Clutter-based Shell Toolkit (St). When over-amplification is enabled, the shell dynamically" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-shell-volume-slider-over-amplification-rendering">GNOME
+Shell Volume Slider Over-Amplification Rendering</h1>
+<p>GNOME Shell renders quick-setting volume sliders with
+over-amplification by integrating low-level audio state from the GNOME
+Volume Control (GVC) library with its Clutter-based Shell Toolkit (St).
+When over-amplification is enabled, the shell dynamically rescales the
+slider's internal coordinate system beyond the standard 100% threshold,
+visually partitions the track to indicate distorted audio ranges, and
+renders the progress bar through custom Clutter actor drawing
+routines.</p>
+<h3 id="state-management-and-gvc-integration">State Management and GVC
+Integration</h3>
+<p>The underlying audio subsystem (typically PipeWire via PulseAudio
+emulation) exposes stream volumes as linear scalar values where
+<code>1.0</code> (or <code>PA_VOLUME_NORM</code>) represents standard
+100% volume. GNOME Shell monitors the GSettings key
+<code>org.gnome.desktop.sound allow-volume-above-100-percent</code>.</p>
+<p>When this setting is active:</p>
+<ul>
+<li>The slider's maximum logical ceiling increases from <code>1.0</code>
+to the over-amplification limit, typically <code>1.53</code> (roughly
+150%).</li>
+<li>The <code>VolumeSlider</code> implementation inside the Quick
+Settings menu binds to the active audio output stream via GVC
+(<code>Gvc.MixerStream</code>).</li>
+<li>Value updates trigger normalized position recalculations, scaling
+the slider's internal range dynamically between <code>0.0</code> and the
+configured maximum limit.</li>
+</ul>
+<h3 id="coordinate-mapping-and-value-normalization">Coordinate Mapping
+and Value Normalization</h3>
+<p>GNOME Shell’s slider widget maps continuous floating-point values to
+pixel coordinates along the track. When over-amplification is disabled,
+standard maximum volume aligns with the full visual width (<span
+class="math inline">\(w\)</span>) of the slider track:</p>
+<p><span class="math display">\[\text{Fill Width} =
+\text{clamp}\left(\frac{\text{Volume}}{\text{PA\_VOLUME\_NORM}}, 0.0,
+1.0\right) \times w\]</span></p>
+<p>When over-amplification is active, the track's total width represents
+the amplified maximum rather than the baseline maximum. The reference
+point for 100% volume is shifted leftward along the track:</p>
+<p><span class="math display">\[\text{Baseline Mark Position} =
+\frac{\text{PA\_VOLUME\_NORM}}{\text{Amplified Maximum}} \times
+w\]</span></p>
+<p>This recalculation leaves approximately the final third of the
+physical track reserved exclusively for over-amplification levels.</p>
+<h3 id="visual-representation-and-threshold-rendering">Visual
+Representation and Threshold Rendering</h3>
+<p>The slider renders its visual state using Clutter actors and St
+styling rules defined in the shell's active stylesheet.</p>
+<ol type="1">
+<li><strong>The Trough:</strong> The background bar is drawn as a
+continuous rounded rectangle acting as the container for both normal and
+amplified zones.</li>
+<li><strong>The 100% Marker:</strong> To prevent unintentional audio
+distortion, GNOME Shell draws a visual reference point—a vertical
+separator or tick mark—at the exact coordinate corresponding to normal
+amplification. This marker alerts the user where safe volume ends and
+potential clipping begins.</li>
+<li><strong>The Active Level Fill:</strong> The active level is filled
+using an inner actor whose width expands up to the current value. When
+the level exceeds the 100% threshold mark, the filled bar crosses the
+separator.</li>
+<li><strong>Style Classes:</strong> The slider actor dynamically appends
+CSS classes (such as <code>.overamplified</code> or warning-tinted state
+styles) when the slider handle crosses the normalization mark, altering
+the fill color or handle appearance to visually communicate that the
+hardware is operating beyond its default gain.</li>
+</ol>
+<h3 id="clutter-and-cairo-painting">Clutter and Cairo Painting</h3>
+<p>The actual pixel rasterization is delegated to Clutter's rendering
+pipeline. The slider component uses a custom <code>vfunc_repaint</code>
+or Cairo canvas drawing pattern on an <code>St.DrawingArea</code> or
+composite Clutter texture:</p>
+<ul>
+<li>Sub-pixel positioning ensures smooth handle movement across the 100%
+demarcation during drag operations.</li>
+<li>Input events (pointer dragging and scroll gestures) map cursor
+coordinates back to audio levels non-linearly near the 100% boundary,
+providing a subtle snap or resistance behavior so users can easily
+settle at standard maximum without overshooting into amplification.</li>
+<li>Once calculated, the volume update is dispatched asynchronously back
+to GVC, updating the stream gain in PipeWire/PulseAudio in real
+time.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

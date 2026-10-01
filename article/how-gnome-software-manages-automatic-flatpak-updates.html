@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Software Manages Automatic Flatpak Updates - gnome</title>
+    <meta name="description" content="GNOME Software streamlines application maintenance by automatically handling Flatpak updates in the background. It achieves this by coordinating its background service with the libflatpak API, monitoring network conditions, and taking advantage of Flatpa">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-software-manages-automatic-flatpak-updates">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Software Manages Automatic Flatpak Updates - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-software-manages-automatic-flatpak-updates" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Software streamlines application maintenance by automatically handling Flatpak updates in the background. It achieves this by coordinating its background service with the libflatpak API, monitoring network conditions, and taking advantage of Flatpa" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-software-manages-automatic-flatpak-updates">How GNOME
+Software Manages Automatic Flatpak Updates</h1>
+<p>GNOME Software streamlines application maintenance by automatically
+handling Flatpak updates in the background. It achieves this by
+coordinating its background service with the <code>libflatpak</code>
+API, monitoring network conditions, and taking advantage of Flatpak's
+sandboxed, transaction-based architecture. This article explains the
+underlying mechanism GNOME Software uses to check for, download, and
+apply these updates seamlessly without requiring system restarts or
+interrupting active user workflows.</p>
+<h3 id="background-scheduling-and-detection">Background Scheduling and
+Detection</h3>
+<p>When automatic updates are enabled, GNOME Software runs as a
+persistent background process launched during the user session. It
+periodically queries remote Flatpak repositories (such as Flathub) for
+metadata changes using <code>libflatpak</code>. Instead of polling
+continuously, the background service relies on scheduled internal
+timers—typically triggering checks once every day or upon system
+startup.</p>
+<h3 id="network-state-verification">Network State Verification</h3>
+<p>Before initiating any download, GNOME Software checks the system's
+network status via NetworkManager and GLib networking APIs. If the
+connection is marked as metered (such as a mobile hotspot) or if
+data-saver modes are enabled, GNOME Software postpones the automatic
+update. This ensures large runtime downloads and application assets do
+not consume bandwidth unexpectedly.</p>
+<h3 id="silent-downloading-and-staging">Silent Downloading and
+Staging</h3>
+<p>Once an unmetered connection is confirmed, GNOME Software silently
+downloads the updated OSTree commits for the target Flatpak applications
+and runtimes. Because Flatpak applications are decoupled from the host
+operating system's base packages, these downloads are staged directly
+into the local Flatpak storage directory (either system-wide at
+<code>/var/lib/flatpak</code> or per-user at
+<code>~/.local/share/flatpak</code>). This process requires no root
+authentication for user-level installations, and system-level
+installations use Polkit policies configured to allow silent background
+staging.</p>
+<h3 id="safe-application-deployment">Safe Application Deployment</h3>
+<p>Flatpak relies on OSTree, an immutable, content-addressed object
+store similar to Git. Because files are addressed by their checksums,
+the new version of an application can be written to disk while an older
+version is actively running. GNOME Software deploys the new OSTree
+commit and updates the application's reference point in the
+background.</p>
+<p>Active application processes remain unaffected because their open
+file descriptors still point to the previous version's runtime
+environment. The next time the user closes and relaunches the
+application, the system launches the newly deployed version.</p>
+<h3 id="configuration-via-gsettings">Configuration via GSettings</h3>
+<p>This automated lifecycle is governed by the GNOME desktop
+configuration system. The feature is controlled by the
+<code>download-updates</code> key located within the
+<code>org.gnome.software</code> GSettings schema. When this toggle is
+turned off in the GNOME Software preferences, the background process
+restricts itself to downloading metadata only, leaving the download and
+deployment phases to manual user interaction.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

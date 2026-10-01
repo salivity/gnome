@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Shell Smooth Animations with Clutter Framework - gnome</title>
+    <meta name="description" content="GNOME Shell delivers a fluid, responsive user experience by combining hardware-accelerated rendering with Clutter's implicit animation framework. Clutter, integrated directly into GNOME's Mutter window manager, abstracts complex animation math away from">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-shell-smooth-animations-with-clutter-framework">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Shell Smooth Animations with Clutter Framework - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-shell-smooth-animations-with-clutter-framework" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell delivers a fluid, responsive user experience by combining hardware-accelerated rendering with Clutter's implicit animation framework. Clutter, integrated directly into GNOME's Mutter window manager, abstracts complex animation math away from" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-shell-smooth-animations-with-clutter-framework">GNOME
+Shell Smooth Animations with Clutter Framework</h1>
+<p>GNOME Shell delivers a fluid, responsive user experience by combining
+hardware-accelerated rendering with Clutter's implicit animation
+framework. Clutter, integrated directly into GNOME's Mutter window
+manager, abstracts complex animation math away from developers by
+automatically interpolating property changes on interface elements. By
+offloading rendering calculations to the GPU and synchronizing updates
+with the display refresh rate, the system produces consistent, tear-free
+interface transitions without relying on manual, frame-by-frame
+programming.</p>
+<h3 id="the-clutter-scene-graph-and-actors">The Clutter Scene Graph and
+Actors</h3>
+<p>At the foundation of GNOME Shell's interface is the Clutter scene
+graph. Every visible UI component—such as the top bar, dash, application
+grid, and pop-up menus—is a <code>ClutterActor</code>. Actors exist in a
+hierarchical, 2D-on-3D canvas where individual properties like position,
+scale, opacity, rotation, and size are tracked. Because Clutter relies
+on Cogl, a modern abstraction layer for OpenGL and Vulkan, these actors
+are rendered directly as textured quads on the GPU, avoiding CPU-bound
+software drawing.</p>
+<h3 id="how-implicit-animations-work">How Implicit Animations Work</h3>
+<p>Traditional explicit animations require developers to configure
+timers, tick listeners, and manual property calculations for every
+frame. In contrast, Clutter's implicit animation model animates changes
+automatically when a state modification occurs.</p>
+<p>When a developer updates an actor's property—such as expanding a
+panel's width or changing its opacity—Clutter inspects whether an easing
+configuration is active on that actor. If duration and easing modes are
+defined, Clutter intercepts the change, detects the delta between the
+current state and the target state, and generates an internal
+transition. The developer writes code that represents the desired end
+state, and the framework automatically calculates every intermediate
+frame.</p>
+<h3 id="easing-modes-and-transitions">Easing Modes and Transitions</h3>
+<p>Under the hood, implicit animations rely on
+<code>ClutterTransition</code> objects and predefined easing curves.
+When state transitions occur:</p>
+<ul>
+<li><strong>Duration:</strong> Specifies how long the interpolation
+takes from the start value to the end value.</li>
+<li><strong>Easing Curves:</strong> Mathematical formulas (such as
+cubic-bezier, ease-in-quad, or ease-out-bounce) modulate the rate of
+change over time, making UI movements feel natural rather than
+robotic.</li>
+<li><strong>Property Overrides:</strong> If a new property change occurs
+while an animation is already in flight, Clutter smoothly interrupts and
+blends the current trajectory toward the new target without visual
+snapping or stutter.</li>
+</ul>
+<p>GNOME Shell developers configure these animations in JavaScript using
+straightforward property sets within an animation allocation block,
+allowing consistent UI choreography across the desktop.</p>
+<h3 id="synchronization-with-the-mutter-render-loop">Synchronization
+with the Mutter Render Loop</h3>
+<p>Smoothness requires strict synchronization with the monitor's refresh
+cycle. Clutter uses a specialized frame clock tied to the Mutter
+compositor. The animation framework executes its timeline steps right
+before the scene graph is drawn and submitted to the kernel's Direct
+Rendering Manager (DRM) subsystem.</p>
+<p>By scheduling animation updates directly against hardware vertical
+blanking intervals (VBlank), GNOME Shell prevents dropped frames and
+screen tearing. The frame clock dynamically adjusts the internal
+timeline tick to match the display’s native refresh rate—whether running
+at 60Hz, 120Hz, or variable refresh rates—ensuring that implicit
+animations remain consistently fluid across different hardware
+configurations.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

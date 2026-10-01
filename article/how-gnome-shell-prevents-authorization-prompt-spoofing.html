@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Prevents Authorization Prompt Spoofing - gnome</title>
+    <meta name="description" content="GNOME Shell isolates modal authorization prompts from application spoofing attacks by embedding the authentication agent directly into the display compositor and enforcing strict input-handling boundaries. By leveraging Wayland’s security model, intern">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-prevents-authorization-prompt-spoofing">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Prevents Authorization Prompt Spoofing - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-prevents-authorization-prompt-spoofing" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell isolates modal authorization prompts from application spoofing attacks by embedding the authentication agent directly into the display compositor and enforcing strict input-handling boundaries. By leveraging Wayland’s security model, intern" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-prevents-authorization-prompt-spoofing">How
+GNOME Shell Prevents Authorization Prompt Spoofing</h1>
+<p>GNOME Shell isolates modal authorization prompts from application
+spoofing attacks by embedding the authentication agent directly into the
+display compositor and enforcing strict input-handling boundaries. By
+leveraging Wayland’s security model, internal system modal grabs, and
+compositor-level UI rendering, GNOME Shell ensures that unprivileged
+client applications can neither impersonate administrative dialogs nor
+intercept sensitive credentials such as user passwords.</p>
+<h3 id="direct-in-compositor-rendering">Direct In-Compositor
+Rendering</h3>
+<p>In traditional desktop architectures, authorization prompts (such as
+Polkit dialogs) were managed by standalone helper processes running as
+separate application windows. This design left them vulnerable to window
+stacking tricks, pixel-stealing, and UI redress attacks.</p>
+<p>GNOME Shell resolves this by implementing its Polkit authentication
+agent directly within the compositor process itself
+(<code>gnome-shell</code>). When an application requests elevated
+privileges, the prompt is rendered natively via GNOME Shell's internal
+Clutter/Stutter scene graph on a privileged UI layer
+(<code>uiGroup</code>), rather than as an independent Wayland or X11
+client window. Because no external application has access to the
+compositor's internal scene graph, third-party software cannot inject
+visual elements, draw overlays, or alter the appearance of the
+prompt.</p>
+<h3 id="exclusive-system-modal-grabs">Exclusive System Modal Grabs</h3>
+<p>When an authorization prompt is triggered, GNOME Shell initiates an
+exclusive system modal grab. This mechanism establishes several
+defenses:</p>
+<ul>
+<li><strong>Event Routing:</strong> The compositor redirects all
+keyboard and mouse input exclusively to the internal authentication
+dialog.</li>
+<li><strong>Input Blocking:</strong> Background applications stop
+receiving pointer and keyboard events entirely. This prevents malicious
+applications from capturing typed passwords or manipulating clicks.</li>
+<li><strong>Visual Dimming:</strong> The compositor applies an
+environmental dimming effect and freezes interaction with the rest of
+the workspace, visually signaling to the user that the desktop has
+entered a trusted, privileged state.</li>
+</ul>
+<h3 id="wayland-security-and-surface-isolation">Wayland Security and
+Surface Isolation</h3>
+<p>The isolation of authentication prompts relies heavily on the
+architectural security of Wayland:</p>
+<ul>
+<li><strong>No Global Coordinates:</strong> Applications under Wayland
+do not know the absolute screen coordinates of other windows or system
+prompts, preventing precise alignment of deceptive overlays.</li>
+<li><strong>No Unsolicited Stacking:</strong> Client applications cannot
+control their own Z-order relative to system layers. A standard
+application cannot force itself on top of a system modal dialog.</li>
+<li><strong>No Input Snooping:</strong> Unlike X11, Wayland does not
+permit client applications to log global input, ensuring that keystrokes
+entered into the GNOME Shell prompt cannot be read via background
+keylogging processes.</li>
+</ul>
+<h3 id="origin-verification-and-contextual-clarity">Origin Verification
+and Contextual Clarity</h3>
+<p>To prevent deception regarding which application triggered the
+escalation, the built-in Polkit agent queries the D-Bus system bus and
+systemd to verify the caller's process credentials. GNOME Shell then
+displays the exact identity, executable, and requested action within the
+prompt itself. This metadata is verified independently of the requesting
+application's self-reported labels, preventing malware from disguising a
+root privilege request as an innocuous routine task.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Manages Flatpak Background Permissions - gnome</title>
+    <meta name="description" content="GNOME manages background application permissions for Flatpak packages through the XDG Desktop Portal framework, specifically using the Background portal. Because Flatpak isolates applications inside sandboxes, programs cannot silently spawn persistent ba">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-manages-flatpak-background-permissions">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Manages Flatpak Background Permissions - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-manages-flatpak-background-permissions" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME manages background application permissions for Flatpak packages through the XDG Desktop Portal framework, specifically using the Background portal. Because Flatpak isolates applications inside sandboxes, programs cannot silently spawn persistent ba" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-manages-flatpak-background-permissions">How GNOME
+Manages Flatpak Background Permissions</h1>
+<p>GNOME manages background application permissions for Flatpak packages
+through the XDG Desktop Portal framework, specifically using the
+Background portal. Because Flatpak isolates applications inside
+sandboxes, programs cannot silently spawn persistent background daemons
+or autostart on boot without explicit system clearance. GNOME acts as
+the front-end mediator, intercepting these background requests,
+enforcing user consent, and providing graphical interfaces to review and
+revoke background running privileges at any time.</p>
+<h2 id="the-role-of-xdg-desktop-portals">The Role of XDG Desktop
+Portals</h2>
+<p>Flatpak enforces strict sandboxing rules that prevent applications
+from escaping their process tree or persisting after their graphical
+windows are closed. To run services or listeners in the background, a
+Flatpak app must communicate over D-Bus with the background portal
+(<code>org.freedesktop.portal.Background</code>), implemented on GNOME
+systems by <code>xdg-desktop-portal-gnome</code>.</p>
+<p>When an application attempts to maintain a background service or
+register an autostart command, the portal queries the permission store.
+If the application has not yet been granted permission, GNOME prompts
+the user with an authorization dialog detailing the request.</p>
+<h2 id="permission-states-and-storage">Permission States and
+Storage</h2>
+<p>GNOME and the portal system store permission states in a centralized
+database managed by the <code>xdg-permission-store</code>. Background
+access generally falls into three states:</p>
+<ul>
+<li><strong>Allowed:</strong> The application is permitted to run
+without an active window and can wake up or stay alive in the
+background.</li>
+<li><strong>Denied:</strong> The application's request is blocked;
+processes attempting to remain alive after the primary window is closed
+may be terminated by the desktop session.</li>
+<li><strong>Ask:</strong> The portal prompts the user each time the
+condition is triggered until a permanent preference is set.</li>
+</ul>
+<p>Applications can also request permission to run automatically at
+system login. This is handled concurrently through the same portal
+mechanism, ensuring autostart entries cannot be placed in user
+directories without the desktop environment's mediation.</p>
+<h2 id="managing-permissions-via-gnome-settings">Managing Permissions
+via GNOME Settings</h2>
+<p>Users can inspect and modify background permissions through the GNOME
+control center:</p>
+<ol type="1">
+<li>Open <strong>Settings</strong>.</li>
+<li>Navigate to <strong>Apps</strong>.</li>
+<li>Select the desired Flatpak application from the list.</li>
+<li>Toggle the <strong>Run in Background</strong> switch to grant or
+revoke permission.</li>
+</ol>
+<p>Disabling this option updates the permission store immediately. The
+next time the application attempts to keep background threads or
+services alive without an active window, the portal denies the
+operation.</p>
+<h2 id="monitoring-active-background-services">Monitoring Active
+Background Services</h2>
+<p>Starting in GNOME 44, the GNOME Shell includes a dedicated
+"Background Apps" tracker inside the Quick Settings menu (top-right
+system menu).</p>
+<p>When a Flatpak application runs without a visible window, GNOME Shell
+identifies the process via systemd application scopes and the portal
+service. The application appears in the menu with a close button, giving
+users real-time visibility into which sandboxed services are consuming
+system resources and allowing them to end the processes on demand.</p>
+<h2 id="command-line-control">Command-Line Control</h2>
+<p>For headless configurations or advanced management, Flatpak
+permissions can be queried and modified using the
+<code>flatpak permission</code> commands:</p>
+<ul>
+<li><strong>List background permissions:</strong>
+<code>flatpak permissions</code></li>
+<li><strong>Reset an application's background permission:</strong>
+<code>flatpak permission-reset &lt;app-id&gt;</code></li>
+<li><strong>Explicitly set permission:</strong>
+<code>flatpak permission-set background background &lt;app-id&gt; yes</code>
+(or <code>no</code> to block)</li>
+</ul>
+<p>This combined architecture ensures that background services from
+sandboxed applications remain transparent, strictly governed, and
+entirely under user control.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

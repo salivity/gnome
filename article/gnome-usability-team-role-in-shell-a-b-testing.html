@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Usability Team Role in Shell A/B Testing - gnome</title>
+    <meta name="description" content="This article examines how the GNOME Usability Team evaluates desktop shell modifications through structured, comparative usability research and variant testing. It outlines the methodologies used to test competing interface designs, how open-source priva">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-usability-team-role-in-shell-a-b-testing">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Usability Team Role in Shell A/B Testing - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-usability-team-role-in-shell-a-b-testing" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article examines how the GNOME Usability Team evaluates desktop shell modifications through structured, comparative usability research and variant testing. It outlines the methodologies used to test competing interface designs, how open-source priva" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-usability-team-role-in-shell-ab-testing">GNOME Usability
+Team Role in Shell A/B Testing</h1>
+<p>This article examines how the GNOME Usability Team evaluates desktop
+shell modifications through structured, comparative usability research
+and variant testing. It outlines the methodologies used to test
+competing interface designs, how open-source privacy values shape these
+evaluations, and the process of transforming experimental test results
+into finalized GNOME Shell features.</p>
+<h3
+id="defining-ab-testing-in-an-open-source-desktop-environment">Defining
+A/B Testing in an Open-Source Desktop Environment</h3>
+<p>Traditional software companies frequently deploy remote,
+telemetry-driven A/B testing silently across large user bases. In
+contrast, the GNOME Project prioritizes user privacy and software
+transparency. Consequently, the GNOME Usability Team does not conduct
+silent, server-side split tests on production installations.</p>
+<p>Instead, the team conducts comparative usability testing in
+controlled environments. When major interface modifications are
+proposed—such as changes to the Activities Overview, workspace layouts,
+or gesture navigation—the team creates discrete design variants (Option
+A versus Option B) and tests them against targeted user cohorts under
+explicit consent.</p>
+<h3 id="designing-test-variations-and-interactive-prototypes">Designing
+Test Variations and Interactive Prototypes</h3>
+<p>Before code reaches the stable GNOME Shell repository, the Usability
+Team identifies key interaction bottlenecks and drafts candidate
+solutions. The team’s role begins with translating conceptual shell
+changes into testable assets:</p>
+<ul>
+<li><strong>Interactive Mockups:</strong> Designers build clickable
+prototypes using tools like Figma or web technologies to simulate shell
+interactions without writing complete C or JavaScript code.</li>
+<li><strong>Experimental Branches:</strong> For tests requiring hardware
+acceleration or native shell interactions (such as gesture animations),
+developers produce custom test builds of GNOME Shell containing the
+competing mechanics.</li>
+</ul>
+<p>By isolating specific variables—such as vertical versus horizontal
+workspace arrangements—the team ensures that the tests accurately
+evaluate the specific interaction model rather than external
+distractions.</p>
+<h3 id="conducting-user-research-and-task-based-evaluations">Conducting
+User Research and Task-Based Evaluations</h3>
+<p>The GNOME Usability Team oversees the execution of comparative
+testing sessions. These studies typically involve both existing Linux
+users and participants accustomed to other operating systems to measure
+learnability and discoverability.</p>
+<p>During these sessions, the team coordinates the following
+activities:</p>
+<ul>
+<li><strong>Task Definition:</strong> Participants are assigned
+identical desktop workflows, such as launching applications, organizing
+open windows, or navigating between multiple virtual desktops.</li>
+<li><strong>Quantitative Benchmarking:</strong> Researchers track task
+completion rates, time-to-task, and navigation errors across the
+different design variants.</li>
+<li><strong>Qualitative Feedback:</strong> Observers record qualitative
+feedback, noting moments of hesitation, confusion, or visual clutter
+reported by the participant.</li>
+</ul>
+<h3 id="synthesizing-usability-data-for-shell-developers">Synthesizing
+Usability Data for Shell Developers</h3>
+<p>Once testing concludes, the Usability Team analyzes the comparative
+data to determine which design pattern reduced friction and cognitive
+load. The team synthesizes these findings into design rationale
+documents, public GitLab issues, and interaction guidelines.</p>
+<p>This feedback prevents regression in user experience and provides the
+GNOME Shell development team with verifiable user evidence rather than
+subjective preference. The resulting insights dictate whether a proposed
+change is merged into the default shell, revised for further testing, or
+abandoned entirely in favor of an alternate interaction model.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

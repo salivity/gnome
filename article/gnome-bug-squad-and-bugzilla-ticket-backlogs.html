@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Bug Squad and Bugzilla Ticket Backlogs - gnome</title>
+    <meta name="description" content="The GNOME Bug Squad was an essential volunteer-driven initiative dedicated to triaging, organizing, and reducing the massive accumulation of reports filed in GNOME's legacy Bugzilla tracking system. By serving as the primary buffer between end-users and">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-bug-squad-and-bugzilla-ticket-backlogs">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Bug Squad and Bugzilla Ticket Backlogs - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-bug-squad-and-bugzilla-ticket-backlogs" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Bug Squad was an essential volunteer-driven initiative dedicated to triaging, organizing, and reducing the massive accumulation of reports filed in GNOME's legacy Bugzilla tracking system. By serving as the primary buffer between end-users and" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-bug-squad-and-bugzilla-ticket-backlogs">GNOME Bug Squad
+and Bugzilla Ticket Backlogs</h1>
+<p>The GNOME Bug Squad was an essential volunteer-driven initiative
+dedicated to triaging, organizing, and reducing the massive accumulation
+of reports filed in GNOME's legacy Bugzilla tracking system. By serving
+as the primary buffer between end-users and software developers, the
+team ensured that bug reports were reproducible, adequately documented,
+and properly categorized before reaching project maintainers.
+Historically, the Bug Squad was instrumental in preventing Bugzilla from
+becoming an unmanageable repository, using structured triage protocols,
+community clean-up events, and deduplication workflows to keep GNOME's
+issue pipeline actionable.</p>
+<h3 id="initial-triage-and-quality-control">Initial Triage and Quality
+Control</h3>
+<p>Before the GNOME project migrated its development infrastructure to
+GitLab, Bugzilla received thousands of automated and manual reports
+every month. Many of these issues came through automated crash-reporting
+utilities like Bug Buddy, which frequently submitted incomplete stack
+traces or lacked context.</p>
+<p>The Bug Squad acted as the first line of defense. Squad members
+manually reviewed incoming tickets to verify:</p>
+<ul>
+<li><strong>Completeness:</strong> Checking whether the report contained
+necessary system information, software versions, and debugging
+symbols.</li>
+<li><strong>Reproducibility:</strong> Testing whether reported behavior
+could be replicated on supported versions of GNOME components.</li>
+<li><strong>Actionability:</strong> Requesting additional terminal
+output, logs, or reproduction steps from users when reports were too
+vague for developers to diagnose.</li>
+</ul>
+<h3 id="deduplication-and-component-routing">Deduplication and Component
+Routing</h3>
+<p>A major source of backlog inflation in Bugzilla was the sheer volume
+of duplicate submissions for prominent crashes or regressions. The Bug
+Squad spent significant time querying existing tickets to
+cross-reference stack traces and symptoms. By marking redundant issues
+as duplicates, they consolidated discussions and user reports into
+single, actionable master tickets.</p>
+<p>Additionally, non-technical users frequently misattributed errors,
+such as filing core GTK or display server issues under specific desktop
+applications like Nautilus. Bug Squad contributors reclassified these
+tickets to the appropriate product, component, and sub-module, ensuring
+the relevant maintainers were notified.</p>
+<h3 id="organized-bug-days-and-sprints">Organized "Bug Days" and
+Sprints</h3>
+<p>To aggressively reduce backlogs, the Bug Squad organized regular "Bug
+Days" and targeted triage sprints. These coordinated events rallied both
+seasoned contributors and newcomers around specific modules or recurring
+problems.</p>
+<p>During these sprints, the team focused on:</p>
+<ul>
+<li>Closing tickets that pertained to end-of-life GNOME releases.</li>
+<li>Mass-verifying whether old, lingering bugs were still present in the
+latest software releases.</li>
+<li>Pinging original reporters on inactive tickets to determine if an
+issue remained relevant, closing tickets that received no response after
+a designated grace period.</li>
+</ul>
+<h3 id="bridging-the-gap-between-users-and-maintainers">Bridging the Gap
+Between Users and Maintainers</h3>
+<p>Core developers often lacked the time to manage
+customer-support-style communication alongside software architecture and
+feature development. The Bug Squad served as an intermediary layer. They
+translated non-technical user complaints into clear, technical problem
+statements, set appropriate priority and severity flags, and closed out
+invalid reports or feature requests that fell outside the project's
+scope. This triage process ensured that when developers opened Bugzilla,
+their queues were populated by genuine, well-documented technical
+problems rather than unfiltered user noise.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

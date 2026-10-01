@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Shell Window Tiling and Edge Snapping - gnome</title>
+    <meta name="description" content="GNOME Shell provides built-in window management features that allow users to organize their workspace efficiently using half-tiling and edge snapping. Handled internally by GNOME’s compositing window manager, Mutter, these features rely on predefined k">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-shell-window-tiling-and-edge-snapping">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Shell Window Tiling and Edge Snapping - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-shell-window-tiling-and-edge-snapping" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell provides built-in window management features that allow users to organize their workspace efficiently using half-tiling and edge snapping. Handled internally by GNOME’s compositing window manager, Mutter, these features rely on predefined k" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-shell-window-tiling-and-edge-snapping">GNOME Shell Window
+Tiling and Edge Snapping</h1>
+<p>GNOME Shell provides built-in window management features that allow
+users to organize their workspace efficiently using half-tiling and edge
+snapping. Handled internally by GNOME’s compositing window manager,
+Mutter, these features rely on predefined keyboard shortcuts and pointer
+coordinates to split the display space dynamically without requiring
+full manual window resizing or dedicated third-party tiling
+managers.</p>
+<h3 id="the-architectural-role-of-mutter">The Architectural Role of
+Mutter</h3>
+<p>Window tiling in GNOME Shell is not governed by a traditional dynamic
+tiling engine like i3 or Sway; instead, it operates as a state-based
+layout feature of Mutter. When an application window is manipulated,
+Mutter tracks its state through specific window geometry flags, such as
+maximized, unconstrained, tiled-left, or tiled-right. When a tiling
+action occurs, Mutter overrides the application's default window
+geometry, recalculates the window bounds to match exactly 50% of the
+usable screen width (accounting for system panels like the top bar), and
+redraws the window buffer within those constraints.</p>
+<h3 id="keyboard-shortcuts-and-half-tiling">Keyboard Shortcuts and
+Half-Tiling</h3>
+<p>GNOME Shell assigns direct keyboard shortcuts to trigger half-tiling
+states instantly:</p>
+<ul>
+<li><strong>Super + Left Arrow:</strong> Snaps the focused window to the
+left half of the current display monitor.</li>
+<li><strong>Super + Right Arrow:</strong> Snaps the focused window to
+the right half of the current display monitor.</li>
+<li><strong>Super + Up Arrow:</strong> Maximizes the active window.</li>
+<li><strong>Super + Down Arrow:</strong> Restores the window from a
+tiled or maximized state back to its previous floating dimensions, or
+minimizes it if already floating.</li>
+</ul>
+<p>When cycling these shortcuts, Mutter tracks previous window states.
+For instance, pressing <code>Super + Right Arrow</code> on a window
+already snapped to the left will either restore it to its floating
+geometry or move it directly to the right edge, depending on the active
+GNOME version and monitor topology. In multi-monitor setups, repeating
+the shortcut can move the tiled window sequentially across the edges of
+adjacent displays.</p>
+<h3 id="pointer-based-edge-snapping">Pointer-Based Edge Snapping</h3>
+<p>Edge snapping functions through Mutter’s pointer-tracking routines.
+When a user drags a window by its title bar toward the left or right
+perimeter of the screen:</p>
+<ol type="1">
+<li><strong>Boundary Detection:</strong> Mutter constantly evaluates the
+pointer’s coordinates against the display boundaries.</li>
+<li><strong>Threshold and Visual Preview:</strong> Once the pointer
+crosses the predefined edge threshold, GNOME Shell renders a
+semi-transparent preview overlay indicating where the window will
+snap.</li>
+<li><strong>State Commitment:</strong> Releasing the mouse button
+commits the action, transitioning the window into its tiled state and
+setting its width to 50% and its height to 100% of the available display
+workspace. Dragging the window away from the edge immediately clears the
+tiled state and restores the original floating dimensions.</li>
+</ol>
+<h3 id="native-limitations-and-extensions">Native Limitations and
+Extensions</h3>
+<p>Out of the box, standard GNOME Shell restricts native tiling to 50/50
+two-column half-tiling and full maximization. It does not natively
+provide quarter-tiling (corner snapping to 25% screen quadrants) or
+automated layout tree restructuring. For users requiring four-corner
+snapping or synchronized split-divider resizing, GNOME Shell relies on
+extensions such as Tiling Assistant, which utilize Mutter's internal
+APIs to expose advanced quarter-tiling and simultaneous dual-window
+resizing.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

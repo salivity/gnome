@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Infrastructure Build Runners and Email Relays - gnome</title>
+    <meta name="description" content="The GNOME Infrastructure Team maintains the digital backbone for the GNOME desktop project, ensuring that developers and contributors worldwide have access to reliable development and communication tools. Among their most critical responsibilities are pr">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-infrastructure-build-runners-and-email-relays">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Infrastructure Build Runners and Email Relays - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-infrastructure-build-runners-and-email-relays" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Infrastructure Team maintains the digital backbone for the GNOME desktop project, ensuring that developers and contributors worldwide have access to reliable development and communication tools. Among their most critical responsibilities are pr" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-infrastructure-build-runners-and-email-relays">GNOME
+Infrastructure Build Runners and Email Relays</h1>
+<p>The GNOME Infrastructure Team maintains the digital backbone for the
+GNOME desktop project, ensuring that developers and contributors
+worldwide have access to reliable development and communication tools.
+Among their most critical responsibilities are provisioning and managing
+automated continuous integration (CI) build runners and maintaining
+secure email relay systems. By administering these systems, the team
+guarantees that code is tested efficiently across various architectures
+and that operational communications, automated alerts, and developer
+emails reach their destinations securely and reliably.</p>
+<h2 id="managing-ci-build-runners">Managing CI Build Runners</h2>
+<p>Modern GNOME development relies heavily on GitLab for source control
+and CI/CD pipelines. The GNOME Infrastructure Team is responsible for
+the design, deployment, and lifecycle management of the build runners
+that execute these pipelines.</p>
+<ul>
+<li><strong>Heterogeneous Architecture Support:</strong> The team
+deploys build runners across multiple architectures, primarily x86_64
+and AArch64 (ARM), allowing GNOME applications and underlying libraries
+to be tested across different hardware targets.</li>
+<li><strong>Environment Provisioning and Containerization:</strong>
+Runners are configured to run tasks within isolated container
+environments using tools such as Podman and Docker. This ensures that
+every build starts from a clean state and that malicious or poorly
+formed test code cannot access the host machine.</li>
+<li><strong>Specialized Workloads:</strong> The infrastructure
+accommodates specialized builds, such as generating Flatpak packages,
+running system test suites, and producing official GNOME OS images.
+These require dedicated compute resources, custom caching solutions, and
+privileged virtualization capabilities (like KVM) managed directly by
+the team.</li>
+<li><strong>Capacity and Resource Optimization:</strong> The team
+monitors hardware utilization, manages runner autoscaling across
+on-premises servers and donated cloud infrastructure, and cleans up
+artifacts and cache layers to maintain pipeline speed and prevent
+storage exhaustion.</li>
+</ul>
+<h2 id="hosting-and-securing-email-relays">Hosting and Securing Email
+Relays</h2>
+<p>Email remains a fundamental pillar for the GNOME Foundation,
+supporting automated service notifications, mailing lists, and official
+address forwarding for foundation members. The Infrastructure Team
+oversees the mail transfer agents (MTAs) and relay infrastructure that
+handle this traffic.</p>
+<ul>
+<li><strong>Centralized Mail Relaying:</strong> The team configures
+centralized Postfix or Exim mail relays that process outgoing messages
+generated by GNOME services, including GitLab issue updates, Discourse
+forum notifications, and administrative alerts. Routing through
+centralized relays ensures consistent outbound policies.</li>
+<li><strong>Deliverability and Authentication:</strong> To ensure that
+emails are not rejected or flagged as spam by external providers, the
+team manages modern email authentication mechanisms. This includes
+setting up and maintaining correct SPF (Sender Policy Framework)
+records, DKIM (DomainKeys Identified Mail) cryptographic signing, and
+DMARC (Domain-based Message Authentication, Reporting, and Conformance)
+policies across all <code>@gnome.org</code> domains.</li>
+<li><strong>Spam Prevention and Reputation Management:</strong> The
+infrastructure team actively monitors outbound queues to detect
+compromised accounts or runaway scripts that could trigger rate limits
+or blacklisting. By keeping IP addresses in good standing, they ensure
+critical project notifications reach end users without
+interruption.</li>
+<li><strong>Forwarding and Alias Handling:</strong> The team maintains
+alias and forwarding services that route <code>@gnome.org</code>
+addresses assigned to foundation members to their personal mailboxes,
+keeping the directory synchronized with the project's central identity
+management systems.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

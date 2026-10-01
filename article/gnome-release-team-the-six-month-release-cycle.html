@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Release Team: The Six-Month Release Cycle - gnome</title>
+    <meta name="description" content="The GNOME desktop environment follows a strict, time-based six-month release schedule that delivers updates every March and September. Orchestrating this complex timeline requires precise organization, which is the primary responsibility of the GNOME Rel">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-release-team-the-six-month-release-cycle">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Release Team: The Six-Month Release Cycle - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-release-team-the-six-month-release-cycle" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop environment follows a strict, time-based six-month release schedule that delivers updates every March and September. Orchestrating this complex timeline requires precise organization, which is the primary responsibility of the GNOME Rel" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-release-team-the-six-month-release-cycle">GNOME Release
+Team: The Six-Month Release Cycle</h1>
+<p>The GNOME desktop environment follows a strict, time-based six-month
+release schedule that delivers updates every March and September.
+Orchestrating this complex timeline requires precise organization, which
+is the primary responsibility of the GNOME Release Team. This article
+explains how the Release Team manages milestone scheduling, enforces
+critical development freezes, oversees module inclusion, and ensures
+that thousands of independent contributions coalesce into a stable,
+cohesive desktop operating environment twice a year.</p>
+<h3 id="establishing-the-release-schedule">Establishing the Release
+Schedule</h3>
+<p>The Release Team defines the official calendar for each development
+cycle well in advance. Rather than waiting for specific features to be
+finished (a feature-based model), GNOME operates on a time-based model.
+The team plans exact dates for development milestones:</p>
+<ul>
+<li><strong>Alpha Releases:</strong> Early testing milestones allowing
+maintainers to integrate major architectural changes.</li>
+<li><strong>Beta Releases:</strong> Marks the beginning of the
+stabilization period where new features are largely finalized.</li>
+<li><strong>Release Candidates (RC):</strong> The final polishing stage
+focused strictly on critical bug and crash fixes.</li>
+<li><strong>Final Stable Release (.0):</strong> The official public
+release, followed by planned maintenance updates (.1, .2, etc.).</li>
+</ul>
+<h3 id="managing-freezes-and-coordination">Managing Freezes and
+Coordination</h3>
+<p>To prevent last-minute instability and give non-developer
+contributors time to work, the Release Team enforces a sequence of
+progressive freezes across the ecosystem:</p>
+<ul>
+<li><strong>Feature Freeze:</strong> Halts the introduction of major new
+functionalities so developers shift focus toward stabilization.</li>
+<li><strong>UI Freeze:</strong> Locks user interface layouts so
+documentation teams can write guides and capture up-to-date
+screenshots.</li>
+<li><strong>String Freeze:</strong> Prevents any changes to user-facing
+text strings, allowing internationalization and localization teams to
+complete translations without disruption.</li>
+<li><strong>Hard Code Freeze:</strong> Enacted right before release
+candidate builds, permitting only critical regressions or security fixes
+with explicit approval from the Release Team.</li>
+</ul>
+<p>Maintainers requesting an exception to these freezes must submit
+formal freeze break requests, which the Release Team reviews based on
+risk versus necessity.</p>
+<h3 id="curating-the-gnome-core-set">Curating the GNOME Core Set</h3>
+<p>The Release Team determines the composition of official GNOME
+releases. They evaluate which software modules, core libraries, and
+essential applications constitute the official GNOME release set versus
+external projects. The team continuously monitors external dependencies,
+library deprecations, and architectural standards to verify that
+components build cleanly together across different distributions.</p>
+<h3 id="build-verification-and-final-delivery">Build Verification and
+Final Delivery</h3>
+<p>Throughout the cycle, the Release Team leverages Continuous
+Integration (CI) infrastructure to track build health across the entire
+software stack. When a release milestone arrives, the team verifies
+build consistency, tags the central repositories, generates tarballs,
+and updates official release metadata. Once the final checks pass, the
+team coordinates with the documentation, marketing, and distribution
+teams to publish the final release notes and deliver the finished
+software to Linux distributions worldwide.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

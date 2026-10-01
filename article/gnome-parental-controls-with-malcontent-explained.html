@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Parental Controls with Malcontent Explained - gnome</title>
+    <meta name="description" content="The GNOME desktop implements parental controls through an integrated framework named Malcontent, which allows system administrators to set usage restrictions for standard user accounts. By bridging the underlying Linux system with GNOME's graphical envir">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-parental-controls-with-malcontent-explained">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Parental Controls with Malcontent Explained - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-parental-controls-with-malcontent-explained" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop implements parental controls through an integrated framework named Malcontent, which allows system administrators to set usage restrictions for standard user accounts. By bridging the underlying Linux system with GNOME's graphical envir" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-parental-controls-with-malcontent-explained">GNOME
+Parental Controls with Malcontent Explained</h1>
+<p>The GNOME desktop implements parental controls through an integrated
+framework named Malcontent, which allows system administrators to set
+usage restrictions for standard user accounts. By bridging the
+underlying Linux system with GNOME's graphical environment, Malcontent
+enables age-based application filtering, specific program blocklists,
+installation controls, and computer usage limits. This article details
+the architecture behind Malcontent and explains how GNOME components
+work together to enforce digital safety restrictions across the
+operating system.</p>
+<h2 id="the-architecture-of-malcontent">The Architecture of
+Malcontent</h2>
+<p>Malcontent was created to provide a standardized parental control
+system for Linux desktops, originally spearheaded by Endless OS and
+adopted broadly into the upstream GNOME ecosystem. At its foundation,
+Malcontent consists of:</p>
+<ul>
+<li><strong><code>libmalcontent</code>:</strong> A shared C library
+providing APIs for querying and checking application filtering and time
+limit settings.</li>
+<li><strong>Malcontent Daemon
+(<code>malcontent-control</code>):</strong> A background service
+communicating over D-Bus to inspect and update policy states.</li>
+<li><strong>AccountServices Integration:</strong> The system service
+used by GNOME to manage user accounts on the machine. Malcontent stores
+permissions as metadata directly within AccountServices user
+configurations.</li>
+<li><strong>PAM Module (<code>pam_malcontent</code>):</strong> A
+Pluggable Authentication Module that intercepts login attempts to block
+access outside of allowed hours.</li>
+</ul>
+<p>Because restrictions are tied to standard user accounts managed via
+system accounts, only users with administrative (<code>sudo</code> or
+wheel) privileges can modify parental control settings.</p>
+<h2 id="integration-with-gnome-settings">Integration with GNOME
+Settings</h2>
+<p>GNOME integrates Malcontent controls directly into GNOME Control
+Center (GNOME Settings) under the <strong>Users</strong> panel. When an
+administrator inspects a standard user profile, they are presented with
+a "Parental Controls" option.</p>
+<p>Within this interface, administrators can:</p>
+<ul>
+<li>Enforce application filtering based on Open Age Rating Service
+(OARS) ratings.</li>
+<li>Block specific applications individually regardless of their age
+rating.</li>
+<li>Restrict standard users from installing software independently.</li>
+<li>Restrict access to specific web browsers.</li>
+</ul>
+<h2 id="application-filtering-via-oars-and-gnome-software">Application
+Filtering via OARS and GNOME Software</h2>
+<p>To avoid manual curation of every app, Malcontent relies on the Open
+Age Rating Service (OARS). Developers tag applications with content
+ratings (such as violence, language, or online interactions) within
+their AppStream metadata.</p>
+<p>When an administrator designates an age threshold (e.g., ages 3+, 7+,
+12+, or 18+), Malcontent reads the AppStream metadata of installed
+programs and blocks anything exceeding the designated tier.</p>
+<p>GNOME Software enforces this mechanism dynamically:</p>
+<ol type="1">
+<li><strong>Browsing and Search:</strong> Applications rated above the
+user's allowed threshold are automatically hidden from search results
+and catalogs inside GNOME Software.</li>
+<li><strong>Installation Prevention:</strong> If a restricted user
+attempts to install an application through flatpak bundles, package
+files, or external links, GNOME Software prevents installation by
+querying <code>libmalcontent</code>.</li>
+</ol>
+<h2 id="launch-time-application-blocking">Launch-Time Application
+Blocking</h2>
+<p>Parental controls must also prevent execution of already-installed
+software. Malcontent enforces this at the desktop shell and execution
+layers:</p>
+<ul>
+<li><strong>Application Launcher:</strong> The GNOME Shell application
+grid reads the user's restrictions from Malcontent and hides launchers
+(<code>.desktop</code> files) for blocked programs.</li>
+<li><strong>Execution Hooks:</strong> If a restricted user attempts to
+launch an unapproved binary directly, Flatpak runtimes and desktop
+portals query <code>libmalcontent</code> and deny the execution
+process.</li>
+</ul>
+<h2 id="access-schedules-and-time-limits">Access Schedules and Time
+Limits</h2>
+<p>Malcontent allows administrators to set weekly access schedules. This
+system controls both total daily usage time and specific time windows
+during which the user is allowed to log in.</p>
+<p>Enforcement relies on two mechanisms:</p>
+<ul>
+<li><strong>Session Start (Authentication):</strong> When a user enters
+their credentials at the GDM (GNOME Display Manager) login screen,
+<code>pam_malcontent</code> checks the current time against allowed
+schedules. If the attempt occurs outside allowed hours, login is
+denied.</li>
+<li><strong>Active Sessions:</strong> An active daemon monitors running
+time. When a child's allowed time budget expires, the session manager
+warns the user and automatically logs the session out, returning the
+system to the display manager.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

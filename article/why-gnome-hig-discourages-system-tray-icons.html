@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why GNOME HIG Discourages System Tray Icons - gnome</title>
+    <meta name="description" content="The GNOME Human Interface Guidelines (HIG) recommend against depending on system tray icons—often referred to as status icons or notification area items—to foster a cleaner, distraction-free desktop experience. By moving away from persistent tray ico">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/why-gnome-hig-discourages-system-tray-icons">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Why GNOME HIG Discourages System Tray Icons - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/why-gnome-hig-discourages-system-tray-icons" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME Human Interface Guidelines (HIG) recommend against depending on system tray icons—often referred to as status icons or notification area items—to foster a cleaner, distraction-free desktop experience. By moving away from persistent tray ico" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="why-gnome-hig-discourages-system-tray-icons">Why GNOME HIG
+Discourages System Tray Icons</h1>
+<p>The GNOME Human Interface Guidelines (HIG) recommend against
+depending on system tray icons—often referred to as status icons or
+notification area items—to foster a cleaner, distraction-free desktop
+experience. By moving away from persistent tray icons, GNOME establishes
+clear application lifecycle models, eliminates visual clutter, improves
+accessibility, and encourages developers to adopt modern system
+integration methods like action-oriented notifications and background
+service portals.</p>
+<h3 id="elimination-of-visual-clutter-and-distraction">Elimination of
+Visual Clutter and Distraction</h3>
+<p>The primary objective of GNOME's desktop shell is to minimize
+cognitive load and eliminate interruptions. Traditional system trays
+often accumulate a chaotic array of third-party icons with inconsistent
+visual styles, ambiguous meanings, and irregular update behaviors. By
+deprecating dependence on tray icons, the GNOME HIG prevents the top
+panel from turning into a second, unorganized taskbar, ensuring that
+only core system-level indicators (such as network, volume, and battery
+status) occupy persistent screen real estate.</p>
+<h3 id="clarifying-application-lifecycle-and-state">Clarifying
+Application Lifecycle and State</h3>
+<p>System tray icons historically blurred the boundary between an
+application that is actively running, one that is minimized, and one
+that is running as an invisible background service. This led to
+conflicting user expectations:</p>
+<ul>
+<li>Closing a window sometimes exited an application, while other times
+it minimized the application to the tray.</li>
+<li>Users were forced to hunt for tiny icons to reopen windows or fully
+terminate software.</li>
+</ul>
+<p>GNOME advocates for standard window management. An application should
+clearly be either open in the window overview or closed. If a program
+needs to run background tasks, it should do so without demanding a
+permanent graphical footprint in the system panel.</p>
+<h3 id="modern-architectural-alternatives">Modern Architectural
+Alternatives</h3>
+<p>GNOME provides robust, standardized alternatives to replace the
+typical use cases of system tray icons:</p>
+<ul>
+<li><strong>Interactive Desktop Notifications:</strong> For
+time-sensitive events (such as receiving a chat message or completing a
+download), applications should send transient desktop notifications with
+interactive action buttons rather than flashing a tiny tray icon.</li>
+<li><strong>The System Status Menu:</strong> Global hardware and session
+controls are consolidated into a unified "Quick Settings" menu managed
+exclusively by the shell, ensuring uniform design and behavior.</li>
+<li><strong>Background Apps Portal:</strong> Through modern standards
+like <code>xdg-desktop-portal</code>, GNOME provides users with an
+integrated "Background Apps" interface. This gives users transparent
+oversight and control over which applications are running without an
+open window, without requiring individual status icons for each
+app.</li>
+<li><strong>In-App Controls:</strong> Ongoing processes (such as syncing
+files or updating software) are best communicated within the main
+application window or through explicit progress reporting APIs, rather
+than hidden menus attached to an icon.</li>
+</ul>
+<h3 id="accessibility-and-responsive-form-factors">Accessibility and
+Responsive Form Factors</h3>
+<p>System tray icons are inherently difficult to design for modern
+accessibility standards. They are typically small targets that pose
+challenges for users with motor impairments and are difficult to operate
+on touchscreen devices. Furthermore, third-party status icons frequently
+lack standardized semantic labels, rendering them ineffective or
+invisible to screen readers. Relying on standard windows, full-sized
+menus, and native notifications ensures that applications remain
+functional, accessible, and adaptable across various display sizes and
+input methods.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

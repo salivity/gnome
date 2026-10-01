@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using GNOME Boxes with SPICE Virtual Machines - gnome</title>
+    <meta name="description" content="GNOME Boxes functions as both a local virtualization manager and an efficient remote desktop client designed to interface directly with SPICE-enabled virtual machines. By utilizing the SPICE (Simple Protocol for Independent Computing Environments) protoc">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/using-gnome-boxes-with-spice-virtual-machines">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Using GNOME Boxes with SPICE Virtual Machines - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/using-gnome-boxes-with-spice-virtual-machines" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Boxes functions as both a local virtualization manager and an efficient remote desktop client designed to interface directly with SPICE-enabled virtual machines. By utilizing the SPICE (Simple Protocol for Independent Computing Environments) protoc" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="using-gnome-boxes-with-spice-virtual-machines">Using GNOME Boxes
+with SPICE Virtual Machines</h1>
+<p>GNOME Boxes functions as both a local virtualization manager and an
+efficient remote desktop client designed to interface directly with
+SPICE-enabled virtual machines. By utilizing the SPICE (Simple Protocol
+for Independent Computing Environments) protocol, GNOME Boxes delivers a
+near-native user experience when interacting with guests running locally
+or over a network. This article examines the core functions of GNOME
+Boxes in establishing, optimizing, and managing direct SPICE
+connections.</p>
+<h3 id="core-functions-of-gnome-boxes-in-spice-environments">Core
+Functions of GNOME Boxes in SPICE Environments</h3>
+<p><strong>Direct Remote Client Capabilities</strong><br />
+GNOME Boxes allows users to bypass local hypervisors entirely by
+connecting directly to existing virtual machines via network addresses.
+By entering a standard SPICE URI (such as
+<code>spice://ip-address:port</code>), GNOME Boxes acts as a lightweight
+viewer powered by the <code>spice-gtk</code> library, connecting
+directly to the virtual machine's display server without requiring local
+computing resources for emulation.</p>
+<p><strong>Dynamic Display and Resolution Adaptation</strong><br />
+When connected to a guest running the SPICE agent (vdagent), GNOME Boxes
+automatically handles dynamic resolution resizing. When the user resizes
+the GNOME Boxes application window on the host, the guest operating
+system automatically adapts its virtual display resolution to match the
+new dimensions instantly, eliminating black bars and distorted aspect
+ratios.</p>
+<p><strong>Clipboard Sharing and File Transfers</strong><br />
+GNOME Boxes leverages SPICE channels to create seamless interoperability
+between the host and guest environments:</p>
+<ul>
+<li><strong>Bidirectional Clipboard:</strong> Text and image data copied
+on the host can be immediately pasted inside the SPICE guest, and vice
+versa.</li>
+<li><strong>Drag-and-Drop File Transfers:</strong> Users can drag files
+from the host file manager directly onto the GNOME Boxes window,
+initiating an automatic transfer to the guest's default download
+folder.</li>
+</ul>
+<p><strong>Peripheral and USB Redirection</strong><br />
+Through the SPICE protocol, GNOME Boxes enables the host system to route
+physical hardware devices directly into the virtual environment. Through
+the application interface, users can toggle individual USB devices—such
+as flash drives, smart card readers, or webcams—allowing the remote
+virtual machine to recognize and interact with the hardware
+natively.</p>
+<p><strong>Optimized Audio and Input Handling</strong><br />
+SPICE provides dedicated channels for low-latency multimedia streaming.
+GNOME Boxes utilizes these channels to deliver synchronized audio
+playback and recording between the guest and host. Additionally,
+seamless mouse pointer integration eliminates mouse capture locks,
+allowing the cursor to move freely between the host desktop and the
+virtual machine window without requiring an ungrab key combination.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Handles Full-Screen Notifications - gnome</title>
+    <meta name="description" content="GNOME Shell automatically suppresses intrusive notification banners whenever an application is running in full-screen mode to prevent interruptions during video games, movies, and presentations. Instead of displaying pop-up toasts over active windows, th">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-handles-full-screen-notifications">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Handles Full-Screen Notifications - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-handles-full-screen-notifications" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell automatically suppresses intrusive notification banners whenever an application is running in full-screen mode to prevent interruptions during video games, movies, and presentations. Instead of displaying pop-up toasts over active windows, th" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-handles-full-screen-notifications">How GNOME
+Shell Handles Full-Screen Notifications</h1>
+<p>GNOME Shell automatically suppresses intrusive notification banners
+whenever an application is running in full-screen mode to prevent
+interruptions during video games, movies, and presentations. Instead of
+displaying pop-up toasts over active windows, the desktop environment
+routes non-urgent alerts directly to the notification center while
+preserving full-screen performance and immersion. This article explains
+how GNOME Shell detects full-screen applications, processes different
+notification urgency levels, and handles user controls during
+full-screen sessions.</p>
+<h3 id="automatic-full-screen-detection">Automatic Full-Screen
+Detection</h3>
+<p>GNOME’s window and compositing manager, Mutter, continuously monitors
+window states across both Wayland and X11 sessions. When an application
+requests full-screen mode—such as a video player, slide deck, or video
+game—Mutter marks the window surface as covering the entire monitor
+geometry.</p>
+<p>Once a window enters this state, GNOME Shell temporarily disables the
+standard pop-up banner overlay mechanism for that display. This avoids
+visual distractions and prevents the compositor from breaking direct
+scanout (unredirection) in games, which ensures minimal input latency
+and optimal frame rates.</p>
+<h3 id="the-notification-queue-and-message-tray">The Notification Queue
+and Message Tray</h3>
+<p>Notifications received while an application is full-screen are not
+lost or discarded. Instead, GNOME Shell modifies how they are
+delivered:</p>
+<ul>
+<li><strong>Banners Are Suppressed:</strong> Visual banners (toasts)
+that normally slide down from the top panel are blocked from rendering
+over the full-screen window.</li>
+<li><strong>Direct Archival:</strong> Notifications bypass the screen
+overlay and are sent directly to the Calendar and Notification menu
+located in the top panel.</li>
+<li><strong>Audio Alerts:</strong> Depending on the application's
+configuration and whether "Do Not Disturb" is active, notification
+sounds may still play softly unless the notification source is
+specifically muted.</li>
+</ul>
+<p>Once you exit full-screen mode or switch workspaces, the
+notifications remain safely stored in the notification list for you to
+review at your convenience.</p>
+<h3 id="urgency-levels-and-exceptions">Urgency Levels and
+Exceptions</h3>
+<p>The FreeDesktop notification specification defines three urgency
+levels: Low, Normal, and Critical. GNOME Shell treats these tiers
+differently when full-screen applications are running:</p>
+<ol type="1">
+<li><strong>Low and Normal Urgency:</strong> Standard notifications—such
+as new emails, chat messages, or system update reminders—are quietly
+filed away without interrupting your application.</li>
+<li><strong>Critical Urgency:</strong> Alerts categorized as critical
+(such as an imminent battery failure or hardware warnings) can override
+standard suppression. These alerts are deemed essential to the operation
+of the system and may break through full-screen barriers to prevent
+hardware shutdown or data loss.</li>
+</ol>
+<h3 id="manual-overrides-and-do-not-disturb">Manual Overrides and Do Not
+Disturb</h3>
+<p>If you want to ensure that zero banners or audio cues disrupt your
+session, GNOME includes a built-in <strong>Do Not Disturb</strong>
+toggle located in the notification tray (accessible via
+<code>Super + V</code> or clicking the clock). Turning this on
+suppresses all notification banners across the entire desktop,
+regardless of whether an app is running in full-screen mode or windowed
+mode, ensuring completely distraction-free gaming and presentation
+environments.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

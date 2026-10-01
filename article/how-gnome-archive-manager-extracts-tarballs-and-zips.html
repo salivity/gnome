@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Archive Manager Extracts Tarballs and Zips - gnome</title>
+    <meta name="description" content="GNOME Archive Manager, historically known as File Roller, serves as the default graphical user interface (GUI) for archive management in the GNOME desktop environment. This article explains how the tool functions to decompress tarballs and ZIP archives,">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-archive-manager-extracts-tarballs-and-zips">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Archive Manager Extracts Tarballs and Zips - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-archive-manager-extracts-tarballs-and-zips" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Archive Manager, historically known as File Roller, serves as the default graphical user interface (GUI) for archive management in the GNOME desktop environment. This article explains how the tool functions to decompress tarballs and ZIP archives," />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-archive-manager-extracts-tarballs-and-zips">How GNOME
+Archive Manager Extracts Tarballs and Zips</h1>
+<p>GNOME Archive Manager, historically known as File Roller, serves as
+the default graphical user interface (GUI) for archive management in the
+GNOME desktop environment. This article explains how the tool functions
+to decompress tarballs and ZIP archives, detailing its underlying
+architecture, file integrity handling, and integration with core system
+tools.</p>
+<h2 id="the-role-of-file-roller-as-a-graphical-front-end">The Role of
+File Roller as a Graphical Front-End</h2>
+<p>File Roller does not natively pack or unpack files itself. Instead,
+it acts as an abstraction layer and graphical front-end for various
+command-line archiving utilities installed on a Linux system. When
+handling operations, it detects system backends—such as
+<code>tar</code>, <code>gzip</code>, <code>bzip2</code>,
+<code>xz</code>, and <code>unzip</code>—and passes the appropriate
+commands and flags to these binaries behind the scenes. This enables
+users to perform complex decompression workflows through standard
+desktop actions like double-clicking, contextual menu selections, and
+drag-and-drop operations.</p>
+<h2 id="decompressing-zip-archives">Decompressing ZIP Archives</h2>
+<p>ZIP files are single-step archives that combine both file packaging
+and compression. When a user requests File Roller to extract a ZIP
+archive:</p>
+<ol type="1">
+<li><strong>Backend Invocation:</strong> File Roller typically invokes
+utilities such as <code>unzip</code> or <code>7z</code>.</li>
+<li><strong>Cataloging and Inspection:</strong> It reads the archive's
+central directory to display the file list, directory hierarchy, and
+compressed sizes before extraction.</li>
+<li><strong>Extraction Execution:</strong> Users can extract the entire
+archive, select specific files or subdirectories, or extract directly to
+a chosen destination without reading the entire payload into system
+memory.</li>
+<li><strong>Security and Encryption:</strong> If a ZIP file is
+encrypted, File Roller intercepts the process to prompt the user for a
+password, passing the credentials to the extraction backend to decrypt
+the files.</li>
+</ol>
+<h2 id="decompressing-tarballs">Decompressing Tarballs</h2>
+<p>Tarballs (such as <code>.tar.gz</code>, <code>.tar.bz2</code>, or
+<code>.tar.xz</code>) differ from ZIP archives because the archiving
+process (combining files into a single <code>.tar</code> container) and
+the compression process (reducing file size using algorithms like Gzip,
+Bzip2, or XZ) are distinct stages.</p>
+<p>File Roller simplifies this two-stage process:</p>
+<ol type="1">
+<li><strong>Two-Stage Decompression:</strong> Traditionally, extracting
+a compressed tarball in a terminal requires piping the decompressed
+stream into the <code>tar</code> command (or using bundled flags like
+<code>-xzvf</code>). File Roller manages this natively in a single step,
+identifying the compression layer and passing the data to
+<code>tar</code> seamlessly.</li>
+<li><strong>Metadata and Permissions Preservation:</strong> Tarballs are
+heavily used in Unix-like environments because they retain critical file
+attributes, including POSIX permissions, ownership (UID/GID), symbolic
+links, and timestamps. File Roller ensures these flags are respected
+during decompression, preventing broken permissions or lost links upon
+extraction.</li>
+</ol>
+<h2 id="key-features-during-extraction">Key Features During
+Extraction</h2>
+<ul>
+<li><strong>Selective Extraction:</strong> Users can view the contents
+of an archive without writing files to disk, allowing the extraction of
+a single document from a multi-gigabyte tarball or ZIP.</li>
+<li><strong>Integrity and Error Handling:</strong> File Roller monitors
+the standard error outputs of the underlying utilities. If an archive is
+corrupted, has a mismatched checksum, or encounters a write-permission
+error, the application halts the process and surfaces a clear graphical
+error dialogue.</li>
+<li><strong>Desktop Integration:</strong> It integrates with the
+Nautilus (GNOME Files) file manager, providing native "Extract Here" and
+"Extract To..." context menu actions that trigger File Roller's
+decompression engine silently in the background.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Console Command Completion Notifications - gnome</title>
+    <meta name="description" content="GNOME Console includes an intelligent notification system designed to inform users when long-running terminal tasks finish executing in the background. This article explores the specific features and architectural mechanisms that power this capability, i">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-console-command-completion-notifications">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Console Command Completion Notifications - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-console-command-completion-notifications" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Console includes an intelligent notification system designed to inform users when long-running terminal tasks finish executing in the background. This article explores the specific features and architectural mechanisms that power this capability, i" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-console-command-completion-notifications">GNOME Console
+Command Completion Notifications</h1>
+<p>GNOME Console includes an intelligent notification system designed to
+inform users when long-running terminal tasks finish executing in the
+background. This article explores the specific features and
+architectural mechanisms that power this capability, including focus
+detection, automatic execution thresholds, exit status reporting, and
+native desktop environment integration.</p>
+<h3 id="focus-and-window-state-detection">Focus and Window State
+Detection</h3>
+<p>GNOME Console avoids cluttering your desktop with unnecessary
+notifications by monitoring window and tab focus. Alerts are suppressed
+if you are actively viewing the terminal tab where the command is
+running. The application only dispatches a notification when the
+relevant window is minimized, hidden behind other windows, or running in
+an inactive tab.</p>
+<h3 id="automatic-duration-thresholds">Automatic Duration
+Thresholds</h3>
+<p>To prevent constant interruptions, Console applies a duration
+threshold to terminal processes. Everyday commands that execute quickly,
+such as <code>cd</code>, <code>ls</code>, or simple file operations, do
+not trigger alerts. The notification mechanism only activates if a
+foreground process takes a significant amount of time to
+complete—typically lasting longer than several seconds.</p>
+<h3 id="process-lifecycle-and-vte-monitoring">Process Lifecycle and VTE
+Monitoring</h3>
+<p>Under the hood, GNOME Console leverages the Virtual Terminal Emulator
+(VTE) library to track process states. Console monitors the process
+lifecycle of child commands executed within the shell session. When a
+child process terminates, the terminal detects the transition from a
+running state back to an idle shell prompt, prompting the alert
+mechanism to evaluate whether a notification is warranted.</p>
+<h3 id="exit-status-reporting">Exit Status Reporting</h3>
+<p>The notification does more than just state that a command has ended;
+it also conveys the outcome of the process. GNOME Console checks the
+exit code of the completed command. If the process terminates with an
+error code, the notification reflects the failure, allowing users to
+quickly assess whether the background task succeeded without immediately
+switching back to the terminal.</p>
+<h3 id="direct-gnome-shell-notification-integration">Direct GNOME Shell
+Notification Integration</h3>
+<p>Console communicates directly with the desktop notification daemon
+using standard FreeDesktop notification protocols. When a task
+completes, it generates a native system banner within the GNOME Shell
+interface. Clicking this notification immediately brings the specific
+terminal window and tab to the foreground, allowing users to inspect the
+terminal output seamlessly.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Contacts Integrates with Evolution Data Server - gnome</title>
+    <meta name="description" content="GNOME Contacts serves as a streamlined, dedicated graphical user interface for managing personal information, but it does not store or synchronize address book data on its own. Instead, it relies on Evolution Data Server (EDS), a robust backend system se">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-contacts-integrates-with-evolution-data-server">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Contacts Integrates with Evolution Data Server - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-contacts-integrates-with-evolution-data-server" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Contacts serves as a streamlined, dedicated graphical user interface for managing personal information, but it does not store or synchronize address book data on its own. Instead, it relies on Evolution Data Server (EDS), a robust backend system se" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-contacts-integrates-with-evolution-data-server">How
+GNOME Contacts Integrates with Evolution Data Server</h1>
+<p>GNOME Contacts serves as a streamlined, dedicated graphical user
+interface for managing personal information, but it does not store or
+synchronize address book data on its own. Instead, it relies on
+Evolution Data Server (EDS), a robust backend system service that
+handles contact storage, protocol synchronization, and query management.
+This architectural separation allows GNOME Contacts to function as a
+centralized hub where contacts from various local and remote sources are
+aggregated and made accessible across the entire desktop
+environment.</p>
+<h3 id="the-client-backend-architecture">The Client-Backend
+Architecture</h3>
+<p>The core of this integration is based on a client-server architecture
+where GNOME Contacts acts as the client and EDS operates as the
+background daemon. EDS runs persistent background processes—principally
+<code>evolution-addressbook-factory</code>—that manage the actual data
+manipulation.</p>
+<p>GNOME Contacts communicates with this factory via
+<code>libebook</code>, a client library provided by the Evolution API,
+using D-Bus for inter-process communication (IPC). When GNOME Contacts
+opens, it does not read database files directly from the disk; instead,
+it requests data from EDS through standard D-Bus calls, ensuring that
+data access is thread-safe and non-blocking.</p>
+<h3
+id="centralized-source-management-and-gnome-online-accounts">Centralized
+Source Management and GNOME Online Accounts</h3>
+<p>Evolution Data Server abstracts individual backends, enabling support
+for numerous protocols and services:</p>
+<ul>
+<li>Local address books (stored in SQLite formats).</li>
+<li>Remote cloud services (such as Google Contacts, Nextcloud, and
+generic CardDAV servers).</li>
+<li>Enterprise directories (such as Microsoft Exchange, Office 365, and
+LDAP).</li>
+</ul>
+<p>When a user adds an account through GNOME Online Accounts (GOA), the
+credentials and server endpoints are automatically provisioned inside
+EDS. GNOME Contacts automatically inherits these sources without
+requiring manual configuration. If an address book is added or modified
+in the full Evolution groupware suite, third-party email clients like
+Geary, or directly via GOA, EDS updates its internal registry, and the
+changes appear instantly in GNOME Contacts.</p>
+<h3 id="unified-views-and-meta-contact-linking">Unified Views and
+Meta-Contact Linking</h3>
+<p>A key feature of GNOME Contacts is its ability to present a clean,
+unified view of people whose details might be scattered across multiple
+accounts (e.g., an email address from a corporate LDAP directory and a
+personal phone number from a Google account).</p>
+<p>Instead of forcing a destructive merge on the remote servers, GNOME
+Contacts uses EDS’s metadata capabilities. It links related contact
+records under a single "meta-contact" presentation. EDS tracks the
+individual underlying unique resource identifiers (UIDs) for each remote
+service while presenting a merged dataset to the UI, preserving the
+integrity of each independent source.</p>
+<h3 id="real-time-synchronization-and-system-wide-sharing">Real-Time
+Synchronization and System-Wide Sharing</h3>
+<p>The integration provides real-time event-driven updates. When a user
+creates, edits, or deletes a contact inside GNOME Contacts:</p>
+<ol type="1">
+<li>GNOME Contacts invokes the appropriate <code>libebook</code>
+APIs.</li>
+<li>EDS writes the changes to the local cache and queues outbound
+synchronization to the respective remote server (such as pushing a
+CardDAV update).</li>
+<li>EDS emits change notification signals across the D-Bus system
+bus.</li>
+<li>Other integrated components—such as the GNOME Shell search provider,
+email clients, and calendar components—listen for these signals and
+immediately update their cached views.</li>
+</ol>
+<p>By delegating networking, caching, and storage protocols to Evolution
+Data Server, GNOME Contacts maintains a lightweight footprint while
+providing a centralized, reliable address book ecosystem for Linux
+desktops.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

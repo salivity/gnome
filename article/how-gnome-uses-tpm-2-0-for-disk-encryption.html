@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Uses TPM 2.0 for Disk Encryption - gnome</title>
+    <meta name="description" content="Modern GNOME environments leverage the Trusted Platform Module (TPM 2.0) to streamline Linux full-disk encryption by securely binding encryption keys to system hardware. Instead of requiring users to enter a separate disk passphrase before the operating">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-uses-tpm-2-0-for-disk-encryption">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Uses TPM 2.0 for Disk Encryption - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-uses-tpm-2-0-for-disk-encryption" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern GNOME environments leverage the Trusted Platform Module (TPM 2.0) to streamline Linux full-disk encryption by securely binding encryption keys to system hardware. Instead of requiring users to enter a separate disk passphrase before the operating" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-uses-tpm-20-for-disk-encryption">How GNOME Uses TPM
+2.0 for Disk Encryption</h1>
+<p>Modern GNOME environments leverage the Trusted Platform Module (TPM
+2.0) to streamline Linux full-disk encryption by securely binding
+encryption keys to system hardware. Instead of requiring users to enter
+a separate disk passphrase before the operating system loads, the system
+relies on underlying plumbing technologies—chiefly systemd and LUKS2—to
+automatically unseal the encryption key at boot if the platform’s
+integrity remains intact. This article explains how this architecture
+operates, how the cryptographic keys are bound to the hardware, and what
+occurs during the boot and recovery phases.</p>
+<h2 id="the-architectural-foundation-luks2-and-systemd">The
+Architectural Foundation: LUKS2 and systemd</h2>
+<p>GNOME itself does not directly implement cryptographic primitives for
+hardware chips. Instead, modern Linux distributions running GNOME (such
+as Fedora and Ubuntu) orchestrate disk encryption using a modern Linux
+security stack:</p>
+<ul>
+<li><strong>LUKS2 (Linux Unified Key Setup):</strong> The standard
+specification for Linux disk encryption, capable of supporting multiple
+keyslots and hardware-bound tokens.</li>
+<li><strong>systemd-cryptenroll / systemd-cryptsetup:</strong> The
+low-level utilities that interface directly with the TPM 2.0 chip to
+enroll keys and unlock volumes during early boot.</li>
+<li><strong>GNOME Desktop &amp; Installers:</strong> The front-end user
+experience, including installers (like Anaconda or Subiquity) and
+configuration tools that offer hardware-backed encryption options during
+system installation or setup.</li>
+</ul>
+<h2 id="how-key-sealing-works-with-tpm-20">How Key Sealing Works with
+TPM 2.0</h2>
+<p>At the center of TPM-based encryption is a cryptographic process
+known as <strong>sealing</strong>:</p>
+<ol type="1">
+<li><strong>Key Generation:</strong> When disk encryption is configured
+with TPM support, a secondary key is generated and stored in a
+designated LUKS2 keyslot.</li>
+<li><strong>PCR Binding:</strong> The TPM 2.0 chip seals this key
+against specific Platform Configuration Registers (PCRs). PCRs measure
+software integrity from the firmware to the bootloader. Typically, PCR 7
+(Secure Boot state) and PCR 0/2 (firmware and motherboard code) are
+measured.</li>
+<li><strong>Sealed Storage:</strong> The resulting encrypted blob (the
+sealed key) is stored in the LUKS2 header. The TPM will only release
+(unseal) this key if the current PCR measurements match the exact state
+recorded during enrollment.</li>
+</ol>
+<p>Because the key is tied to the hardware and specific system
+measurements, the disk cannot be removed and decrypted on another
+machine.</p>
+<h2 id="the-boot-and-login-workflow">The Boot and Login Workflow</h2>
+<p>When a system running GNOME boots with TPM 2.0 encryption enabled,
+the decryption process takes place before GNOME even starts:</p>
+<ol type="1">
+<li><strong>Hardware Verification:</strong> The UEFI firmware
+initializes and populates the PCR registers with cryptographic hashes of
+the boot components.</li>
+<li><strong>Unsealing the Drive:</strong> Early userspace
+(<code>initramfs</code>) invokes <code>systemd-cryptsetup</code>. The
+utility sends the sealed key policy to the TPM 2.0 chip.</li>
+<li><strong>Automatic Unlock:</strong> If Secure Boot is active and no
+unauthorized modifications to the boot path are detected, the TPM
+unseals the key. The drive decrypts automatically without user
+intervention.</li>
+<li><strong>User Authentication:</strong> The system proceeds directly
+to the GNOME Display Manager (GDM). The user enters their user account
+password once to unlock their GNOME keyring and access the desktop,
+removing the redundant step of entering both a disk passphrase and a
+login password.</li>
+</ol>
+<h2 id="fallback-and-recovery-mechanics">Fallback and Recovery
+Mechanics</h2>
+<p>If the system detects an anomaly—such as disabled Secure Boot,
+tampered boot files, a firmware update that alters PCR measurements, or
+the physical drive being moved to another computer—the TPM 2.0 refuses
+to release the unsealing key.</p>
+<p>In this scenario, the boot process halts and drops to an interactive
+prompt requesting the manual LUKS passphrase or a recovery key. Once the
+user enters the manual passphrase, GNOME can boot normally, and the TPM
+policy can subsequently be re-enrolled to trust the updated hardware or
+firmware state.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

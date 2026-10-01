@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Web Isolates Web Application Profiles - gnome</title>
+    <meta name="description" content="GNOME Web, also known as Epiphany, allows users to transform websites into standalone desktop applications with independent security boundaries. This article explores the core technical features—including dedicated directory structures, WebKitGTK multi">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-web-isolates-web-application-profiles">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Web Isolates Web Application Profiles - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-web-isolates-web-application-profiles" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Web, also known as Epiphany, allows users to transform websites into standalone desktop applications with independent security boundaries. This article explores the core technical features—including dedicated directory structures, WebKitGTK multi" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-web-isolates-web-application-profiles">How GNOME Web
+Isolates Web Application Profiles</h1>
+<p>GNOME Web, also known as Epiphany, allows users to transform websites
+into standalone desktop applications with independent security
+boundaries. This article explores the core technical features—including
+dedicated directory structures, WebKitGTK multi-process architecture,
+Bubblewrap sandboxing, and desktop portal integration—that enable GNOME
+Web to deliver strictly isolated sandboxing profiles for individual web
+applications.</p>
+<h3 id="independent-profile-directories">Independent Profile
+Directories</h3>
+<p>When a user creates a web application in GNOME Web via the "Install
+Site as Web Application" feature, the browser generates an isolated
+profile directory entirely separate from the standard browser instance.
+Stored in a distinct user data path (typically under
+<code>~/.local/share/org.gnome.Epiphany.WebApp-*</code> or within the
+application's specific Flatpak data directory), each application
+maintains its own:</p>
+<ul>
+<li><strong>Cookies and Session Storage:</strong> Prevents tracking
+across apps and between the app and the standard browser.</li>
+<li><strong>Cache and IndexedDB Data:</strong> Ensures offline assets
+and local databases cannot be read or modified by other web
+instances.</li>
+<li><strong>Extensions and Settings:</strong> Disables global browser
+extensions by default, minimizing the attack surface and avoiding script
+injection risks.</li>
+</ul>
+<p>Because these directories are isolated at the filesystem level, web
+applications run without shared memory, state, or session leakage.</p>
+<h3 id="webkitgtk-multi-process-architecture">WebKitGTK Multi-Process
+Architecture</h3>
+<p>GNOME Web is built on the WebKitGTK engine, which inherently isolates
+different browsing components into individual system processes:</p>
+<ul>
+<li><strong>UI Process:</strong> Manages the window, system integration,
+and application shell.</li>
+<li><strong>Network Process:</strong> Handles all network requests, TLS
+negotiation, and socket communication independently for that specific
+profile.</li>
+<li><strong>Web Processes:</strong> Renders the DOM, parses CSS, and
+executes JavaScript. Each origin or instance runs inside its own
+restricted process.</li>
+</ul>
+<p>By splitting these tasks, an exploit or crash within a web
+application's rendering engine cannot easily compromise the underlying
+system or access the main browser's runtime memory.</p>
+<h3 id="flatpak-and-bubblewrap-sandboxing">Flatpak and Bubblewrap
+Sandboxing</h3>
+<p>When GNOME Web is deployed as a Flatpak, its sandboxing capabilities
+are significantly enhanced through Bubblewrap. Bubblewrap uses Linux
+kernel namespaces (mount, network, IPC, PID, and user namespaces) to
+lock down the execution environment:</p>
+<ul>
+<li><strong>Filesystem Restrictions:</strong> Web apps are blocked from
+viewing arbitrary host files. They only have access to their specific
+sandboxed data directory.</li>
+<li><strong>Process Isolation:</strong> An application cannot inspect or
+manipulate processes running on the host or inside other sandboxes.</li>
+<li><strong>Device Node Filtering:</strong> Direct access to host
+hardware devices is restricted, preventing unauthorized low-level
+hardware communication.</li>
+</ul>
+<h3 id="dedicated-application-mode-execution">Dedicated Application Mode
+Execution</h3>
+<p>Each installed web application is launched with a specialized
+command-line flag (<code>epiphany --application-mode</code>). This flag
+forces the binary to run as an independent application instance
+identified by a unique desktop file. It bypasses the standard
+single-instance D-Bus service used by the main browser window, ensuring
+that the web app spawns with its own process group and security context
+rather than attaching to an existing, elevated browser session.</p>
+<h3 id="permission-control-via-xdg-desktop-portals">Permission Control
+via XDG Desktop Portals</h3>
+<p>GNOME Web relies on XDG Desktop Portals to broker access to system
+resources. Instead of granting blanket permissions, capabilities such
+as:</p>
+<ul>
+<li>File selection (Open/Save dialogs)</li>
+<li>Camera and microphone access</li>
+<li>Location services</li>
+<li>System notifications</li>
+</ul>
+<p>are handled through out-of-process system dialogs. The sandboxed web
+application never gets direct hardware or filesystem access; it receives
+only the specific resource or data stream approved by the user, enforced
+strictly on a per-application basis.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

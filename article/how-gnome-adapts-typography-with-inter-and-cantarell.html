@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Adapts Typography With Inter and Cantarell - gnome</title>
+    <meta name="description" content="This article explores how the GNOME desktop environment refines its user interface typography by transitioning from Cantarell to customized builds of Inter. It examines the technical and visual adaptations made to font metrics, OpenType features, and ver">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-adapts-typography-with-inter-and-cantarell">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Adapts Typography With Inter and Cantarell - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-adapts-typography-with-inter-and-cantarell" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explores how the GNOME desktop environment refines its user interface typography by transitioning from Cantarell to customized builds of Inter. It examines the technical and visual adaptations made to font metrics, OpenType features, and ver" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-adapts-typography-with-inter-and-cantarell">How GNOME
+Adapts Typography With Inter and Cantarell</h1>
+<p>This article explores how the GNOME desktop environment refines its
+user interface typography by transitioning from Cantarell to customized
+builds of Inter. It examines the technical and visual adaptations made
+to font metrics, OpenType features, and vertical alignment to ensure
+optimal legibility, consistent widget spacing, and crisp rendering
+across diverse screen resolutions.</p>
+<p>For over a decade, Cantarell served as the signature typeface of
+GNOME 3 and 40. Originally designed by Dave Crossland and later refined
+by the GNOME design team, Cantarell provided a distinct, humanistic
+aesthetic. However, as user interfaces shifted toward higher density,
+fractional scaling, and modern flat design paradigms, Cantarell’s
+geometry presented legibility challenges at small sizes and in dense UI
+components like title bars, popovers, and sidebars.</p>
+<p>To resolve these limitations, GNOME initiated a transition toward
+Inter, a typeface designed by Rasmus Andersson specifically for computer
+screens. Inter offers a neo-grotesque structure with a tall x-height,
+open apertures, and wide counters, significantly improving readability
+on low-DPI displays while remaining crisp on HiDPI panels.</p>
+<p>GNOME does not simply implement default font builds; it adapts them
+to align with the platform's visual guidelines and technical
+framework:</p>
+<ul>
+<li><strong>Customized Vertical Metrics:</strong> Default typefaces
+often introduce unequal padding when placed inside fixed-height GTK and
+libadwaita widgets. GNOME adjusts the vertical metrics—specifically the
+ascender, descender, and line-gap values—to guarantee that text sits
+precisely centered inside buttons, text entries, and header bars without
+requiring hardcoded pixel offsets in the stylesheet.</li>
+<li><strong>OpenType Feature Activation:</strong> GNOME utilizes
+specific OpenType features to enhance utility. Tabular figures
+(<code>tnum</code>) are leveraged in places like the top-bar clock,
+system monitors, and media players to prevent text jumping as numbers
+increment. Additionally, glyph alternates—such as disambiguated versions
+of the capital "I", lowercase "l", and numeral "1"—are enabled to
+improve scanability in terminal emulators, system logs, and code
+editors.</li>
+<li><strong>Variable Font Optimization:</strong> GNOME integrates
+variable font technology, allowing the system to interpolate weights
+dynamically. Instead of being restricted to standard weights like
+Regular (400) and Bold (700), the shell and system applications can use
+intermediate weights (such as 500 or 600) to create clear visual
+hierarchies without overwhelming interface layouts.</li>
+<li><strong>Hinting and Anti-Aliasing Alignment:</strong> The customized
+typefaces are tuned for FreeType rendering on Linux. By optimizing the
+outlines to work seamlessly with modern subpixel anti-aliasing and
+standard grayscale rendering, GNOME eliminates visual artifacts such as
+uneven stem weights and blurry curves.</li>
+</ul>
+<p>By customizing Inter and refining Cantarell, GNOME achieves a balance
+between functional minimalism and typographic precision, creating a
+coherent, highly legible interface that adapts across laptops,
+high-resolution monitors, and mobile form factors.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

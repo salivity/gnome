@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Handles Crash Dumps with debuginfod - gnome</title>
+    <meta name="description" content="Modern GNOME environments manage application crashes through a unified pipeline combining Linux core dump handlers, distribution-specific crash reporting tools, and on-demand debug symbol fetching via debuginfod. When a GNOME application encounters a fat">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-handles-crash-dumps-with-debuginfod">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Handles Crash Dumps with debuginfod - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-handles-crash-dumps-with-debuginfod" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern GNOME environments manage application crashes through a unified pipeline combining Linux core dump handlers, distribution-specific crash reporting tools, and on-demand debug symbol fetching via debuginfod. When a GNOME application encounters a fat" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-handles-crash-dumps-with-debuginfod">How GNOME Handles
+Crash Dumps with debuginfod</h1>
+<p>Modern GNOME environments manage application crashes through a
+unified pipeline combining Linux core dump handlers,
+distribution-specific crash reporting tools, and on-demand debug symbol
+fetching via debuginfod. When a GNOME application encounters a fatal
+error, the underlying system captures the process state, extracts
+executable build IDs, and automatically downloads exact debugging
+symbols over the network. This process eliminates the traditional
+requirement of manually installing multi-gigabyte debug packages to
+obtain meaningful stack traces.</p>
+<h3 id="the-crash-handling-pipeline">The Crash Handling Pipeline</h3>
+<p>GNOME does not independently capture core dumps; it relies on
+underlying system facilities, predominantly
+<code>systemd-coredump</code>, or distribution-level managers such as
+ABRT on Fedora or Apport on Ubuntu.</p>
+<p>When a GNOME application crashes due to a signal like
+<code>SIGSEGV</code> (segmentation fault):</p>
+<ol type="1">
+<li>The Linux kernel intercepts the termination and delegates the memory
+dump to the configured core pattern handler (usually
+<code>systemd-coredump</code>).</li>
+<li>The core dump handler stores the compressed core file, system
+context, and the metadata of the failing process in
+<code>/var/lib/systemd/coredump/</code> or the system journal.</li>
+<li>GNOME Shell or desktop daemon components detect the failure, either
+displaying a user notification regarding the unexpected termination or
+sending the event to background telemetry and diagnostic utilities.</li>
+</ol>
+<h3 id="dynamic-symbol-resolution-via-debuginfod">Dynamic Symbol
+Resolution via debuginfod</h3>
+<p>A raw core dump contains binary addresses rather than readable
+function names and source line numbers. Historically, debugging required
+users to locate and install the matching <code>-debuginfo</code> or
+<code>-dbgsym</code> packages for the application and all associated
+shared libraries.</p>
+<p><code>debuginfod</code> streamlines this through an HTTP-based
+client-server architecture:</p>
+<ul>
+<li>Every modern ELF executable and shared library contains a unique
+cryptographic hash called a GNU Build ID.</li>
+<li>When an application terminates, its core dump retains the Build IDs
+of the executable and every dynamically loaded library (such as GTK,
+GLib, or Mutter).</li>
+<li>Diagnostic tools linked against <code>libdebuginfod</code> query
+configured servers via the <code>DEBUGINFOD_URLS</code> environment
+variable, passing the Build ID to fetch the corresponding DWARF debug
+symbols and source code files on demand.</li>
+</ul>
+<h3 id="integration-with-core-gnome-workflows">Integration with Core
+GNOME Workflows</h3>
+<p>The resolution of debug symbols occurs across several primary
+interfaces within the GNOME ecosystem:</p>
+<ul>
+<li><strong>Command-Line Analysis (<code>coredumpctl</code> and
+<code>gdb</code>):</strong> Developers or advanced users inspecting a
+GNOME crash invoke <code>coredumpctl debug &lt;PID&gt;</code> or
+<code>coredumpctl gdb</code>. GDB natively queries
+<code>debuginfod</code> to automatically fetch missing symbols for GNOME
+libraries, presenting fully symbolized backtraces without manual package
+configuration.</li>
+<li><strong>Automated Bug Reporting:</strong> Utilities such as GNOME
+ABRT or distribution crash reporters parse the generated core dump,
+trigger <code>debuginfod</code> queries in the background to symbolize
+the stack trace, and generate concise, human-readable issue reports
+ready for upstream submission to GNOME GitLab.</li>
+<li><strong>GNOME OS and Flatpak Environments:</strong> Within
+containerized Flatpak applications, crashes are captured on the host.
+Host-level utilities can query public debuginfod instances (such as
+those maintained by Fedora, Arch, or Debian) or runtime-specific symbol
+servers to reconstruct the call stack accurately across container
+boundaries.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

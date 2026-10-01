@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Dynamic Wallpapers and Wallpaper Positioning - gnome</title>
+    <meta name="description" content="This guide explains the technical mechanisms the GNOME desktop environment uses to manage custom wallpaper positioning and dynamic day-to-night transitions. GNOME relies on its GSettings configuration database to control image placement and display modes">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-dynamic-wallpapers-and-wallpaper-positioning">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Dynamic Wallpapers and Wallpaper Positioning - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-dynamic-wallpapers-and-wallpaper-positioning" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This guide explains the technical mechanisms the GNOME desktop environment uses to manage custom wallpaper positioning and dynamic day-to-night transitions. GNOME relies on its GSettings configuration database to control image placement and display modes" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-dynamic-wallpapers-and-wallpaper-positioning">GNOME
+Dynamic Wallpapers and Wallpaper Positioning</h1>
+<p>This guide explains the technical mechanisms the GNOME desktop
+environment uses to manage custom wallpaper positioning and dynamic
+day-to-night transitions. GNOME relies on its GSettings configuration
+database to control image placement and display modes, while dynamic
+time-shifting backgrounds and light/dark mode pairings are handled
+through structured XML definition files and dedicated system schema
+keys.</p>
+<h3 id="wallpaper-positioning-and-scaling-in-gnome">Wallpaper
+Positioning and Scaling in GNOME</h3>
+<p>GNOME controls how background images are fitted to monitors through
+the GSettings schema <code>org.gnome.desktop.background</code>. While
+the standard GNOME Settings graphical interface automatically crops and
+scales images to fill the display, advanced positioning options remain
+available via the command line or the GNOME Tweaks utility.</p>
+<p>The specific key responsible for positioning is
+<code>picture-options</code>. It accepts several distinct
+parameters:</p>
+<ul>
+<li><strong>zoom</strong>: The default mode, which scales the image to
+fill the entire screen while maintaining the aspect ratio, cropping
+edges if necessary.</li>
+<li><strong>centered</strong>: Centers the wallpaper at its native
+resolution without scaling, leaving border colors around smaller
+images.</li>
+<li><strong>scaled</strong>: Scales the image up or down to fit inside
+the screen boundaries without cropping, potentially leaving letterboxing
+or pillarboxing bars.</li>
+<li><strong>stretched</strong>: Forces the image dimensions to match the
+display resolution exactly, distorting the aspect ratio.</li>
+<li><strong>spanned</strong>: Stretches a single large wallpaper
+continuously across a multi-monitor layout instead of duplicating it on
+each display.</li>
+<li><strong>none</strong>: Disables the image entirely, rendering a
+solid background color configured in the <code>primary-color</code>
+key.</li>
+</ul>
+<p>Users can modify this behavior directly in the terminal using the
+following command:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsettings</span> set org.gnome.desktop.background picture-options <span class="st">&#39;centered&#39;</span></span></code></pre></div>
+<h3 id="day-night-switching-in-modern-gnome">Day-Night Switching in
+Modern GNOME</h3>
+<p>Starting with GNOME 42, the desktop introduced a system-wide dark
+style preference. GNOME handles binary day-and-night wallpaper switching
+using dual GSettings keys:</p>
+<ul>
+<li><code>picture-uri</code>: Stores the file path for the light version
+of the wallpaper.</li>
+<li><code>picture-uri-dark</code>: Stores the file path for the dark
+version of the wallpaper.</li>
+</ul>
+<p>When a user toggles the global dark style switch in the quick
+settings menu or control center, GNOME automatically alternates between
+the values set in these two keys without requiring external scripts.</p>
+<h3 id="continuous-time-based-dynamic-wallpapers-via-xml">Continuous
+Time-Based Dynamic Wallpapers via XML</h3>
+<p>For wallpapers that transition smoothly across multiple times of day
+(such as sunrise, afternoon, and night), GNOME utilizes an XML-based
+scheduling system. These XML files dictate image sequencing, durations,
+and crossfade transitions based on the system clock.</p>
+<p>A dynamic background XML file typically resides alongside image
+assets in <code>/usr/share/backgrounds/</code> or the user-specific
+directory <code>~/.local/share/backgrounds/</code>. The XML file
+structure relies on three primary elements:</p>
+<ol type="1">
+<li><strong><code>&lt;starttime&gt;</code></strong>: Defines the base
+timestamp (year, month, day, hour, minute, second) from which transition
+cycles are calculated.</li>
+<li><strong><code>&lt;static&gt;</code></strong>: Specifies the duration
+(in seconds) for displaying a specific image file via the
+<code>&lt;file&gt;</code> sub-tag.</li>
+<li><strong><code>&lt;transition&gt;</code></strong>: Defines a gradual
+blend over a set duration from a <code>&lt;from&gt;</code> file to a
+<code>&lt;to&gt;</code> file.</li>
+</ol>
+<p>A simplified XML implementation follows this layout:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">background</span>&gt;</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">starttime</span>&gt;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">year</span>&gt;2024&lt;/<span class="kw">year</span>&gt;</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">month</span>&gt;01&lt;/<span class="kw">month</span>&gt;</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">day</span>&gt;01&lt;/<span class="kw">day</span>&gt;</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">hour</span>&gt;07&lt;/<span class="kw">hour</span>&gt;</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">minute</span>&gt;00&lt;/<span class="kw">minute</span>&gt;</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">second</span>&gt;00&lt;/<span class="kw">second</span>&gt;</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">starttime</span>&gt;</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">&lt;!-- Display daytime image for 14400 seconds (4 hours) --&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">static</span>&gt;</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">duration</span>&gt;14400.0&lt;/<span class="kw">duration</span>&gt;</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">file</span>&gt;/path/to/day.jpg&lt;/<span class="kw">file</span>&gt;</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">static</span>&gt;</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">&lt;!-- Transition to evening over 1 hour --&gt;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">transition</span>&gt;</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">duration</span>&gt;3600.0&lt;/<span class="kw">duration</span>&gt;</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">from</span>&gt;/path/to/day.jpg&lt;/<span class="kw">from</span>&gt;</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">to</span>&gt;/path/to/night.jpg&lt;/<span class="kw">to</span>&gt;</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">transition</span>&gt;</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">&lt;!-- Display nighttime image --&gt;</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">static</span>&gt;</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">duration</span>&gt;14400.0&lt;/<span class="kw">duration</span>&gt;</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">file</span>&gt;/path/to/night.jpg&lt;/<span class="kw">file</span>&gt;</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">static</span>&gt;</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">background</span>&gt;</span></code></pre></div>
+<h3 id="system-registration-and-appearance">System Registration and
+Appearance</h3>
+<p>To make dynamic or day-night paired backgrounds visible within the
+native GNOME Settings background picker, a metadata file must be placed
+in <code>/usr/share/gnome-background-properties/</code> or
+<code>~/.local/share/gnome-background-properties/</code>.</p>
+<p>This property XML informs the desktop of the wallpaper's
+capabilities:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span> <span class="ot">version=</span><span class="st">&quot;1.0&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> <span class="dt">wallpapers</span> SYSTEM &quot;gnome-wp-list.dtd&quot;<span class="dt">&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">wallpapers</span>&gt;</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">wallpaper</span> <span class="ot">deleted=</span><span class="st">&quot;false&quot;</span>&gt;</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">name</span>&gt;Dynamic Wallpaper&lt;/<span class="kw">name</span>&gt;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">filename</span>&gt;/path/to/dynamic-schedule.xml&lt;/<span class="kw">filename</span>&gt;</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">options</span>&gt;zoom&lt;/<span class="kw">options</span>&gt;</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">pcolor</span>&gt;#000000&lt;/<span class="kw">pcolor</span>&gt;</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">scolor</span>&gt;#000000&lt;/<span class="kw">scolor</span>&gt;</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">wallpaper</span>&gt;</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">wallpapers</span>&gt;</span></code></pre></div>
+<p>When an XML schedule or dual-theme setup is loaded, the GNOME Control
+Center identifies the background as dynamic and marks it with a small
+badge, enabling the desktop environment to coordinate background
+aesthetics with system themes and local time automatically.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

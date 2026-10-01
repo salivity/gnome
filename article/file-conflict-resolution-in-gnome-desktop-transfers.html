@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Conflict Resolution in GNOME Desktop Transfers - gnome</title>
+    <meta name="description" content="When transferring large directory trees in the GNOME desktop environment, file conflicts are managed through the default file manager, GNOME Files (Nautilus), powered by the GVfs (GNOME Virtual File System) backend. This article explains how GNOME detect">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/file-conflict-resolution-in-gnome-desktop-transfers">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="File Conflict Resolution in GNOME Desktop Transfers - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/file-conflict-resolution-in-gnome-desktop-transfers" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="When transferring large directory trees in the GNOME desktop environment, file conflicts are managed through the default file manager, GNOME Files (Nautilus), powered by the GVfs (GNOME Virtual File System) backend. This article explains how GNOME detect" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="file-conflict-resolution-in-gnome-desktop-transfers">File
+Conflict Resolution in GNOME Desktop Transfers</h1>
+<p>When transferring large directory trees in the GNOME desktop
+environment, file conflicts are managed through the default file
+manager, GNOME Files (Nautilus), powered by the GVfs (GNOME Virtual File
+System) backend. This article explains how GNOME detects identical file
+paths during mass operations, the specific options it presents to the
+user, how batch operations prevent repeated prompts, and how directory
+merging is processed.</p>
+<h3 id="conflict-detection-and-the-resolution-dialog">Conflict Detection
+and the Resolution Dialog</h3>
+<p>During a copy or move operation involving nested or large
+directories, Nautilus monitors destination paths in real time. If an
+incoming file shares a name and relative path with an existing file, the
+transfer pauses the conflicting item and triggers a modal conflict
+resolution window.</p>
+<p>The dialog provides side-by-side metadata comparisons to help users
+make an informed choice, displaying:</p>
+<ul>
+<li>File names and thumbnails (if available).</li>
+<li>File sizes.</li>
+<li>Last modified timestamps.</li>
+</ul>
+<h3 id="available-conflict-actions">Available Conflict Actions</h3>
+<p>Users can resolve each collision using one of three primary
+actions:</p>
+<ol type="1">
+<li><strong>Skip:</strong> The incoming file is ignored, leaving the
+existing file at the destination untouched.</li>
+<li><strong>Replace:</strong> The existing file at the destination is
+overwritten by the incoming file.</li>
+<li><strong>Rename:</strong> The incoming file is preserved alongside
+the original file. GNOME automatically appends an incremental suffix
+(e.g., <code>filename (copy).ext</code> or
+<code>filename (1).ext</code>) to the incoming item.</li>
+</ol>
+<h3 id="batch-processing-with-apply-to-all">Batch Processing with "Apply
+to All"</h3>
+<p>To prevent the transfer of thousands of files from becoming unusable
+due to frequent interruptions, GNOME includes an <strong>"Apply this
+action to all files"</strong> checkbox within the conflict dialog.</p>
+<p>When checked, the chosen action (Skip, Replace, or Auto-Rename)
+becomes the default rule for any subsequent collision encountered during
+that specific transfer task. If unchecked, Nautilus will prompt the user
+again at the next collision while continuing to transfer non-conflicting
+files in the background queue.</p>
+<h3 id="directory-merging-vs-file-overwrites">Directory Merging vs. File
+Overwrites</h3>
+<p>GNOME distinguishes between individual file collisions and folder
+collisions:</p>
+<ul>
+<li><strong>Folder Merging:</strong> When an incoming directory matches
+the name of an existing destination directory, GNOME merges the two
+folders by default rather than overwriting the entire directory tree. It
+transfers unique sub-items without prompting.</li>
+<li><strong>File Overwrites Within Folders:</strong> Prompts only occur
+when specific files <em>inside</em> those directories share the same
+path and name.</li>
+</ul>
+<h3 id="error-handling-and-queue-management">Error Handling and Queue
+Management</h3>
+<p>File transfers run as asynchronous background jobs represented by a
+circular progress pie in the header bar. If a user does not immediately
+respond to a conflict prompt, the transfer process waits at the point of
+conflict. Recent versions of GNOME Files also support partial undo
+functionality via <code>Ctrl+Z</code>, which can reverse non-destructive
+transfer steps if an error or unintended overwrite occurs during
+directory transfers.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

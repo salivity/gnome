@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Background App Permissions via XDG Portals - gnome</title>
+    <meta name="description" content="Modern Linux desktop environments prioritize sandboxing and user privacy, making background execution control a vital security feature. The GNOME desktop manages background app permissions primarily through XDG Desktop Portals—specifically utilizing th">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-background-app-permissions-via-xdg-portals">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Background App Permissions via XDG Portals - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-background-app-permissions-via-xdg-portals" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="Modern Linux desktop environments prioritize sandboxing and user privacy, making background execution control a vital security feature. The GNOME desktop manages background app permissions primarily through XDG Desktop Portals—specifically utilizing th" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-background-app-permissions-via-xdg-portals">GNOME
+Background App Permissions via XDG Portals</h1>
+<p>Modern Linux desktop environments prioritize sandboxing and user
+privacy, making background execution control a vital security feature.
+The GNOME desktop manages background app permissions primarily through
+XDG Desktop Portals—specifically utilizing the Background portal API.
+This mechanism bridges sandboxed applications (such as Flatpaks) and the
+host system, giving users transparency and control over which
+applications can continue running without an open window or launch
+automatically upon system startup.</p>
+<h2 id="the-role-of-xdg-desktop-portals">The Role of XDG Desktop
+Portals</h2>
+<p>XDG Desktop Portals function as secure intermediaries between
+sandboxed environments and host system resources over the D-Bus
+inter-process communication system. The primary portal framework
+consists of two main components:</p>
+<ol type="1">
+<li><strong><code>xdg-desktop-portal</code>:</strong> The generic,
+desktop-agnostic frontend daemon that provides standard D-Bus interfaces
+to applications.</li>
+<li><strong><code>xdg-desktop-portal-gnome</code>:</strong> The backend
+implementation specific to GNOME that interfaces directly with the GNOME
+Shell, Mutter window manager, and native desktop settings.</li>
+</ol>
+<p>When an application wants to run in the background or register an
+autostart command, it makes a request to the
+<code>org.freedesktop.portal.Background</code> interface rather than
+executing directly on the host system.</p>
+<h2 id="how-the-background-permission-workflow-works">How the Background
+Permission Workflow Works</h2>
+<p>The interaction follows a structured lifecycle involving permission
+checks, user consent, and persistence storage:</p>
+<h3 id="1-permission-requests-via-d-bus">1. Permission Requests via
+D-Bus</h3>
+<p>When an app without a visible window attempts to keep running, it
+calls the <code>RequestBackground</code> method on the portal. The
+request typically includes metadata, such as a reason for needing
+background execution and whether the app also requests permission to
+autostart with the system.</p>
+<h3 id="2-verification-against-the-permission-store">2. Verification
+Against the Permission Store</h3>
+<p>The portal checks the host's Permission Store database
+(<code>xdg-permission-store</code>).</p>
+<ul>
+<li>If the user has already granted or denied the background capability
+for that specific application identifier, the portal enforces the
+existing rule immediately.</li>
+<li>If no record exists, GNOME presents a system dialog prompting the
+user to allow or deny the background execution request.</li>
+</ul>
+<h3 id="3-state-enforcement-and-sandboxing">3. State Enforcement and
+Sandboxing</h3>
+<p>For sandboxed applications like Flatpaks, isolation rules strictly
+prevent the process from bypassing the portal. If background permissions
+are denied, the runtime limits the application's ability to maintain
+detached background worker processes or establish autostart entries.</p>
+<h2 id="gnome-shell-integration-and-user-visibility">GNOME Shell
+Integration and User Visibility</h2>
+<p>GNOME handles background processes visually through built-in desktop
+indicators and system settings:</p>
+<ul>
+<li><strong>Background Apps Menu:</strong> Introduced in GNOME 44, the
+Quick Settings menu includes a dedicated "Background Apps" section. This
+monitor displays active applications that have no open graphical
+windows. If an app runs without an active window, GNOME Shell queries
+the portal system to identify and display it, allowing users to
+forcefully terminate it directly from the interface.</li>
+<li><strong>Control via Settings:</strong> Users can manage background
+permissions retroactively through GNOME Settings under the "Apps" panel.
+Here, permissions granted via the XDG portal can be toggled on or off
+individually for each application.</li>
+<li><strong>Autostart Tracking:</strong> When an application receives
+background permission that includes autostart privileges, the portal
+writes the appropriate <code>.desktop</code> entries into the user’s
+designated config directory (<code>~/.config/autostart</code>), which
+GNOME tracks using <code>systemd</code> user sessions.</li>
+</ul>
+<p>By routing lifecycle requests through XDG Desktop Portals, GNOME
+removes an application's ability to silently persist in the background,
+enforcing explicit user consent and unified system-level visibility.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

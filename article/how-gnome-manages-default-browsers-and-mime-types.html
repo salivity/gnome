@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Manages Default Browsers and MIME Types - gnome</title>
+    <meta name="description" content="The GNOME desktop environment manages default web browsers and file associations by leveraging standardized Freedesktop.org specifications. Through a combination of MIME-type databases, .desktop entry files, user-specific override lists, and GNOME-specif">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-manages-default-browsers-and-mime-types">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Manages Default Browsers and MIME Types - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-manages-default-browsers-and-mime-types" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop environment manages default web browsers and file associations by leveraging standardized Freedesktop.org specifications. Through a combination of MIME-type databases, .desktop entry files, user-specific override lists, and GNOME-specif" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-manages-default-browsers-and-mime-types">How GNOME
+Manages Default Browsers and MIME Types</h1>
+<p>The GNOME desktop environment manages default web browsers and file
+associations by leveraging standardized Freedesktop.org specifications.
+Through a combination of MIME-type databases, <code>.desktop</code>
+entry files, user-specific override lists, and GNOME-specific
+configuration frameworks like GSettings, the system matches file formats
+and URI schemes to the appropriate applications. This article breaks
+down how GNOME determines file types, how configuration files prioritize
+defaults, and how web browsers are specifically registered and
+selected.</p>
+<h2 id="the-freedesktoporg-shared-mime-info-standard">The
+Freedesktop.org Shared MIME-Info Standard</h2>
+<p>GNOME relies on the Shared MIME-Info specification defined by
+Freedesktop.org. When a user interacts with a file, the system
+determines its MIME type (such as <code>text/html</code> or
+<code>application/pdf</code>) by inspecting:</p>
+<ol type="1">
+<li><strong>File Extensions:</strong> Matching suffixes (e.g.,
+<code>.html</code>, <code>.png</code>) against the database.</li>
+<li><strong>File Signatures (Magic Numbers):</strong> Inspecting the
+initial bytes of a file when an extension is missing, ambiguous, or
+misleading.</li>
+</ol>
+<p>The core MIME database resides in <code>/usr/share/mime/</code>. When
+applications are installed, they register new MIME definitions via XML
+files placed in <code>/usr/share/mime/packages/</code>, which are
+compiled using the <code>update-mime-database</code> command.</p>
+<h2 id="desktop-entry-files-desktop">Desktop Entry Files
+(<code>.desktop</code>)</h2>
+<p>Applications announce their capabilities to GNOME via
+<code>.desktop</code> files stored in
+<code>/usr/share/applications/</code> (system-wide) or
+<code>~/.local/share/applications/</code> (per-user).</p>
+<p>Inside each <code>.desktop</code> file, the <code>MimeType</code> key
+lists all file types and protocol handlers the application can process.
+For example, a web browser’s <code>.desktop</code> entry typically
+includes:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">MimeType</span><span class="ot">=</span><span class="st">text/html;text/xml;application/xhtml_xml;x-scheme-handler/http;x-scheme-handler/https;</span></span></code></pre></div>
+<p>Without these definitions in its <code>.desktop</code> file, an
+application will not appear as an option for handling those specific
+formats within GNOME.</p>
+<h2 id="the-mimeappslist-hierarchy">The <code>mimeapps.list</code>
+Hierarchy</h2>
+<p>The definitive mapping between MIME types and applications is
+recorded in <code>mimeapps.list</code> files. GNOME evaluates these
+files in a strict order of precedence, where earlier entries override
+later ones:</p>
+<ol type="1">
+<li><code>~/.config/mimeapps.list</code> (User configuration)</li>
+<li><code>~/.local/share/applications/mimeapps.list</code> (Deprecated
+user location, supported for backward compatibility)</li>
+<li><code>/etc/xdg/mimeapps.list</code> (System administrator
+configuration)</li>
+<li><code>/usr/share/applications/mimeapps.list</code>
+(Distribution-level defaults)</li>
+</ol>
+<p>A <code>mimeapps.list</code> file is divided into two primary
+sections:</p>
+<ul>
+<li><code>[Default Applications]</code>: Defines the primary application
+assigned to open a specific MIME type.</li>
+<li><code>[Added Associations]</code>: Defines secondary applications
+that appear in GNOME’s "Open With" context menus.</li>
+</ul>
+<h2 id="default-web-browser-handling">Default Web Browser Handling</h2>
+<p>Web browsers differ from standard file handlers because they must
+process both local file types and URL network protocols. To establish an
+application as the default browser, GNOME links it to:</p>
+<ul>
+<li><strong>File Types:</strong> <code>text/html</code>,
+<code>application/xhtml+xml</code></li>
+<li><strong>URI Schemes:</strong> <code>x-scheme-handler/http</code>,
+<code>x-scheme-handler/https</code></li>
+</ul>
+<p>When you choose a default web browser in <strong>GNOME Settings &gt;
+Default Applications</strong>, GNOME updates
+<code>~/.config/mimeapps.list</code> with corresponding entries:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[Default Applications]</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">text/html</span><span class="ot">=</span><span class="st">firefox.desktop</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">application/xhtml+xml</span><span class="ot">=</span><span class="st">firefox.desktop</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">x-scheme-handler/http</span><span class="ot">=</span><span class="st">firefox.desktop</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">x-scheme-handler/https</span><span class="ot">=</span><span class="st">firefox.desktop</span></span></code></pre></div>
+<p>GNOME also references dconf keys stored under
+<code>org.gnome.desktop.default-applications</code>, though modern GNOME
+versions have largely unified around the <code>x-scheme-handler</code>
+MIME-type standard to ensure consistent behavior across other desktop
+environments and command-line tools.</p>
+<h2 id="command-line-tools-for-inspection-and-modification">Command-Line
+Tools for Inspection and Modification</h2>
+<p>GNOME's default associations can be queried and modified directly
+from the terminal using standard utilities:</p>
+<ul>
+<li><strong>Query the default browser for URLs:</strong>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xdg-mime</span> query default x-scheme-handler/https</span></code></pre></div></li>
+<li><strong>Set the default browser to a specific application:</strong>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xdg-mime</span> default org.mozilla.firefox.desktop x-scheme-handler/http x-scheme-handler/https text/html</span></code></pre></div></li>
+<li><strong>Inspect the handler using GIO (GNOME’s native virtual file
+system tool):</strong>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gio</span> mime x-scheme-handler/https</span></code></pre></div></li>
+</ul>
+<p>By pairing the Freedesktop.org specifications with user-level
+configuration files, GNOME ensures that file associations remain
+predictable, customizable, and compatible with the broader Linux
+ecosystem.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Manage GNOME Per-Application Volume Settings - gnome</title>
+    <meta name="description" content="This article provides a direct overview of how the GNOME desktop environment handles per-application volume controls within its native sound settings panel. It covers the dynamic detection of active audio streams, the role of modern sound servers like Pi">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-to-manage-gnome-per-application-volume-settings">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How to Manage GNOME Per-Application Volume Settings - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-to-manage-gnome-per-application-volume-settings" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article provides a direct overview of how the GNOME desktop environment handles per-application volume controls within its native sound settings panel. It covers the dynamic detection of active audio streams, the role of modern sound servers like Pi" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-to-manage-gnome-per-application-volume-settings">How to
+Manage GNOME Per-Application Volume Settings</h1>
+<p>This article provides a direct overview of how the GNOME desktop
+environment handles per-application volume controls within its native
+sound settings panel. It covers the dynamic detection of active audio
+streams, the role of modern sound servers like PipeWire and PulseAudio,
+and how users can manage and persist independent volume levels for
+individual programs without third-party software.</p>
+<h3 id="the-underlying-audio-architecture">The Underlying Audio
+Architecture</h3>
+<p>GNOME does not manage audio streams directly; instead, it interfaces
+with the system's sound server—most commonly PipeWire (managed by
+WirePlumber) on modern distributions, or PulseAudio on older
+releases.</p>
+<p>When an application plays audio, it opens a stream with the sound
+server. The GNOME Control Center (<code>gnome-control-center</code>)
+queries these streams using standard desktop audio APIs via D-Bus. This
+architecture allows GNOME to expose individual stream properties—such as
+the application name, current volume, and mute status—directly to the
+graphical user interface.</p>
+<h3 id="dynamic-stream-detection">Dynamic Stream Detection</h3>
+<p>In the GNOME Settings application under the <strong>Sound</strong>
+panel, per-application controls are located in the <strong>Volume
+Levels</strong> section. This panel is fully dynamic:</p>
+<ul>
+<li><strong>Active Streams Only:</strong> Applications only appear in
+the list when they are actively playing audio or holding an open output
+stream. If an application is idle or closed, it will not appear in the
+Volume Levels list.</li>
+<li><strong>Instant Population:</strong> As soon as an application
+begins playback (such as a web browser starting a video), GNOME detects
+the stream and instantly renders an entry for it.</li>
+<li><strong>Stream Removal:</strong> When an application terminates its
+audio session, its entry automatically disappears from the panel.</li>
+</ul>
+<h3 id="controls-and-independent-levels">Controls and Independent
+Levels</h3>
+<p>Each detected application in the panel receives its own dedicated
+interface element, providing two primary controls:</p>
+<ol type="1">
+<li><strong>Volume Slider:</strong> Adjusts the application's output
+relative to the master system volume. Lowering an app's slider
+attenuates its sound without lowering the system-wide master
+output.</li>
+<li><strong>Mute Toggle:</strong> Completely silences the selected
+application without affecting other active streams or the master
+volume.</li>
+</ol>
+<p>GNOME respects relative volume scaling. If the system master volume
+is adjusted, individual application outputs scale proportionally based
+on their specific levels.</p>
+<h3 id="volume-persistence">Volume Persistence</h3>
+<p>Changes made within the Volume Levels section are persistent.
+PipeWire and PulseAudio track client properties—such as the executable
+binary name (<code>application.process.binary</code>) or the desktop
+entry ID (<code>application.id</code>).</p>
+<p>When you set an application’s volume to 50% and close it, the sound
+server stores that preference in its state database. The next time the
+application opens and starts an audio stream, the sound server restores
+the previously assigned volume level, which is immediately reflected in
+GNOME's sound settings panel.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

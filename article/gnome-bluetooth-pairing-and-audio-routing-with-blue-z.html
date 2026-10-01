@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Bluetooth Pairing and Audio Routing with BlueZ - gnome</title>
+    <meta name="description" content="This article explains how the GNOME desktop environment orchestrates Bluetooth device pairing and audio routing using BlueZ and modern Linux audio servers. It details the underlying architecture, from user-initiated interactions in GNOME Shell to D-Bus c">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-bluetooth-pairing-and-audio-routing-with-blue-z">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Bluetooth Pairing and Audio Routing with BlueZ - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-bluetooth-pairing-and-audio-routing-with-blue-z" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="This article explains how the GNOME desktop environment orchestrates Bluetooth device pairing and audio routing using BlueZ and modern Linux audio servers. It details the underlying architecture, from user-initiated interactions in GNOME Shell to D-Bus c" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-bluetooth-pairing-and-audio-routing-with-bluez">GNOME
+Bluetooth Pairing and Audio Routing with BlueZ</h1>
+<p>This article explains how the GNOME desktop environment orchestrates
+Bluetooth device pairing and audio routing using BlueZ and modern Linux
+audio servers. It details the underlying architecture, from
+user-initiated interactions in GNOME Shell to D-Bus communication with
+the BlueZ system daemon, as well as the dynamic audio hand-off and
+profile management managed by PipeWire and WirePlumber.</p>
+<h3 id="the-architectural-stack">The Architectural Stack</h3>
+<p>GNOME does not interact with Bluetooth hardware directly. Instead, it
+relies on a layered software stack:</p>
+<ol type="1">
+<li><strong>Kernel Subsystem:</strong> The Linux kernel driver handles
+hardware adapters and low-level protocol transport.</li>
+<li><strong>BlueZ Daemon (<code>bluetoothd</code>):</strong> The
+official Linux Bluetooth protocol stack running as a system service. It
+manages hardware adapters, device pairing, security keys, and service
+discovery.</li>
+<li><strong>gnome-bluetooth:</strong> A library and collection of
+utilities that acts as the bridge between GNOME applications and
+BlueZ.</li>
+<li><strong>Desktop Interfaces:</strong> GNOME Control Center (Settings)
+and the GNOME Shell Quick Settings menu.</li>
+<li><strong>Audio Server:</strong> PipeWire (managed by WirePlumber) or
+legacy PulseAudio, which interfaces with BlueZ's audio profiles.</li>
+</ol>
+<h3 id="device-discovery-and-pairing">Device Discovery and Pairing</h3>
+<p>When a user opens the Bluetooth panel in GNOME Settings or expands
+the Quick Settings menu, GNOME Shell initiates discovery via
+<code>gnome-bluetooth</code>.</p>
+<p>Under the hood, <code>gnome-bluetooth</code> communicates with BlueZ
+over the system D-Bus bus (<code>org.bluez</code>). It calls the
+<code>StartDiscovery()</code> method on the active adapter object
+(<code>org.bluez.Adapter1</code>). BlueZ commands the kernel to scan for
+nearby advertising packets and emits D-Bus signals
+(<code>InterfacesAdded</code> or <code>PropertiesChanged</code>) as
+devices are detected. GNOME parses these signals and renders the
+discovered devices in the user interface.</p>
+<p>When a user selects a device to pair:</p>
+<ol type="1">
+<li>GNOME requests authentication via BlueZ's
+<code>org.bluez.Device1.Pair()</code> method.</li>
+<li>BlueZ handles the Secure Simple Pairing (SSP) or legacy PIN
+handshake through a D-Bus agent interface
+(<code>org.bluez.Agent1</code>) registered by GNOME.</li>
+<li>If user confirmation is required (such as matching a numeric
+passkey), GNOME displays a system modal dialog.</li>
+<li>Upon successful verification, BlueZ stores the cryptographic link
+keys persistently (typically under
+<code>/var/lib/bluetooth/[adapter_mac]/</code>) and sets the device's
+<code>Trusted</code> property to <code>true</code>.</li>
+</ol>
+<h3 id="audio-routing-and-service-registration">Audio Routing and
+Service Registration</h3>
+<p>Once pairing completes, BlueZ performs a Service Discovery Protocol
+(SDP) query to identify the device's supported profiles, such as
+Advanced Audio Distribution Profile (A2DP) for music playback or
+Hands-Free Profile (HFP/HSP) for voice calls.</p>
+<p>Routing the audio stream requires an audio server. In modern GNOME
+distributions, this role is handled by PipeWire alongside its session
+manager, WirePlumber:</p>
+<ol type="1">
+<li><strong>Endpoint Registration:</strong> During initialization,
+PipeWire registers itself with BlueZ as an audio endpoint using BlueZ’s
+Media API (<code>org.bluez.Media1.RegisterEndpoint</code>). This
+registration informs BlueZ that the audio server is capable of encoding
+and decoding audio streams.</li>
+<li><strong>Connection Handling:</strong> When a paired audio device
+connects, BlueZ establishes an Asynchronous Connection-Less (ACL)
+logical transport link and signals the availability of an audio
+transport interface (<code>org.bluez.MediaTransport1</code>) over
+D-Bus.</li>
+<li><strong>Node Creation:</strong> WirePlumber detects the new
+transport and instructs PipeWire to create corresponding audio Sink
+(playback) or Source (microphone) nodes in the audio graph.</li>
+</ol>
+<h3 id="codec-negotiation-and-policy-routing">Codec Negotiation and
+Policy Routing</h3>
+<p>After creating the audio nodes, PipeWire queries the Bluetooth
+device's capabilities via BlueZ to negotiate the highest-quality
+supported codec (such as LDAC, aptX, AAC, or standard SBC for A2DP, and
+mSBC or CVSD for HFP).</p>
+<p>WirePlumber automatically applies routing rules:</p>
+<ul>
+<li><strong>Default Device Switching:</strong> If configured by the
+desktop policy, WirePlumber moves active playback streams from local
+speakers to the newly connected Bluetooth sink.</li>
+<li><strong>Profile Switching:</strong> When an application requests
+microphone access (such as during a VoIP call), WirePlumber switches the
+device from the unidirectional, high-quality A2DP profile to the
+bidirectional HFP/HSP profile.</li>
+<li><strong>Desktop Control:</strong> The GNOME Control Center Sound
+panel communicates with PipeWire through the standard
+PulseAudio-compatible D-Bus or native PipeWire APIs, enabling users to
+manually select audio profiles, change codecs, or balance output
+levels.</li>
+</ul>
+<p>When the device disconnects, BlueZ notifies PipeWire via D-Bus, the
+corresponding audio nodes are removed from the graph, and WirePlumber
+automatically falls back to routing audio through the computer's
+internal speakers.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

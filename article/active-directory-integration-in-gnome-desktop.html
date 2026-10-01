@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Directory Integration in GNOME Desktop - gnome</title>
+    <meta name="description" content="The GNOME desktop integrates enterprise identity management with Microsoft Active Directory by coupling its user interface directly with native Linux enterprise subsystems. Through tools like GNOME Control Center and GNOME Initial Setup, users and admini">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/active-directory-integration-in-gnome-desktop">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Active Directory Integration in GNOME Desktop - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/active-directory-integration-in-gnome-desktop" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop integrates enterprise identity management with Microsoft Active Directory by coupling its user interface directly with native Linux enterprise subsystems. Through tools like GNOME Control Center and GNOME Initial Setup, users and admini" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="active-directory-integration-in-gnome-desktop">Active Directory
+Integration in GNOME Desktop</h1>
+<p>The GNOME desktop integrates enterprise identity management with
+Microsoft Active Directory by coupling its user interface directly with
+native Linux enterprise subsystems. Through tools like GNOME Control
+Center and GNOME Initial Setup, users and administrators can enroll a
+workstation into an Active Directory domain using graphical interfaces.
+Behind the scenes, GNOME communicates over system D-Bus APIs with
+underlying services like <code>realmd</code> and the System Security
+Services Daemon (SSSD), automating the configuration of Kerberos
+authentication, LDAP lookups, and PAM modules to deliver seamless domain
+logons and enterprise single sign-on.</p>
+<h3 id="the-core-architecture">The Core Architecture</h3>
+<p>GNOME does not reinvent authentication protocols. Instead, it acts as
+an accessible front-end for established Linux enterprise identity
+stacks. The integration relies on four primary layers:</p>
+<ol type="1">
+<li><strong>GNOME Settings (Control Center) and Initial Setup:</strong>
+The graphical interface where domain enrollment takes place. Under the
+"Users" panel or during first-boot configuration, administrators select
+"Enterprise Login" and provide the domain name along with domain
+administrator credentials.</li>
+<li><strong>realmd:</strong> A system D-Bus service that standardizes
+domain discovery and joining. When GNOME initiates a domain join, it
+communicates with <code>realmd</code>, which automatically detects AD
+network settings, discovers the nearest domain controller via DNS SRV
+records, and configures the system authentication stack.</li>
+<li><strong>SSSD (System Security Services Daemon):</strong> The primary
+engine configured by <code>realmd</code>. SSSD handles identity
+resolution via LDAP, credential verification via Kerberos, and offline
+credential caching.</li>
+<li><strong>GDM (GNOME Display Manager):</strong> The graphical display
+manager that greets users at login. GDM utilizes the Pluggable
+Authentication Modules (PAM) stack configured by SSSD, allowing domain
+users to sign in using formats such as <code>user@domain.com</code> or
+<code>DOMAIN\user</code>.</li>
+</ol>
+<h3 id="domain-enrollment-workflow">Domain Enrollment Workflow</h3>
+<p>The process of joining a GNOME system to an Active Directory domain
+follows a structured, automated flow:</p>
+<ul>
+<li><strong>Discovery:</strong> The user inputs the Active Directory
+domain name in GNOME Settings. GNOME invokes <code>realmd</code>, which
+queries DNS to discover domain controllers, available Kerberos realms,
+and directory services.</li>
+<li><strong>Authentication and Registration:</strong> The administrator
+enters credentials with domain-join permissions. <code>realmd</code>
+creates a computer account in Active Directory and configures the local
+system keytab file (<code>/etc/krb5.keytab</code>).</li>
+<li><strong>Stack Configuration:</strong> <code>realmd</code> adjusts
+the Name Service Switch (<code>/etc/nsswitch.conf</code>) and PAM
+configurations to route authentication requests through SSSD, removing
+the need for manual file editing.</li>
+</ul>
+<h3 id="authentication-and-single-sign-on">Authentication and Single
+Sign-On</h3>
+<p>Once joined, authentication operates natively within GNOME:</p>
+<ul>
+<li><strong>Kerberos Ticket Granting:</strong> When a domain user logs
+in via GDM, SSSD contacts the Active Directory Key Distribution Center
+(KDC) to obtain a Kerberos Ticket Granting Ticket (TGT).</li>
+<li><strong>Single Sign-On (SSO):</strong> The acquired Kerberos TGT is
+stored in the user's credential cache. GNOME applications that support
+GSSAPI/SPNEGO—such as the Epiphany browser or native network tools—can
+authenticate against enterprise intranets and network shares without
+prompting for passwords again.</li>
+<li><strong>Identity Mapping:</strong> Active Directory Security
+Identifiers (SIDs) are translated dynamically into POSIX user IDs (UIDs)
+and group IDs (GIDs) by SSSD, ensuring files and permissions conform to
+Linux standard security models.</li>
+</ul>
+<h3 id="offline-resilience">Offline Resilience</h3>
+<p>For mobile devices such as enterprise laptops, GNOME’s reliance on
+SSSD ensures authentication continues even when the machine is
+disconnected from the corporate network. SSSD securely caches password
+hashes and identity data locally. If a user logs into GDM away from the
+office, the system verifies the credentials against this local cache and
+mounts the user's local home directory transparently.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Manages Idle Timeouts, Locking, and Privacy - gnome</title>
+    <meta name="description" content="The GNOME desktop environment handles display power management, user authentication, and visual privacy through a coordinated architecture involving Mutter, the GNOME Settings Daemon, and GNOME Shell. This article examines how GNOME monitors system inact">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-manages-idle-timeouts-locking-and-privacy">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Manages Idle Timeouts, Locking, and Privacy - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-manages-idle-timeouts-locking-and-privacy" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop environment handles display power management, user authentication, and visual privacy through a coordinated architecture involving Mutter, the GNOME Settings Daemon, and GNOME Shell. This article examines how GNOME monitors system inact" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-manages-idle-timeouts-locking-and-privacy">How GNOME
+Manages Idle Timeouts, Locking, and Privacy</h1>
+<p>The GNOME desktop environment handles display power management, user
+authentication, and visual privacy through a coordinated architecture
+involving Mutter, the GNOME Settings Daemon, and GNOME Shell. This
+article examines how GNOME monitors system inactivity to trigger idle
+timeouts, executes secure session locking through systemd and GDM, and
+employs both software-based and hardware-level privacy curtains to
+protect user data from unauthorized viewing.</p>
+<h3 id="idle-detection-and-screen-timeouts">Idle Detection and Screen
+Timeouts</h3>
+<p>GNOME manages user inactivity through an integrated subsystem rather
+than standalone background watchers. The window manager and Wayland
+compositor, Mutter, tracks input hardware directly via
+<code>libinput</code>. It exposes an internal D-Bus interface known as
+<code>org.gnome.Mutter.IdleMonitor</code>.</p>
+<p>The <code>gnome-settings-daemon</code> (specifically its power
+plugin) listens to this interface against user preferences stored in the
+GSettings key <code>org.gnome.desktop.session idle-delay</code>. The
+timeout workflow functions in sequential stages:</p>
+<ol type="1">
+<li><strong>Pre-dimming:</strong> Shortly before reaching the designated
+idle threshold, GNOME reduces display brightness to notify the user of
+pending inactivity.</li>
+<li><strong>Session Idle:</strong> Once the timer expires without input,
+the session state transitions to <code>idle</code>.</li>
+<li><strong>Display Power Management (DPMS):</strong> The compositor
+communicates with the kernel Direct Rendering Manager (DRM) to put the
+physical displays into power-saving mode (standby, suspend, or
+off).</li>
+</ol>
+<p>Applications can pause these timeouts using the Freedesktop
+<code>org.freedesktop.ScreenSaver</code> or
+<code>org.freedesktop.portal.Inhibit</code> APIs, which video players,
+presentation tools, and web browsers use to prevent unwanted dimming
+during media playback.</p>
+<h3 id="session-locking-architecture">Session Locking Architecture</h3>
+<p>Unlike earlier Linux desktop paradigms that relied on independent
+screen-locking utilities, modern GNOME integrates screen locking
+directly into the core <code>gnome-shell</code> process. This unified
+design prevents race conditions, application leaks, and X11-style input
+grabs from exposing the underlying desktop.</p>
+<p>The lock behavior is governed by settings in
+<code>org.gnome.desktop.screensaver</code>:</p>
+<ul>
+<li><strong>Triggering:</strong> A lock is invoked either automatically
+after the idle threshold plus a defined grace period
+(<code>lock-delay</code>), manually via the <code>Super + L</code>
+shortcut, or upon system sleep signals delivered by
+<code>systemd-logind</code>.</li>
+<li><strong>State Transition:</strong> Upon activation, GNOME Shell
+restricts input events entirely to its internal lock-screen UI. The
+running session remains active in the background, but its graphical
+buffers are decoupled from rendering.</li>
+<li><strong>Authentication:</strong> Authentication is brokered through
+the GNOME Display Manager (GDM) utilizing Linux PAM (Pluggable
+Authentication Modules). This layer validates passwords, smart cards,
+biometrics (such as fingerprint readers via <code>fprintd</code>), or
+enterprise identity providers before unlocking the display
+pipeline.</li>
+</ul>
+<h3 id="privacy-curtains-and-screen-blanking">Privacy Curtains and
+Screen Blanking</h3>
+<p>GNOME secures visual output against local and remote observation
+through three distinct mechanisms:</p>
+<h4 id="1-the-screen-shield-software-curtain">1. The Screen Shield
+(Software Curtain)</h4>
+<p>When the session locks or the display turns off, GNOME Shell lowers
+an opaque visual shield over the active workspace. This prevents visual
+artifacts, notifications, and application windows from briefly flashing
+on the screen when monitors wake up, maintaining confidentiality until
+PAM successfully verifies the user.</p>
+<h4 id="2-remote-desktop-privacy-screen">2. Remote Desktop Privacy
+Screen</h4>
+<p>For headless or remote operations using GNOME Remote Desktop over
+RDP, GNOME implements a Wayland-native screen curtain. When enabled, the
+physical monitor attached to the host computer is completely blanked or
+displays a persistent lock curtain while the remote user works. This
+prevents individuals with physical access to the host machine from
+observing remote activity in real time.</p>
+<h4 id="3-hardware-electronic-privacy-screens">3. Hardware Electronic
+Privacy Screens</h4>
+<p>GNOME integrates with the Linux kernel's electronic privacy screen
+subsystem (found in enterprise laptops featuring technologies like HP
+Sure View or Lenovo PrivacyGuard). Mutter detects supported panels via
+the DRM subsystem and exposes controls inside GNOME Control Center and
+the Quick Settings menu, enabling users to electronically narrow the
+display panel's viewing angles with a single toggle.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

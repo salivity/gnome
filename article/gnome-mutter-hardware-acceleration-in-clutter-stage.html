@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Mutter Hardware Acceleration in Clutter Stage - gnome</title>
+    <meta name="description" content="The GNOME desktop achieves high-performance graphical rendering by using Mutter, its integrated window manager and Wayland compositor, which relies on an embedded version of the Clutter scene-graph toolkit. At the center of this pipeline is the Clutter s">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-mutter-hardware-acceleration-in-clutter-stage">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Mutter Hardware Acceleration in Clutter Stage - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-mutter-hardware-acceleration-in-clutter-stage" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="The GNOME desktop achieves high-performance graphical rendering by using Mutter, its integrated window manager and Wayland compositor, which relies on an embedded version of the Clutter scene-graph toolkit. At the center of this pipeline is the Clutter s" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-mutter-hardware-acceleration-in-clutter-stage">GNOME
+Mutter Hardware Acceleration in Clutter Stage</h1>
+<p>The GNOME desktop achieves high-performance graphical rendering by
+using Mutter, its integrated window manager and Wayland compositor,
+which relies on an embedded version of the Clutter scene-graph toolkit.
+At the center of this pipeline is the Clutter stage, a top-level canvas
+that abstracts the display into a hierarchical tree of visual actors. By
+leveraging modern Linux graphics subsystems—including DRM/KMS, GBM, and
+EGL—Mutter accelerates this entire composition stage directly on the
+GPU, balancing high frame rates with low latency and optimal power
+usage.</p>
+<h3 id="the-scene-graph-and-the-clutter-stage">The Scene Graph and the
+Clutter Stage</h3>
+<p>In Mutter, every visual component—including application windows,
+desktop panels, background wallpaper, and UI animations—is modeled as a
+<code>ClutterActor</code>. These actors form a parent-child scene graph
+whose top-level root is the <code>ClutterStage</code>.</p>
+<p>Instead of treating windows as flat, independent rectangles drawn
+directly to the frame, Mutter maintains their position, scaling,
+opacity, and transform matrices within the stage's 3D coordinate space.
+This structure allows Mutter to offload geometric transformations and
+blending calculations directly to the GPU.</p>
+<h3 id="egl-cogl-and-the-rendering-pipeline">EGL, Cogl, and the
+Rendering Pipeline</h3>
+<p>Hardware acceleration inside the Clutter stage is powered by an
+embedded hardware-abstraction library historically known as Cogl, now
+deeply integrated directly into Mutter's source tree.</p>
+<ol type="1">
+<li><strong>Context Initialization:</strong> When GNOME starts a Wayland
+session, Mutter communicates directly with the Kernel Mode Setting (KMS)
+and Direct Rendering Manager (DRM) APIs using Generic Buffer Management
+(GBM). It initializes an EGL display context backed by OpenGL or OpenGL
+ES.</li>
+<li><strong>Buffer Allocation:</strong> Application buffers—passed into
+Mutter via Wayland protocols—are imported into the compositor as GPU
+textures (EGLImages/dmabufs).</li>
+<li><strong>Batching and Drawing:</strong> During a frame pass, Mutter
+walks the Clutter stage scene graph. Cogl compiles the state changes,
+vertex positions, and texture bindings into optimized batches of OpenGL
+draw calls. These calls render the actors directly into the back-buffer
+assigned to the display output.</li>
+</ol>
+<h3 id="damage-tracking-and-partial-updates">Damage Tracking and Partial
+Updates</h3>
+<p>Redrawing the entire stage on every frame would overwhelm GPU memory
+bandwidth, particularly at 4K resolutions and high refresh rates. To
+optimize rendering, Mutter implements clip-based damage tracking:</p>
+<ul>
+<li>Applications notify the compositor of updated regions (damage).</li>
+<li>Mutter calculates the bounding union of all damaged regions across
+the Clutter stage actors.</li>
+<li>The Clutter stage sets scissors and clipping rects via OpenGL,
+restricting pixel shader execution and rasterization exclusively to the
+damaged regions.</li>
+<li>The unchanged portions of the screen are preserved from prior
+buffers using standard swap buffer implementations (such as
+<code>EGL_EXT_swap_buffers_with_damage</code> or
+<code>EGL_KHR_swap_buffers_with_damage</code>).</li>
+</ul>
+<h3 id="frame-synchronization-and-page-flipping">Frame Synchronization
+and Page Flipping</h3>
+<p>To eliminate visual tearing and ensure smooth animations, Mutter
+synchronizes stage rendering with the monitor's vertical refresh rate
+(vblank). Mutter's frame clock schedules the repaint cycle just in time
+for the target hardware deadline.</p>
+<p>Once the GPU finishes rendering the Clutter stage to the offscreen
+GBM surface, Mutter issues a page flip request through DRM/KMS. The
+kernel swaps the scanout buffer during the vblank interval, providing
+stutter-free updates.</p>
+<h3 id="direct-scanout-optimization">Direct Scanout Optimization</h3>
+<p>While the Clutter stage manages desktop composition, Mutter can
+bypass stage composition entirely for performance-critical scenarios.
+When a single surface—such as a fullscreen video player or 3D
+game—occupies an entire monitor without overlapping UI elements, Mutter
+assigns that application's buffer directly to a KMS hardware plane.</p>
+<p>By avoiding the Clutter stage composition pass altogether, the GPU
+skips the composite rendering step, reducing latency, eliminating
+composition overhead, and saving power. When the fullscreen application
+relinquishes focus or an overlay appears, Mutter seamlessly reinstates
+the Clutter stage rendering pipeline.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

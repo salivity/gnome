@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNOME Builder for C, Rust, and Python Development - gnome</title>
+    <meta name="description" content="GNOME Builder is the official integrated development environment (IDE) designed specifically for creating native GNOME desktop applications. By pairing a streamlined interface with deep system integration, it removes much of the friction associated with">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/gnome-builder-for-c-rust-and-python-development">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GNOME Builder for C, Rust, and Python Development - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/gnome-builder-for-c-rust-and-python-development" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Builder is the official integrated development environment (IDE) designed specifically for creating native GNOME desktop applications. By pairing a streamlined interface with deep system integration, it removes much of the friction associated with" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="gnome-builder-for-c-rust-and-python-development">GNOME Builder
+for C, Rust, and Python Development</h1>
+<p>GNOME Builder is the official integrated development environment
+(IDE) designed specifically for creating native GNOME desktop
+applications. By pairing a streamlined interface with deep system
+integration, it removes much of the friction associated with desktop
+Linux development. This article examines the core features that make
+GNOME Builder particularly compelling for developers working with C,
+Rust, and Python, including its native Flatpak workflows, Language
+Server Protocol (LSP) integration, UI design tooling, and low-overhead
+profiling capabilities.</p>
+<h2 id="seamless-meson-and-flatpak-integration">Seamless Meson and
+Flatpak Integration</h2>
+<p>GNOME Builder is architected around modern Linux packaging and build
+standards. Rather than requiring developers to manually configure
+toolchains, Builder relies on Flatpak runtimes and the Meson build
+system by default.</p>
+<ul>
+<li><strong>Sandboxed Toolchains:</strong> Builder automatically
+downloads and runs SDKs inside Flatpaks. This guarantees that your build
+environment matches your target deployment environment, eliminating the
+"works on my machine" problem.</li>
+<li><strong>Meson Autodetection:</strong> Meson is the standard build
+system for the GNOME stack. Builder inspects <code>meson.build</code>
+files natively, automatically configuring build targets, dependencies,
+and subprojects without manual configuration steps.</li>
+<li><strong>One-Click Manifest Resolution:</strong> When opening an
+application with a Flatpak manifest, Builder resolves dependencies,
+fetches the required GNOME runtime, and configures the environment
+instantly.</li>
+</ul>
+<h2 id="tailored-support-for-c-rust-and-python">Tailored Support for C,
+Rust, and Python</h2>
+<p>Builder leverages the Language Server Protocol (LSP) alongside
+runtime inspection to provide code intelligence customized for GNOME's
+GObject ecosystem across multiple languages.</p>
+<h3 id="c-the-native-gobject-experience">C: The Native GObject
+Experience</h3>
+<p>C remains a core language of the GNOME platform. Builder provides
+specialized tools to handle the conventions of the GObject
+framework:</p>
+<ul>
+<li><strong>Clang Integration:</strong> Powered by <code>clangd</code>,
+Builder delivers accurate autocompletion, refactoring, and
+jump-to-definition for standard C and GObject APIs.</li>
+<li><strong>Snippet Expansion:</strong> Built-in code snippets handle
+boilerplate-heavy tasks common in C development, such as GObject type
+registrations, class definitions, and property setups.</li>
+<li><strong>GDB Integration:</strong> The embedded debugger provides
+visual breakpoints, variable inspection, and thread management tailored
+for native C binaries.</li>
+</ul>
+<h3 id="rust-memory-safety-with-modern-tooling">Rust: Memory Safety with
+Modern Tooling</h3>
+<p>Rust has become a primary language for modern GNOME development
+through the <code>gtk-rs</code> bindings. Builder facilitates this
+workflow through:</p>
+<ul>
+<li><strong>rust-analyzer Support:</strong> Direct integration with
+<code>rust-analyzer</code> provides fast code analysis, type hints,
+inline errors, and macro expansions.</li>
+<li><strong>Cargo and Meson Synergy:</strong> Builder handles both pure
+Cargo projects and mixed Meson-Cargo setups commonly used to package
+Rust apps with native desktop assets.</li>
+<li><strong>GObject-Rust Ergonomics:</strong> Tooling assists with
+implementing GObject subclasses and handling signals safely in
+Rust.</li>
+</ul>
+<h3 id="python-rapid-prototyping-and-scripting">Python: Rapid
+Prototyping and Scripting</h3>
+<p>Python, via PyGObject, is popular for smaller utilities and rapid
+application development. Builder optimizes this experience:</p>
+<ul>
+<li><strong>LSP Intelligence:</strong> Support for language servers such
+as <code>pylsp</code> or <code>pyright</code> brings auto-complete,
+docstrings, and static analysis to Python GNOME code.</li>
+<li><strong>Interactive Debugging:</strong> Developers can step through
+Python code, inspect runtime states, and diagnose issues without leaving
+the IDE.</li>
+<li><strong>Dynamic Typing Assistance:</strong> Builder bridges dynamic
+Python code with static GObject Introspection data, providing accurate
+parameter hints for GTK classes.</li>
+</ul>
+<h2 id="integrated-gnome-platform-tools">Integrated GNOME Platform
+Tools</h2>
+<p>Developing a desktop application involves more than writing code; it
+requires UI design, resource compilation, and performance tuning.
+Builder integrates these GNOME platform tools directly into the
+workspace.</p>
+<ul>
+<li><strong>UI Design and Blueprint Support:</strong> Builder supports
+both standard GTK XML <code>.ui</code> files and modern Blueprint files,
+featuring syntax highlighting, live error-checking, and rapid previewing
+for Libadwaita interfaces.</li>
+<li><strong>Project Templates:</strong> When initiating a new project,
+Builder provides modern, Libadwaita-compliant templates pre-configured
+for C, Rust, Python, and Vala.</li>
+<li><strong>Performance Analysis with Sysprof:</strong> Builder features
+built-in profiling driven by Sysprof. Developers can capture CPU usage,
+memory allocations, and visual rendering stalls across entire
+applications, directly identifying performance bottlenecks in native C
+or Rust routines as well as Python bindings.</li>
+<li><strong>Targeted Terminal Access:</strong> A built-in terminal
+allows developers to spawn a shell directly inside the application's
+runtime container, simplifying debugging and dependency checks.</li>
+</ul></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>

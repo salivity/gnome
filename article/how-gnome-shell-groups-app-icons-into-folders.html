@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How GNOME Shell Groups App Icons into Folders - gnome</title>
+    <meta name="description" content="GNOME Shell provides an intuitive, clutter-free application grid that allows users to organize software into custom app folders. This article explains the mechanisms behind this functionality, detailing how GNOME handles drag-and-drop folder creation, ma">
+    <link rel="canonical" href="https://salivity.github.io/gnome/article/how-gnome-shell-groups-app-icons-into-folders">
+    <link rel="search" type="application/opensearchdescription+xml" title="gnome" href="/gnome/opensearch.xml">
+    <link rel="icon" href="/gnome/favicon.ico">
+    <link rel="stylesheet" href="/gnome/css/style.css">
+    <link media="print" rel="stylesheet" href="/gnome/css/print.css">
+    <script src="/gnome/js/fuse.min.js"></script>
+    <script src="/gnome/js/script.js"></script>
+    <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/tex-chtml.min.js" defer></script>
+    <script src="/monetize/monetize.js"></script>
+    <script src="/social/social.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="How GNOME Shell Groups App Icons into Folders - gnome" />
+    <meta property="og:url" content="https://salivity.github.io/gnome/article/how-gnome-shell-groups-app-icons-into-folders" />
+    <meta property="og:image" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:secure_url" content="https://salivity.github.io/gnome/images/open-graph/default.webp" />
+    <meta property="og:image:width" content="1120" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:description" content="GNOME Shell provides an intuitive, clutter-free application grid that allows users to organize software into custom app folders. This article explains the mechanisms behind this functionality, detailing how GNOME handles drag-and-drop folder creation, ma" />
+    <link rel="manifest" href="/gnome/pwa/manifest.json" />
+</head>
+<body>
+    <header>
+        <a href="/gnome/" aria-label="Go To Home Page" title="Go To Home Page" id="logo">
+            <span>salivity.github.io/</span><span>gnome</span>
+        </a>
+        <nav>
+            <ul class="header-links">
+                <li><a href="/gnome/search" title="Search" aria-label="Go To Search Page"><svg class="svg-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"></path></svg></a></li>
+                <li><a id="theme-toggle" title="Theme" href="javascript:void(0);" aria-label="Toggle Website Theme"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+    <div class="article-layout">
+        <aside id="profile-sidebar" class="profile-column" aria-label="Author Profile"></aside>
+        <div class="article-main-column">
+            <article><h1 id="how-gnome-shell-groups-app-icons-into-folders">How GNOME Shell
+Groups App Icons into Folders</h1>
+<p>GNOME Shell provides an intuitive, clutter-free application grid that
+allows users to organize software into custom app folders. This article
+explains the mechanisms behind this functionality, detailing how GNOME
+handles drag-and-drop folder creation, manages folder metadata through
+the GSettings configuration system, dynamically matches applications
+using desktop entries, and renders these groups within the Shell
+interface.</p>
+<h3 id="the-drag-and-drop-interaction-layer">The Drag-and-Drop
+Interaction Layer</h3>
+<p>At the user interface level, folder creation relies on clutter-based
+drag-and-drop interactions handled by GNOME Shell's JavaScript frontend
+(specifically within <code>appDisplay.js</code>). When a user drags one
+application icon and drops it directly onto another within the
+application grid, GNOME Shell recognizes the collision event.</p>
+<p>Instead of reordering the icons, the shell triggers a folder-creation
+routine. It groups the two <code>.desktop</code> application identifiers
+together, creates a folder wrapper element, and replaces the individual
+launcher icons with a single folder preview containing smaller
+representations of the grouped apps. Users can remove applications by
+dragging them out of the folder view back to the main grid, which
+automatically dissolves the folder once only a single application
+remains.</p>
+<h3 id="configuration-storage-via-gsettings-and-dconf">Configuration
+Storage via GSettings and dconf</h3>
+<p>GNOME Shell does not move physical files or alter system directories
+to create application folders. Instead, it stores folder structure and
+hierarchy as metadata in the <code>dconf</code> configuration database
+under the GSettings schema:</p>
+<p><code>org.gnome.desktop.app-folders</code></p>
+<p>Within this schema, the key <code>folder-children</code> holds an
+array of string identifiers (such as
+<code>['Utilities', 'Sundry', 'CustomFolder1']</code>). Each ID
+corresponds to a relocatable GSettings path:</p>
+<p><code>org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/&lt;folder-id&gt;/</code></p>
+<p>Inside each relocatable folder schema, GNOME Shell manages four
+primary keys:</p>
+<ul>
+<li><strong>name</strong>: A string specifying the display name of the
+folder.</li>
+<li><strong>translate</strong>: A boolean determining whether GNOME
+should attempt to translate the folder name based on system locale
+files.</li>
+<li><strong>apps</strong>: An array of explicit desktop file names
+(e.g.,
+<code>['org.gnome.Calculator.desktop', 'org.gnome.Characters.desktop']</code>)
+designated for that folder.</li>
+<li><strong>categories</strong>: An array of standard Freedesktop.org
+menu categories (such as <code>['Utility', 'Development']</code>) that
+automatically pull matching applications into the folder.</li>
+<li><strong>excluded-apps</strong>: An array of <code>.desktop</code>
+IDs specifically prevented from being populated via the
+<code>categories</code> rule.</li>
+</ul>
+<h3 id="automatic-and-dynamic-folder-population">Automatic and Dynamic
+Folder Population</h3>
+<p>GNOME Shell balances manual customization with automated
+categorization. When generating the application grid, the shell
+enumerates all valid <code>.desktop</code> files located in the standard
+XDG data directories (<code>/usr/share/applications</code> and
+<code>~/.local/share/applications</code>).</p>
+<p>For each application, the shell evaluates whether its identifier
+appears explicitly in a folder's <code>apps</code> list. If it does not,
+GNOME Shell checks the <code>Categories</code> field inside the
+application's <code>.desktop</code> file against the
+<code>categories</code> array in defined app folders. If a category
+match is found and the application is not explicitly listed under
+<code>excluded-apps</code>, GNOME Shell dynamically inserts the
+application into that folder.</p>
+<h3 id="real-time-grid-rendering">Real-Time Grid Rendering</h3>
+<p>Because folder states are managed as GSettings keys, GNOME Shell
+listens for change events on the
+<code>org.gnome.desktop.app-folders</code> path. Whenever a user creates
+a folder, edits a folder name, or alters folder contents using the
+graphical shell, the GNOME Software center, or command-line utilities
+like <code>gsettings</code>, the backend configuration updates
+instantly.</p>
+<p>Upon detecting these changes, GNOME Shell dynamically redraws the
+application view without requiring a shell reload or session restart,
+seamlessly updating icon positions, folders, and page counts in the
+overview grid.</p></article>
+        <div id="comments-container"></div>
+        <script>
+            const utterancesScript = document.createElement('script');
+            utterancesScript.setAttribute('src', 'https://utteranc.es/client.js');
+            utterancesScript.setAttribute('repo', 'salivity/gnome'); 
+            utterancesScript.setAttribute('issue-term', 'pathname'); 
+            utterancesScript.setAttribute('theme', localStorage.getItem('theme') === 'dark' ? 'github-dark' : 'github-light'); 
+            utterancesScript.setAttribute('crossorigin', 'anonymous');
+            utterancesScript.async = true;
+            document.getElementById('comments-container').appendChild(utterancesScript);
+        </script>
+    
+        </div>
+    </div>
+    
+    </main>
+    <footer>
+        <nav>
+            <ul class="social-links">
+            </ul>
+        </nav>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="/gnome/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/gnome/terms-and-conditions">Terms and Conditions</a></li>
+            </ul>
+        </nav>
+        <div class="copyright">
+            Copyright &copy; <span id="current-year"></span>
+        </div>
+    </footer>
+</body>
+</html>
